@@ -2,9 +2,9 @@
   <div class='judge-value'>
     <!-- C_value修改值，字段filedType为'input', 'textarea', 'number' -->
     <template v-if="handleItem.type === 'C_value'">
-      <!-- 多选 类型 -->
+      <!-- 数组 类型 -->
       <el-select
-        v-if="multipleSelect.includes(filedType)"
+        v-if="handleItem.valueType === 'array'"
         multiple
         placeholder="请选择"
         v-model="handleItem.value">
@@ -17,7 +17,7 @@
       </el-select>
       <!-- 单选 类型 -->
       <el-select
-        v-else-if="singleSelect.includes(filedType)"
+        v-else-if="(handleItem.valueType === 'string') && handleItem.optionsList"
         placeholder="请选择"
         v-model="handleItem.value">
         <el-option
@@ -29,19 +29,19 @@
       </el-select>
       <!-- input、textarea类型 -->
       <el-input
-        v-else-if="textInput.includes(filedType)"
+        v-else-if="handleItem.valueType === 'string'"
         v-model="handleItem.value"
         placeholder="请输入值">
       </el-input>
       <!-- number 类型 -->
       <el-input-number
-        v-else-if="filedType === 'number'"
+        v-else-if="handleItem.valueType === 'number'"
         v-model="handleItem.value"
         label="请输入值">
       </el-input-number>
       <!-- 开关 类型 -->
       <el-switch
-        v-else-if="filedType === 'switch'"
+        v-else-if="handleItem.valueType === 'boolean'"
         v-model="handleItem.value"
         active-color="#13ce66"
         inactive-color="#ff4949">
@@ -104,11 +104,11 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .judge-value {
   min-width: 120px;
-  .el-switch {
-    margin-top: 8px;
-  }
+}
+.judge-value .el-switch {
+  margin-top: 8px;
 }
 </style>

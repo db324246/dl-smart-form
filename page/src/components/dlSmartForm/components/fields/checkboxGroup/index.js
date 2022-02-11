@@ -6,6 +6,7 @@ export default {
     label: '多选框组',
     value: [],
     editable: true,
+    insideForm: true, // 控件是否展示再表单组件内
     attrs: {
       bindDicts: false, // 是否绑定字典
       dictName: '',

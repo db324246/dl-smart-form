@@ -6,6 +6,7 @@ export default {
     label: '下拉选择框',
     value: '',
     editable: true,
+    insideForm: true, // 控件是否展示再表单组件内
     attrs: {
       placeholder: '请选择',
       bindDicts: false, // 是否绑定字典

@@ -4,9 +4,9 @@
     <div
       v-if="equalList.includes(judge)"
       key="equal">
-      <!-- select、radioGroup类型 -->
+      <!-- 有选项的 -->
       <el-select
-        v-if="singleSelect.includes(filedType)"
+        v-if="condition.optionsList"
         v-model="condition.value"
         placeholder="请选择值">
         <el-option
@@ -18,13 +18,13 @@
       </el-select>
       <!-- input、textarea类型 -->
       <el-input
-        v-else-if="textInput.includes(filedType)"
+        v-else-if="condition.valueType === 'string'"
         v-model="condition.value"
         placeholder="请输入值">
       </el-input>
       <!-- number 类型 -->
       <el-input-number
-        v-else-if="condition.filedType === 'number'"
+        v-else-if="condition.valueType === 'number'"
         v-model="condition.value"
         label="请输入值">
       </el-input-number>
@@ -78,9 +78,7 @@ export default {
     return {
       equalList: ['==', '!='],
       containList: ['contains', 'uncontains'],
-      compareList: ['>', '<', '>=', '<='],
-      singleSelect: ['select', 'radioGroup'],
-      textInput: ['input', 'textarea']
+      compareList: ['>', '<', '>=', '<=']
     }
   },
   computed: {
@@ -94,11 +92,11 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .validate-value {
   margin-right: 0!important;
-  ::v-deep .el-input-number--medium {
-    width: 180px;
-  }
+}
+.validate-value >>> .el-input-number--medium {
+  width: 180px;
 }
 </style>

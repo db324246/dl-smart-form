@@ -6,6 +6,7 @@ export default {
     label: '日期范围',
     value: [],
     editable: true,
+    insideForm: true, // 控件是否展示再表单组件内
     attrs: {
       startPlaceholder: '请选择开始日期',
       endPlaceholder: '请选择结束日期',

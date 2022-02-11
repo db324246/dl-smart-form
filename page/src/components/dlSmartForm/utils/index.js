@@ -3,7 +3,6 @@
 // 比较新值和旧值是否有改动 返回更新后的值
 export const diffValue = (newVal, oldVal, deep = false) => {
   const recursionDiffer = (newVal, oldVal, level) => {
-    // if (!deep && level > 1) return deepClone(newVal)
     level++
     const newType = typeOf(newVal)
     const oldType = typeOf(oldVal)
@@ -59,7 +58,7 @@ export const diffValue = (newVal, oldVal, deep = false) => {
     case 'array':
       return []
     default:
-      return
+      return null
   }
 }
 
@@ -120,8 +119,8 @@ export const generatePersonalConfig = config => {
     isSingle,
     placeholder,
     rangeType,
-    target } = config
-
+    target
+  } = config
   return {
     placeholder, // 按钮或点击input的提示性文字
     dialogTitle: placeholder, // 弹出框标题

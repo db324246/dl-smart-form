@@ -55,15 +55,15 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .el-form {
   padding: 0 10px;
-  ::v-deep .el-form--label-top .el-form-item__label {
-    padding: 0;
-  }
-  .el-form-item {
-    margin-bottom: 10px;
-  }
+}
+.el-form >>> .el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+.el-form .el-form-item {
+  margin-bottom: 10px;
 }
 .w-100per {
   width: 100%;

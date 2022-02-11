@@ -3,10 +3,13 @@ import time from './time'
 import input from './input'
 import number from './number'
 import select from './select'
+import title from './title'
+import divider from './divider'
 import switchCom from './switch'
 import textarea from './textarea'
 import dateRange from './dateRange'
 import mulSelect from './mulSelect'
+import arrayForm from './arrayForm'
 import radioGroup from './radioGroup'
 import checkboxGroup from './checkboxGroup'
 
@@ -26,38 +29,15 @@ export const basicComponents = [
 ]
 
 // 布局字段
-export const layoutComponents = []
+export const layoutComponents = [
+  title,
+  divider
+]
 
 // 复杂类型字典
 export const complexField = [
-  // 数据子项
-  {
-    field: {
-      type: 'objectform',
-      label: '数据子项',
-      value: null,
-      editable: true,
-      attrs: {
-        fieldCorrelativeRules: [],
-        fieldAttachedRule: {}
-      }
-    }
-  },
   // 重复上报
-  {
-    field: {
-      type: 'arrayform',
-      label: '重复上报',
-      value: [],
-      editable: true,
-      attrs: {
-        tableColumns: [],
-        queryFields: [],
-        fieldCorrelativeRules: [],
-        fieldAttachedRule: {}
-      }
-    }
-  }
+  arrayForm
 ]
 
 // 字段配置组件集合
@@ -80,6 +60,11 @@ const allOriginField = [
   ...basicComponents,
   ...layoutComponents,
   ...complexField
+]
+
+// 没有附属规则的字段
+export const hasNoAttachRuleFields = [
+  'title'
 ]
 
 export default allOriginField

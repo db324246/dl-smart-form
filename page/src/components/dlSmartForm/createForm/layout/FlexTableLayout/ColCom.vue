@@ -9,28 +9,26 @@
     @contextmenu.stop.prevent="handlerFocus"
     @click.stop="handleNodeFocus">
     <v-contextmenu ref="contextmenu" :style="{
-      'border-width': !isSubForm || subFormCol ? '1px' : '0px'
+      'border-width': '1px'
     }">
-      <v-contextmenu-submenu v-show="!isSubForm" title="新增">
+      <v-contextmenu-submenu title="新增">
         <v-contextmenu-item @click="handleCommand('newRow')">在单元格里新增表格行</v-contextmenu-item>
       </v-contextmenu-submenu>
-      <v-contextmenu-submenu v-show="!isSubForm || subFormCol" title="插入">
-        <v-contextmenu-item v-show="!isSubForm || subFormCol" @click="handleCommand('insertLeftCol')">单元格(在左侧)</v-contextmenu-item>
-        <v-contextmenu-item v-show="!isSubForm || subFormCol" @click="handleCommand('insertRightCol')">单元格(在右侧)</v-contextmenu-item>
-        <v-contextmenu-item v-show="!isSubForm" @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
-        <v-contextmenu-item v-show="!isSubForm" @click="handleCommand('insertBottomRow')">行(在下方)</v-contextmenu-item>
+      <v-contextmenu-submenu title="插入">
+        <v-contextmenu-item @click="handleCommand('insertLeftCol')">单元格(在左侧)</v-contextmenu-item>
+        <v-contextmenu-item @click="handleCommand('insertRightCol')">单元格(在右侧)</v-contextmenu-item>
+        <v-contextmenu-item @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
+        <v-contextmenu-item  @click="handleCommand('insertBottomRow')">行(在下方)</v-contextmenu-item>
       </v-contextmenu-submenu >
-      <v-contextmenu-item v-show="!isSubForm || subFormCol" divider></v-contextmenu-item>
-      <!-- <v-contextmenu-item v-show="showFieldHandler" @click="handleCommand('editField')">编辑字段</v-contextmenu-item>
-      <v-contextmenu-item v-show="showFieldHandler && !isSubForm" @click="handleCommand('delField')">删除字段</v-contextmenu-item> -->
-      <v-contextmenu-item v-show="!isSubForm || subFormCol" @click="handleCommand('editColAttr')">编辑单元格</v-contextmenu-item>
-      <v-contextmenu-item  v-show="!isSubForm || subFormCol" divider></v-contextmenu-item>
-      <v-contextmenu-item v-show="!isSubForm || subFormCol" @click="handleCommand('delCol')">删除单元格</v-contextmenu-item>
-      <v-contextmenu-item v-show="!isSubForm" @click="handleCommand('delRow')">删除行</v-contextmenu-item>
+      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item @click="handleCommand('editColAttr')">编辑单元格</v-contextmenu-item>
+      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item @click="handleCommand('delCol')">删除单元格</v-contextmenu-item>
+      <v-contextmenu-item @click="handleCommand('delRow')">删除行</v-contextmenu-item>
     </v-contextmenu>
 
     <div ref="drag-wrapper" class="drag-wrapper">
-      <template v-for="(item, subIndex) in colData.children">
+      <template v-for="(item, index) in colData.children">
         <widget-item
           v-if="item.domtype === 'field'"
           :key="item.key"
@@ -38,12 +36,11 @@
           :field-name="item.fieldName"
           v-contextmenu:contextmenu
           @click.native="handleContentEdit(item.fieldName)">
-          <!-- @contextmenu.native.stop="handleContentFocus(item.field, subIndex)" -->
         </widget-item>
         <row-com
           v-else-if="item.domtype === 'row'"
           :key="item.key"
-          :row-index="subIndex"
+          :row-index="index"
           :row-config="item"
           :row-key="item.key"/>
       </template>
@@ -86,7 +83,6 @@ export default {
   },
   data() {
     return {
-      subIndex: 0,
       focusFieldIn: false,
       focusField: null,
       sortableWrap: null
@@ -112,20 +108,12 @@ export default {
         return item.domtype === 'row'
       }).length > 0
     },
-    // 是否是明细字表结构
-    isSubForm() {
-      return this.colData.isSubForm
-    },
-    // 是否是明细字表col项
-    subFormCol() {
-      return !!this.colData.subFormCol
-    },
     active() {
       return Bus.focusNodeKey === this.colData.key
     }
   },
   created() {
-    // 递归删除col(无需判断是否是明细子表)
+    // 递归删除col
     Bus.$on('delete-col', colKey => {
       if (this.colData.key !== colKey) return
       this.hasFiled && this.deleteField()
@@ -153,7 +141,6 @@ export default {
     })
   },
   mounted() {
-    if (this.colData.fixed) return
     this.sortableWrap = Sortable.create(
       this.$refs['drag-wrapper'],
       {
@@ -178,7 +165,6 @@ export default {
     // 节点 聚焦
     handleNodeFocus() {
       this.hideContextMenu()
-      if (this.colData.fixed) return
       Bus.setFocusNodeKey(this.colData.key)
     },
     // 字段点击编辑
@@ -219,8 +205,6 @@ export default {
           Bus.$emit('edit-node', this.colData)
           break;
         case 'delCol': // 删除单元格
-          if (this.isOnlyCol && this.subFormCol) return this.$message.error('明细子表至少保留一个单元格')
-
           this.$confirm('删除后不可撤销，确认删除吗?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -255,17 +239,10 @@ export default {
     // 删除字段
     deleteField() {
       const filedName = this.colData.children.find(node => node.domtype === 'field').fieldName
-      if (this.subFormCol) {
-        Bus.$emit('delete-subForm-colField', {
-          fieldName: this.colData.fieldName,
-          fieldKey: filedName
-        })
-      } else {
-        Bus.$emit('delete-field', {
-          domKey: this.colData.key,
-          fieldKey: filedName
-        })
-      }
+      Bus.$emit('delete-field', {
+        domKey: this.colData.key,
+        fieldKey: filedName
+      })
     },
     // 删除列下的行
     deleteRow() {
@@ -316,17 +293,10 @@ export default {
               '.field-component'
             )
             if (this.hasFiled) return this.$message.error('节点中已存在字段')
-            if (this.subFormCol) {
-              Bus.$emit('add-subForm-colField', {
-                fieldName: this.colData.fieldName,
-                field: data
-              })
-            } else {
-              Bus.$emit('add-field', {
-                field: data
-              })
-              Bus.$emit('edit-node', data)
-            }
+            Bus.$emit('add-field', {
+              field: data
+            })
+            Bus.$emit('edit-node', data)
             this.colData.children.splice(evt.newIndex, 0, {
               domtype: 'field',
               parentKey: this.colData.key,
@@ -353,7 +323,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .f-table-col {
   position: relative;
   flex: 1;
@@ -365,38 +335,37 @@ export default {
   box-sizing: border-box;
   border: 1px dashed #ebf0fe;
   z-index: 1;
-  // border: 1px dashed rgba(170,170,170,0.7);
   background-color: rgba(236, 245, 255, .8);
-  &:hover {
-    border-color: #00bfc4;
-  }
-  .drag-wrapper {
-    height: 100%;
-  }
-  .col-drag {
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 28px;
-    line-height: 28px;
-    background: #00bfc4;
-    z-index: 20;
-    i{
-      font-size: 14px;
-      color: #fff;
-      margin: 0 5px;
-      cursor: move;
-    }
-  }
+}
+.f-table-col:hover {
+  border-color: #00bfc4;
+}
+.f-table-col .drag-wrapper {
+  height: 100%;
+}
+.f-table-col .col-drag {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 28px;
+  line-height: 28px;
+  background: #00bfc4;
+  z-index: 20;
+}
+.f-table-col .col-drag i{
+  font-size: 14px;
+  color: #fff;
+  margin: 0 5px;
+  cursor: move;
 }
 .active-col {
   border-color: #00bfc4;
 }
 </style>
 <style lang="scss">
-  .ghost-col{
-    width: 100%;
-    border: 1px dashed #ffa921;
-    border-radius: 4px;
-  }
+.ghost-col{
+  width: 100%;
+  border: 1px dashed #ffa921;
+  border-radius: 4px;
+}
 </style>

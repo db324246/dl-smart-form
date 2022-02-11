@@ -46,34 +46,40 @@
 <script>
 import Bus from '../Bus'
 import store from '../../store'
+import ColConfig from './ColConfig'
 import smartTitle from '../../components/smartTitle'
-import { fieldConfigComMap } from '../../components/fields'
+import { fieldConfigComMap, hasNoAttachRuleFields } from '../../components/fields'
 
 export default {
   name: 'field-config',
   components: {
+    ColConfig,
     smartTitle,
     ...fieldConfigComMap,
     ...store.customFieldConfigMap
   },
   inject: [
     'layout',
-    'fieldAttachedRule'
+    'getFieldAttachedRules'
   ],
   data() {
     return {
       filedData: {
         editable: true,
         type: 'default'
-      }
+      },
+      hasNoAttachRuleFields
     }
   },
   computed: {
     componentId() {
       return (this.filedData.type || this.filedData.domtype) + '-config'
     },
+    fieldAttachedRule() {
+      return this.getFieldAttachedRules()
+    },
     showAttachedRule() {
-      return this.filedData.name && !['title'].includes(this.filedData.type)
+      return this.layout !== 'singleField' && this.filedData.name && !this.hasNoAttachRuleFields.includes(this.filedData.type)
     },
     fieldRule() {
       return this.fieldAttachedRule[this.filedData.name] || {}
@@ -102,23 +108,21 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .field-config {
   height: 100%;
-  .smart-title {
-    ::v-deep .smart-title__name {
-      font-size: 18px;
-      color: #00bfc4;
-    }
-  }
-  .field-config-wrapper {
-    padding-bottom: 50px;
-    max-height: calc(100% - 40px);
-    overflow-y: auto;
-  }
-  .attache-rule-form {
-    padding: 0 10px;
-  }
+}
+.field-config .smart-title >>> .smart-title__name {
+  font-size: 18px;
+  color: #00bfc4;
+}
+.field-config .field-config-wrapper {
+  padding-bottom: 50px;
+  max-height: calc(100% - 40px);
+  overflow-y: auto;
+}
+.field-config .attache-rule-form {
+  padding: 0 10px;
 }
 .default-config {
   font-size: 14px;

@@ -129,34 +129,34 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .vertical-layout {
   height: 100%;
-  .smart-title {
-    position: relative;
-    border-bottom: 1px solid #ebf0fe;
-    ::v-deep .smart-title__name {
-      font-size: 18px;
-      color: #00bfc4;
-    }
-  }
-  .flex-config {
-    margin: 10px 0;
-    font-size: 14px;
-    color: #b0b0b0;
-    padding-left: 20px;
-  }
-  .vertical-layout-wrapper {
-    height: calc(100% - 40px - 28px - 20px);
-    .el-form {
-      padding: 5px;
-      border: 1px dashed #ccc;
-    }
-  }
-  .rules-btn {
-    position: absolute;
-    top: 6px;
-    right: 20px;
-  }
+}
+.vertical-layout .smart-title {
+  position: relative;
+  border-bottom: 1px solid #ebf0fe;
+}
+.vertical-layout .smart-title >>> .smart-title__name {
+  font-size: 18px;
+  color: #00bfc4;
+}
+.vertical-layout .flex-config {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #b0b0b0;
+  padding-left: 20px;
+}
+.vertical-layout .vertical-layout-wrapper {
+  height: calc(100% - 40px - 28px - 20px);
+}
+.vertical-layout .vertical-layout-wrapper .el-form {
+  padding: 5px;
+  border: 1px dashed #ccc;
+}
+.vertical-layout .rules-btn {
+  position: absolute;
+  top: 6px;
+  right: 20px;
 }
 </style>

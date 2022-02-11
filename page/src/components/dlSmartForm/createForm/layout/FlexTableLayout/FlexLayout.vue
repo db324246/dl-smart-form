@@ -97,7 +97,7 @@ export default {
   },
   computed: {
     nodesMap() {
-      return Bus.former.nodesMap
+      return Bus.nodesMap
     }
   },
   created() {
@@ -219,11 +219,6 @@ export default {
       const sourceIndex = parent.findIndex(row => row.key === rowKey)
       parent.splice(sourceIndex, 1)
       this.nodesMap.delete(rowKey)
-
-      if (row.fieldName && row.isSubForm) {
-        // 明细子表 需要删除对应字段
-        Bus.$emit('delete-subForm-field', row.fieldName)
-      }
     },
     // 清算行（移除没有子节点的行）
     liquidationRows() {

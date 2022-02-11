@@ -32,7 +32,6 @@
               :class="{
                 'drag-item': field.type !== 'objectform',
                 'complex-com': complexFields.includes(field.type),
-                'object-com': field.type === 'objectform',
                 'array-com': field.type === 'arrayform',
               }"
               :key="item.groupKey + index"
@@ -216,14 +215,10 @@ export default {
     handleSave() {
       this.chooseFields.forEach(field => {
         if (!this.choosedFieldKeys.includes(field.name)) {
-          if (this.layout === 'vertical' && field.type === 'subform') {
-            this.$message.warning('重复上报表单中无法引用明细子表字段')
-          } else {
-            this.choosedFieldKeys.push(field.name)
-            Bus.$emit('insert-field', {
-              ...field
-            })
-          }
+          this.choosedFieldKeys.push(field.name)
+          Bus.$emit('insert-field', {
+            ...field
+          })
         }
       })
       this.handleClose()
@@ -265,85 +260,57 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .field-selection {
   height: 100%;
   padding-bottom: 50px;
   overflow-y: auto;
 }
-.smart-title {
-  ::v-deep .smart-title__name {
-    font-size: 18px;
-    color: #00bfc4;
-  }
+.smart-title >>> .smart-title__name{
+  font-size: 18px;
+  color: #00bfc4;
 }
 .el-collapse {
   padding: 0 10px;
   border: none;
-  .drag-wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    .field-component {
-      flex: 1;
-      margin-bottom: 20px;
-      font-size: 14px;
-      font-size: 14px;
-      color: #5F5F5F;
-      text-align: left;
-      span {
-        display: inline-block;
-        width: 112px;
-        height: 36px;
-        line-height: 36px;
-        text-align: center;
-        background: #FFFFFF;
-        border: 1px dashed #CBCBCB;
-        border-radius: 4px;
-        cursor: pointer;
-      }
-    }
-    .complex-com {
-      min-width: 100%;
-      span {
-        width: 100%;
-        max-width: 250px;
-        padding-left: 15px;
-        border-color: #00bfc4;
-        color: #00bfc4;
-        text-align: left;
-      }
-    }
-    // .array-com span {
-    //   position: relative;
-    //   &::after {
-    //     position: absolute;
-    //     content: '';
-    //     top: -1px;
-    //     right: 0;
-    //     width: 36px;
-    //     height: 36px;
-    //     background: url('~@/components/dlSmartForm/assets/arrayform.png') no-repeat center;
-    //     background-size: 100%;
-    //   }
-    // }
-    .object-com span {
-      position: relative;
-      &::after {
-        position: absolute;
-        content: '';
-        top: -1px;
-        right: 0;
-        width: 36px;
-        height: 36px;
-        background: url('~@/components/dlSmartForm/assets/objectform.png') no-repeat center;
-        background-size: 100%;
-      }
-    }
-    .hide-com {
-      min-width: 110px;
-      margin-bottom: 0;
-    }
-  }
+}
+.el-collapse .drag-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.el-collapse .drag-wrapper .field-component {
+  flex: 1;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-size: 14px;
+  color: #5F5F5F;
+  text-align: left;
+}
+.el-collapse .drag-wrapper .field-component span {
+  display: inline-block;
+  width: 112px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  background: #FFFFFF;
+  border: 1px dashed #CBCBCB;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.el-collapse .drag-wrapper .complex-com {
+  min-width: 100%;
+}
+.el-collapse .drag-wrapper .complex-com span {
+  width: 100%;
+  max-width: 250px;
+  padding-left: 15px;
+  border-color: #00bfc4;
+  color: #00bfc4;
+  text-align: left;
+}
+.el-collapse .drag-wrapper .hide-com {
+  min-width: 110px;
+  margin-bottom: 0;
 }
 .custom-fields-button {
   padding: 0 10px;
@@ -361,9 +328,9 @@ export default {
   margin-right: 10px;
   margin-bottom: 10px;
   cursor: pointer;
-  &.disabled-tag {
-    cursor: not-allowed;
-  }
+}
+.disabled-tag {
+  cursor: not-allowed;
 }
 .empty-tip {
   font-size: 14px;

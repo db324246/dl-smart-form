@@ -9,62 +9,39 @@
     @contextmenu.stop.prevent="hideContextMenu"
     @click.stop="handleNodeFocus">
     <v-contextmenu ref="contextmenu" :style="{
-      'border-width': !isSubForm || subFormCol ? '1px' : '0px'
+      'border-width': '1px'
     }">
-      <v-contextmenu-submenu v-show="!isSubForm || subFormCol" title="插入">
-        <v-contextmenu-item v-show="!isSubForm || subFormCol" @click="handleCommand('insertCol')">单元格</v-contextmenu-item>
-        <v-contextmenu-item v-show="!isSubForm" @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
-        <v-contextmenu-item v-show="!isSubForm" @click="handleCommand('insertBottomRow')">行(在下方)</v-contextmenu-item>
+      <v-contextmenu-submenu title="插入">
+        <v-contextmenu-item @click="handleCommand('insertCol')">单元格</v-contextmenu-item>
+        <v-contextmenu-item @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
+        <v-contextmenu-item @click="handleCommand('insertBottomRow')">行(在下方)</v-contextmenu-item>
       </v-contextmenu-submenu>
-      <v-contextmenu-item v-show="!isSubForm" divider></v-contextmenu-item>
-      <v-contextmenu-item v-show="!isSubForm" @click="handleCommand('delRow')">删除行</v-contextmenu-item>
-      <v-contextmenu-item v-show="!isSubForm" divider></v-contextmenu-item>
-      <v-contextmenu-item v-show="!isSubForm" :disabled="rowIndex === 0" @click="handleCommand('upRow')">前移行</v-contextmenu-item>
+      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item @click="handleCommand('delRow')">删除行</v-contextmenu-item>
+      <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item :disabled="rowIndex === 0" @click="handleCommand('upRow')">前移行</v-contextmenu-item>
     </v-contextmenu>
 
     <div
       ref="drag-wrapper"
       class="drag-wrapper f-table-row__flex"
-      :style="(!isSubForm || subFormCol)
-        ? { 'overflow-x': 'auto' }
-        : {}">
-      <template v-if="isSubForm && subFormCol">
-        <col-com
-          :key="item.key"
-          v-for="(item, index) in rowConfig.children"
-          :col-data="item"
-          :col-index="index"
-          :style="{
-            'min-width': '240px',
-            'text-align': item.align.split('_')[1],
-            'vertical-align': item.align.split('_')[0]
-          }"/>
-      </template>
-      <template v-else>
-        <col-com
-          :key="item.key"
-          v-for="(item, index) in rowConfig.children"
-          :col-data="item"
-          :col-index="index"
-          :style="{
-            'max-width': item.width ? item.width + 'px' : 'auto',
-            'min-width': item.width ? item.width + 'px' : 'auto',
-            'text-align': item.align.split('_')[1],
-            'vertical-align': item.align.split('_')[0]
-          }"/>
-      </template>
+      :style="{ 'overflow-x': 'auto' }">
+      <col-com
+        :key="item.key"
+        v-for="(item, index) in rowConfig.children"
+        :col-data="item"
+        :col-index="index"
+        :style="{
+          'max-width': item.width ? item.width + 'px' : 'auto',
+          'min-width': item.width ? item.width + 'px' : 'auto',
+          'text-align': item.align.split('_')[1],
+          'vertical-align': item.align.split('_')[0]
+        }"/>
     </div>
 
     <div v-if="active" class="row-drag">
       <i class="el-icon-rank drag-row"></i>
     </div>
-
-    <template v-if="active && isSubForm">
-      <div class="subForm-actions">
-        <!-- <i class="el-icon-edit-outline" title="编辑" @click.stop="handleSubFormEdit"></i> -->
-        <i class="el-icon-delete" title="删除" @click.stop="handleSubFormDelete"></i>
-      </div>
-    </template>
   </div>
 </template>
 
@@ -104,22 +81,13 @@ export default {
   },
   computed: {
     nodesMap() {
-      return Bus.former.nodesMap
-    },
-    // 是否是明细字表结构
-    isSubForm() {
-      return this.rowConfig.isSubForm
-    },
-    // 是否是明细字表col项
-    subFormCol() {
-      return !!this.rowConfig.subFormCol
+      return Bus.nodesMap
     },
     active() {
       return Bus.focusNodeKey === this.rowKey
     }
   },
   mounted() {
-    if (this.rowConfig.fixed) return
     this.sortableWrap = Sortable.create(
       this.$refs['drag-wrapper'],
       {
@@ -143,25 +111,11 @@ export default {
     // 节点 聚焦
     handleNodeFocus() {
       this.hideContextMenu()
-      const parentKey = this.rowConfig.parentKey
-      if (parentKey !== -1) {
-        const parent = this.nodesMap.get(parentKey)
-        if (parent && parent.fixed) return
-      }
       Bus.setFocusNodeKey(this.rowKey)
     },
     // 插入列
     insertCol(sourceIndex) {
-      let defaultCol
-      if (this.isSubForm && this.subFormCol) {
-        defaultCol = createCol(this.rowKey, false, {
-          fieldName: this.rowConfig.fieldName,
-          isSubForm: true,
-          subFormCol: true
-        })
-      } else {
-        defaultCol = createCol(this.rowKey)
-      }
+      const defaultCol = createCol(this.rowKey)
       this.rowConfig.children.splice(sourceIndex, 0, defaultCol)
       return defaultCol
     },
@@ -177,8 +131,8 @@ export default {
       this.rowConfig.children.splice(sourceIndex, 1)
       this.nodesMap.delete(colKey)
     },
-    // 删除明细字表或行
-    handleSubFormDelete() {
+    // 删除行
+    handleRowDelete() {
       this.$confirm('删除后不可撤销，确认删除吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -213,7 +167,7 @@ export default {
           Bus.$emit('insert-row', this.rowIndex + 1, this.rowKey)
           break;
         case 'delRow': // 删除行
-          this.handleSubFormDelete()
+          this.handleRowDelete()
           break;
         case 'upRow': // 前移行
           Bus.$emit('exchange-row', this.rowIndex, this.rowIndex - 1, this.rowKey)

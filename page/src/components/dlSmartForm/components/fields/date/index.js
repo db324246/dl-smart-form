@@ -7,6 +7,7 @@ export default {
     value: '',
     placeholder: '请选择日期',
     editable: true,
+    insideForm: true, // 控件是否展示再表单组件内
     attrs: {
       placeholder: '请选择日期',
       format: 'yyyy-MM-dd',

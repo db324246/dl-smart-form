@@ -23,7 +23,7 @@ import TwoLayoutTab from './layout/TwoLayoutTab'
 import VerticalLayout from './layout/VerticalLayout'
 import FieldConfig from './components/FieldConfig'
 import FieldSelection from './components/FieldSelection'
-import { deepClone, hideContextMenu, generateKey, generateCreateSubFormFn } from './utils'
+import { deepClone, hideContextMenu, generateKey, syncFieldInitTo } from './utils'
 
 export default {
   name: 'smart-form-create',
@@ -53,27 +53,6 @@ export default {
     hasCiteFormFie: {
       type: Boolean,
       default: true
-    },
-    /**
-     * {
-        form: [],
-        layout: {
-          layoutType: 'default',
-          pcLayout: {
-            layoutConfig: {}
-            rowsData: []
-          }
-        },
-        attachedRule: {
-          fieldAttachedRule: {},
-          fieldCorrelativeRules: []
-        }
-      }
-     */
-    // 编辑状态下的表单数据
-    editFormOptions: {
-      type: Object,
-      default: () => ({})
     },
     // 字段扩展属性
     extendedAttrs: {
@@ -112,17 +91,15 @@ export default {
     return {
       layout: this.layout,
       fieldsArr: this.fieldsArr,
-      fieldAttachedRule: this.fieldAttachedRule,
       extendedAttrs: this.extendedAttrs,
       generateFieldName: this.generateFieldName,
       dictionaryArr: this.dictionaryArr,
       loadDictList: this.loadDictList,
-      createSubFormBox: generateCreateSubFormFn(
-        this.generateFieldName,
-        this.extendedAttrs
-      ),
       getCorrelativeRules: () => {
         return this.fieldCorrelativeRules
+      },
+      getFieldAttachedRules: () => {
+        return this.fieldAttachedRule
       },
       scopedSlots: (field) => {
         return this.$scopedSlots.tag && this.$scopedSlots.tag(field)
@@ -146,71 +123,63 @@ export default {
     }
   },
   created() {
-    // 创建表单实例
-    Bus.initFormer()
     Bus.$on('add-field', this.handleAddField)
-    Bus.$on('add-subForm-field', this.handleAddSubFormField)
-    Bus.$on('add-subForm-colField', this.handleAddSubFormColField)
     Bus.$on('delete-field', this.handleDelField)
-    Bus.$on('delete-subForm-field', this.handleDelSubFormField)
-    Bus.$on('delete-subForm-colField', this.handleDelSubFormColField)
     Bus.$on('update-correlativeRules', this.handleUpdateCorrelativeRules)
     Bus.$on('empty-fields', this.handleEmpty)
 
     this.$on('hook:destroyed', () => {
-      Bus.$off('add-subForm-field')
-      Bus.$off('add-subForm-colField')
       Bus.$off('add-field')
       Bus.$off('delete-field')
-      Bus.$off('delete-subForm-field')
-      Bus.$off('delete-subForm-colField')
       Bus.$off('update-correlativeRules')
     })
   },
   methods: {
-    // 编辑初始化
-    editInitForm() {
-      if (!Object.keys(this.editFormOptions).length) return
+    /**
+     * 编辑初始化
+     * formData:
+     * {
+        form: [],
+        layout: {
+          layoutType: 'default',
+          pcLayout: {
+            layoutConfig: {}
+            rowsData: []
+          }
+        },
+        attachedRule: {
+          fieldAttachedRule: {},
+          fieldCorrelativeRules: []
+        }
+      }
+     */
+    initFormData(formData) {
+      if (!Object.keys(formData).length) return
+      // 重置表单实例
+      Bus.initFormer()
       this.fieldsArr.splice(0, this.fieldsArr.length)
-      const { layout, attachedRule, form } = this.editFormOptions
-      this.fieldAttachedRule = Object.assign(this.fieldAttachedRule, attachedRule.fieldAttachedRule || {})
-      this.fieldCorrelativeRules.push(
-        ...(attachedRule.fieldCorrelativeRules || [])
-      )
+      const { layout, attachedRule, form } = formData
+      this.fieldAttachedRule = attachedRule.fieldAttachedRule || {}
+      this.fieldCorrelativeRules = attachedRule.fieldCorrelativeRules || []
       const pcLayout = layout.pcLayout
       if (layout.layoutType === 'default') {
         Bus.$emit('set-layout-config', pcLayout.layoutConfig || {})
       }
       if (layout.layoutType !== 'singleField') {
-        // rowsData 结构数据因为明细子表在垂直模式下也被需要
         Bus.$emit('set-pc-rows', pcLayout.rowsData || [])
-        console.log('00000000000', layout.mobileLayout)
         Bus.$emit('set-mobile-rows', layout.mobileLayout || [])
       }
       this.fieldsArr.push(
-        ...form.map(f => this.syncFieldInitTo(f))
+        ...form.map(f => syncFieldInitTo(f))
       )
     },
     // 添加字段
-    handleAddField({ field }, virtual = false) {
+    handleAddField({ field }) {
       if (!['title', 'divider'].includes(field.type)) {
         this.$set(this.fieldAttachedRule, field.name, deepClone(this.defaultAttachedRule))
       }
       this.fieldsArr.push(field)
-      // 对于明细子表中的title则不应该添加到移动端布局数据
-      !virtual && Bus.$emit('add-m-field', field)
-    },
-    // 添加明细子表字段
-    handleAddSubFormField(field) {
-      this.$set(this.fieldAttachedRule, field.name, deepClone(this.defaultAttachedRule))
-      this.fieldsArr.push(field)
       Bus.$emit('add-m-field', field)
-    },
-    // 添加明细子表列表项字段
-    handleAddSubFormColField({ field, fieldName }) {
-      this.$set(this.fieldAttachedRule, field.name, deepClone(this.defaultAttachedRule))
-      const subFormField = this.fieldsArr.find(f => f.name === fieldName)
-      subFormField.columnFields.push(field)
     },
     // 删除字段
     handleDelField({ fieldKey }) {
@@ -221,13 +190,6 @@ export default {
       }
       this.handleDelCorrelativeRule(fieldKey)
       Bus.$emit('delete-m-field', fieldKey)
-    },
-    // 删除明细子表
-    handleDelSubFormField(fieldName) {
-      this.$delete(this.fieldAttachedRule, fieldName)
-      const index = this.fieldsArr.findIndex(f => f.name === fieldName)
-      this.fieldsArr.splice(index, 1)
-      this.handleDelCorrelativeRule(fieldName)
     },
     // 删除字段相关关联规则
     handleDelCorrelativeRule(fieldName) {
@@ -244,13 +206,6 @@ export default {
       })
       this.fieldCorrelativeRules = this.fieldCorrelativeRules
         .filter(item => item.conditions.length > 0)
-    },
-    // 删除明细子表列表项字段
-    handleDelSubFormColField({ fieldName, fieldKey }) {
-      this.$delete(this.fieldAttachedRule, fieldKey)
-      const subFormField = this.fieldsArr.find(f => f.name === fieldName)
-      const index = subFormField.findIndex(f => f.name === fieldKey)
-      subFormField.splice(index, 1)
     },
     // 更新字段关联规则
     handleUpdateCorrelativeRules(fieldCorrelativeRules) {
@@ -310,34 +265,34 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .smart_form-container {
   display: flex;
   height: 100%;
   user-select: none;
-  .smart_form-wrapper {
-    flex: 1;
-    height: 100%;
-    margin: 0 auto;
-    border: 1px solid #ebf0fe;
-    min-height: 600px;
-  }
-  .smart_form-components {
-    flex: 1;
-    min-width: 145px;
-    max-width: 300px;
-    height: 100%;
-    margin-right: 10px;
-    border: 1px solid #ebf0fe;
-  }
-  .smart_form-config {
-    flex: 1;
-    min-width: 250px;
-    max-width: 300px;
-    height: 100%;
-    margin-left: 10px;
-    border: 1px solid #ebf0fe;
-  }
+}
+.smart_form-container .smart_form-wrapper {
+  flex: 1;
+  height: 100%;
+  margin: 0 auto;
+  border: 1px solid #ebf0fe;
+  min-height: 600px;
+}
+.smart_form-container .smart_form-components {
+  flex: 1;
+  min-width: 145px;
+  max-width: 300px;
+  height: 100%;
+  margin-right: 10px;
+  border: 1px solid #ebf0fe;
+}
+.smart_form-container .smart_form-config {
+  flex: 1;
+  min-width: 250px;
+  max-width: 300px;
+  height: 100%;
+  margin-left: 10px;
+  border: 1px solid #ebf0fe;
 }
 .el-tabs {
   margin-top: -1px;

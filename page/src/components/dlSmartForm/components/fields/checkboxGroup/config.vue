@@ -70,7 +70,7 @@
 
 <script>
 import Draggable from 'vuedraggable'
-import { generateKey } from '@/components/dlSmartForm/utils'
+import { generateKey } from '../../../createForm/utils'
 export default {
   name: 'checkboxGroup-config',
   inject: ['dictionaryArr', 'loadDictList'],
@@ -160,25 +160,25 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .el-form {
   padding: 0 10px;
-  ::v-deep .el-form--label-top .el-form-item__label {
-    padding: 0;
-  }
-  .el-form-item {
-    margin-bottom: 10px;
-  }
+}
+.el-form >>> .el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+.el-form .el-form-item {
+  margin-bottom: 10px;
 }
 .draggable-options {
   padding: 0;
-  li {
-    margin-bottom: 10px;
-    line-height: 1;
-    label {
-      height: 28px;
-      line-height: 1;
-    }
-  }
+}
+.draggable-options li {
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.draggable-options li label {
+  height: 28px;
+  line-height: 1;
 }
 </style>

@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import FieldRules from '../fieldRules/index'
+import FieldRules from '../../../createForm/components/fieldRules'
 export default {
   name: 'arrayform-config',
   components: {
@@ -99,14 +99,14 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .arrayform-config .el-form {
   padding: 0 10px;
-  ::v-deep .el-form--label-top .el-form-item__label {
-    padding: 0;
-  }
-  .el-form-item {
-    margin-bottom: 10px;
-  }
+}
+.arrayform-config .el-form >>> .el-form--label-top .el-form-item__label {
+  padding: 0;
+}
+.el-form-item {
+  margin-bottom: 10px;
 }
 </style>

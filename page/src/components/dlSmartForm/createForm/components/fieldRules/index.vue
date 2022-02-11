@@ -45,7 +45,7 @@
                   v-model="conditionItem.judge"
                   @change="v=>conditionJudgeChange(v,conditionItem)">
                   <el-option
-                    v-for="judgeItem in fieldJudgeConfig[conditionItem.filedType || 'default'].options"
+                    v-for="judgeItem in fieldJudgeMap.get(conditionItem.valueType)"
                     :key="judgeItem.value"
                     :label="judgeItem.name"
                     :value="judgeItem.value">
@@ -89,7 +89,7 @@
                 <el-select
                   placeholder="请选择操作类型"
                   v-model="THandleItem.type"
-                  v-if="hasOptionsFields.includes(THandleItem.filedType)">
+                  v-if="THandleItem.optionsList">
                   <el-option
                     v-for="handleFieldItem in actionTypeOpt"
                     :key="handleFieldItem.value"

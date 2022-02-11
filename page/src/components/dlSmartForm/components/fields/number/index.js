@@ -6,6 +6,7 @@ export default {
     label: '数字输入',
     value: 0,
     editable: true,
+    insideForm: true, // 控件是否展示再表单组件内
     attrs: {
       placeholder: '占位符文字',
       min: undefined,

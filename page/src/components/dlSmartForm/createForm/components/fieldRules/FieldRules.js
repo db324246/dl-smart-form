@@ -1,8 +1,8 @@
 import Bus from '../../Bus'
-import fieldJudgeConfig from './fieldJudgeConfig'
+import fieldJudgeMap from './fieldJudgeMap'
 import JudgeValue from './components/JudgeValue.vue'
 import ValidateValue from './components/ValidateValue.vue'
-import { generateKey, deepClone } from '@/components/dlSmartForm/utils'
+import { generateKey, deepClone, typeOf } from '../../utils'
 export default {
   name: 'field-rules',
   components: {
@@ -27,9 +27,9 @@ export default {
   },
   data() {
     return {
+      fieldJudgeMap,
       fieldCorrelativeRules: [],
       dialogVisible: false,
-      fieldJudgeConfig,
       connectorList: [
         { type: 'connector', label: '并', value: '&&' },
         { type: 'connector', label: '或者', value: '||' },
@@ -96,6 +96,7 @@ export default {
         type: 'condition', // 类型为条件
         fieldName: '', // 字段name
         filedType: '', // 字段类型
+        valueType: undefined, // 值的类型
         judge: '', // 条件判断语句， 值的种类见下表 1.1
         value: '' // 用于条件判断的值， 条件判断语句为 “为空”、“不为空”时， 没有这个
       }
@@ -109,8 +110,8 @@ export default {
     conditionFieldChange(v, conditionItem) {
       const field = this.fieldList.find(field => field.name === v)
       conditionItem.filedType = field.type
-      const list = ['select', 'radioGroup', 'checkboxGroup', 'mulSelect']
-      if (list.includes(field.type)) { // 有option选项的
+      conditionItem.valueType = typeOf(field.value)
+      if (field.options && Array.isArray(field.options)) { // 有option选项的
         this.$set(conditionItem, 'optionsList', field.options)
       } else {
         this.$delete(conditionItem, 'optionsList')
@@ -130,6 +131,7 @@ export default {
         type: '', // 类型为条件
         fieldName: '', // 字段name
         filedType: '', // 字段类型
+        valueType: undefined, // 值的类型
         value: '',
         show: true,
         options: [] // 只有下拉的级联的时候会有这个字段
@@ -144,10 +146,9 @@ export default {
     THandleFieldChange(v, THandleItem) {
       const field = this.fieldList.find(field => field.name === v)
       THandleItem.filedType = field.type
-      const list = ['select', 'radioGroup', 'checkboxGroup', 'mulSelect']
-      if (list.includes(field.type)) { // 有option选项的
-        const optionsList = field.options
-        this.$set(THandleItem, 'optionsList', optionsList)
+      THandleItem.valueType = typeOf(field.value)
+      if (field.options && Array.isArray(field.options)) { // 有option选项的
+        this.$set(THandleItem, 'optionsList', field.options)
       } else {
         this.$delete(THandleItem, 'optionsList')
         THandleItem.options = []
@@ -160,8 +161,9 @@ export default {
         type: '', // 类型为条件
         fieldName: '', // 字段name
         filedType: '', // 字段类型
+        valueType: undefined, // 值的类型
         value: '',
-        show: true,
+        show: true, // 显示、隐藏
         options: [] // 只有下拉的级联的时候会有这个字段
       }
       rule.F_handle.push(deepClone(defaultJson))
@@ -174,10 +176,9 @@ export default {
     FHandleFieldChange(v, FHandleItem) {
       const field = this.fieldList.find(field => field.name === v)
       FHandleItem.filedType = field.type
-      const list = ['select', 'radioGroup', 'checkboxGroup', 'mulSelect']
-      if (list.includes(field.type)) { // 有option选项的
-        const optionsList = field.options
-        this.$set(FHandleItem, 'optionsList', optionsList)
+      FHandleItem.valueType = typeOf(field.value)
+      if (field.options && Array.isArray(field.options)) { // 有option选项的
+        this.$set(FHandleItem, 'optionsList', field.options)
       } else {
         this.$delete(FHandleItem, 'optionsList')
         FHandleItem.options = []

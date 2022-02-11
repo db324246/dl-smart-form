@@ -20,7 +20,7 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .field-te-t-tag-box {
   position: absolute;
   left: 10px;

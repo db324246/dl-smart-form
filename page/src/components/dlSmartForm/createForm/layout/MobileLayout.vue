@@ -20,14 +20,7 @@
         v-contextmenu:contextmenu
         @contextmenu.stop="handleContentFocus(field, index)"
         @click.stop="handleNodeFocus(field)">
-        <row-com
-          v-if="field.type === 'subform'"
-          :row-index="index"
-          :row-config="getSubformRow(field.domKey)"
-          :row-key="getSubformRow(field.domKey).key"
-          />
         <widget-item
-          v-else
           @click.native="handleContentEdit(field)"
           :field-name="field.name"
           :data-index="index">
@@ -54,7 +47,7 @@ import {
 
 export default {
   name: 'mobile-layout',
-  inject: ['layout', 'createSubFormBox'],
+  inject: ['layout'],
   components: {
     WidgetItem
   },
@@ -82,7 +75,7 @@ export default {
       return Bus.focusNodeKey
     },
     nodesMap() {
-      return Bus.former.nodesMap
+      return Bus.nodesMap
     },
     showFieldHandler() {
       return this.focusFieldIn && this.focusField
@@ -230,18 +223,10 @@ export default {
         Bus.$emit('empty-fields')
         this.rowsData.splice(0, this.rowsData.length)
       }
-      if (field.type === 'subform') {
-        if (this.layout === 'vertical') return this.$message.error('重复上报表单中无法创建明细子表')
-        this.createSubFormBox(-1)
-      } else {
-        Bus.$emit('add-field', { field })
-        Bus.$emit('edit-node', field)
-      }
+
+      Bus.$emit('add-field', { field })
+      Bus.$emit('edit-node', field)
       this.layout === 'vertical' && this.$emit('ver_add-field', field)
-    },
-    getSubformRow(domKey) {
-      const node = this.nodesMap.get(domKey)
-      return node
     },
     // 获取布局数据
     getLayout() {

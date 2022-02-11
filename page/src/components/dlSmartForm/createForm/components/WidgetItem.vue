@@ -5,48 +5,25 @@
       'is_req': curFieldAttachedRule.required
     }">
 
-    <!-- 重复上报 -->
-    <div class="citeform_box" v-if="fieldObj.type === 'arrayform'">
-      <div
-        class="citeform_box__title"
-        v-if="showLabel">
-        {{ fieldObj.label }}
-      </div>
-      <el-table border>
-        <el-table-column
-          :label="item.label"
-          :key="item.name"
-          v-for="item in fieldObj.attrs.tableColumns">
-        </el-table-column>
-      </el-table>
-    </div>
-
-    <!-- 标题/段落 -->
-    <div
-      v-else-if="fieldObj.type === 'title'"
-      class="el-title"
-      v-text="fieldObj.value"
-      :style="{
-        'font-size': fieldObj.attrs.fontSize,
-        'font-weight': fieldObj.attrs.fontWeight,
-        'color': fieldObj.attrs.color,
-        'background-color': fieldObj.attrs.backgroundColor
-      }">
-    </div>
-
-    <!-- 分割线 -->
-    <el-divider v-else-if="fieldObj.type === 'divider'"></el-divider>
-
     <el-form-item
+      v-if="fieldObj.insideForm"
       :label="showLabel ? fieldObj.label : ''"
-      :label-width="showLabel ? labelWidth : '0'"
-      v-else>
+      :label-width="showLabel ? labelWidth : '0'">
       <component
         :field-obj="fieldObj"
+        :show-label="showLabel"
         :template-style="getMediumWidth"
         :is="componentId">
       </component>
     </el-form-item>
+
+    <component
+      v-else
+      :show-label="showLabel"
+      :field-obj="fieldObj"
+      :template-style="getMediumWidth"
+      :is="componentId">
+    </component>
 
     <field-tag :field="fieldObj"></field-tag>
   </div>
@@ -64,7 +41,7 @@ export default {
     ...fieldTempComMap,
     ...store.customFieldTempMap
   },
-  inject: ['fieldAttachedRule', 'fieldsArr'],
+  inject: ['getFieldAttachedRules', 'fieldsArr'],
   props: {
     fieldName: {
       type: String,
@@ -77,6 +54,9 @@ export default {
     },
     componentId() {
       return this.fieldObj.type + '-template'
+    },
+    fieldAttachedRule() {
+      return this.getFieldAttachedRules()
     },
     curFieldAttachedRule() {
       const json = (this.fieldObj.name && this.fieldAttachedRule[this.fieldObj.name]) || {}
@@ -171,18 +151,6 @@ $primary-background-color: rgba(0, 191, 196,.01);
     }
   }
 }
-.citeform_box {
-  .citeform_box__title {
-    font-size: 14px;
-    padding: 10px 0 10px 20px;
-    &::before {
-      display: none;
-      content: '*';
-      color: #f56c6c;
-      margin-right: 4px;
-    }
-  }
-}
 .widget-view.is_req {
   .citeform_box__title::before {
     display: inline-block;
@@ -200,10 +168,5 @@ $primary-background-color: rgba(0, 191, 196,.01);
   ::v-deep .el-input__suffix-inner {
     pointer-events: none;
   }
-}
-.el-title {
-  padding: 5px 10px;
-  user-select: auto;
-  background-color: #efdebb;
 }
 </style>
