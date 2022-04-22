@@ -185,74 +185,6 @@
           </el-switch>
         </template>
 
-        <!-- 文件上传 -->
-        <template v-else-if="fieldType=='file'">
-          <uploader-view
-            v-if="fieldObj.attrs.filetype === 'attachement'"
-            v-model="fieldObj.value"
-            :params="uploaderFileParams"
-            :arrow-value="false"
-            :multiple="fieldObj.attrs.multiple"
-            :accept="fieldObj.attrs.customType"
-            :max-up-num="fieldObj.attrs.upMaxNum">
-          </uploader-view>
-          <images-by-upload
-            v-if="fieldObj.attrs.filetype === 'image'"
-            sham-delete
-            v-model="fieldObj.value">
-            <uploader-view
-              slot="before"
-              v-model="fieldObj.value"
-              :arrow-value="false"
-              :params="uploaderImgParams"
-              :hasFileList="false"
-              :max-up-num="fieldObj.attrs.upMaxNum"
-              :accept="['.png', '.jpg', '.jpeg', '.bmp']">
-              <div class="upload-hint" slot="uploadBtn">
-                <div class="upload-btn"></div>
-              </div>
-            </uploader-view>
-          </images-by-upload>
-        </template>
-
-        <!-- 证照上传 -->
-        <template v-else-if="fieldType == 'license'">
-          <edu-uploader-avatar
-            ref="eduUploaderAvatar"
-            v-model="fieldObj.value"
-            :pic-clicked="false"
-            :pic-rounded="false"
-            :onerror-pic="onerrorPic"
-            :params="uploaderAvatarParams">
-            <template>
-              <span>{{fieldObj.attrs.tips}}</span>
-            </template>
-            <template slot="rightAside">
-              <div class="uploadAvatar_btn">
-                <p class="sm-msg">
-                  {{fieldObj.attrs.tips}}
-                </p>
-                <el-button size='mini' type='primary' @click="$refs['eduUploaderAvatar'].showDialog()">{{fieldObj.attrs.btnText}}</el-button>
-              </div>
-            </template>
-          </edu-uploader-avatar>
-        </template>
-
-        <!-- 选人控件 -->
-        <template v-else-if="fieldType == 'personnel'">
-          <address-book
-            :style="getMediumWidth"
-            v-if="fieldObj.attrs.customRange.length"
-            v-model="fieldObj.value"
-            :self-range-data="fieldObj.attrs.customRange"
-            :config="computedConfig"/>
-          <address-book
-            v-else
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            :config="computedConfig"/>
-        </template>
-
         <field-tag :field="fieldObj"></field-tag>
       </el-form-item>
     </template>
@@ -262,30 +194,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import FieldTag from './FieldTag'
-import bizEnroll from '@/components/dlSmartForm/utils/framework/bizEnroll'
-import AddressBook from '@/components/EduAddressBook/index'
-import EduUploaderAvatar from '@/components/eduUploaderAvatar'
-import UploaderView from '@/components/GlobalUploader/UploaderView'
-import { generatePersonalConfig } from '@/components/dlSmartForm/utils'
-import ImagesByUpload from '@/common/sbjd/components/ImagesByUpload'
 import FieldDataCom from '@/components/dlSmartForm/showForm/components/FieldDataCom'
 
 export default {
   name: 'widget-item',
   components: {
     FieldTag,
-    FieldDataCom,
-    AddressBook,
-    UploaderView,
-    EduUploaderAvatar,
-    ImagesByUpload
+    FieldDataCom
   },
   inject: [
     'getFormId',
     'isEditable',
-    'isFieldShow',
-    'fileCode',
-    'loadDictList'
+    'isFieldShow'
   ],
   props: {
     fieldName: {
@@ -299,15 +219,6 @@ export default {
   },
   data() {
     return {
-      uploaderFileParams: bizEnroll(
-        'customForm-file', this.fileCode + this.fieldName
-      ),
-      uploaderImgParams: bizEnroll(
-        'customForm-image', this.fileCode + this.fieldName
-      ),
-      uploaderAvatarParams: bizEnroll(
-        'customForm-avatar', this.fileCode + this.fieldName
-      ),
       baseFieldTypes: ['input', 'textarea', 'number', 'date', 'time'], // 基础类型字段
       rangeFieldTypes: ['dateRange', 'timeRange'], // 范围类型的字段
       hasOptionsField: ['select', 'radioGroup', 'checkboxGroup', 'mulSelect'] // 拥有选项的字段类型
@@ -366,13 +277,6 @@ export default {
     labelWidth() {
       return `${this.curFieldAttachedRule.labelWidth || 100}px`
     },
-    // 计算选人控件配置参数
-    computedConfig() {
-      return generatePersonalConfig(this.fieldObj.attrs)
-    },
-    onerrorPic() {
-      return `this.onerror=null;this.src="${this.fieldObj.attrs.defaultImg}"`
-    },
     getMediumWidth() {
       if (this.curFieldAttachedRule.hasOwnProperty('mediumWidth') && this.curFieldAttachedRule.mediumWidth > 0) {
         return {
@@ -392,19 +296,6 @@ export default {
     }
   },
   async created() {
-    if (this.hasOptionsField.includes(this.fieldType)) {
-      if (this.fieldObj.attrs.bindDicts &&
-      this.fieldObj.attrs.constantId && this.loadDictList) {
-        try {
-          const data = await this.loadDictList(
-            this.fieldObj.attrs.constantId
-          )
-          this.fieldObj.options = data
-        } catch (err) {
-          console.log(err)
-        }
-      }
-    }
   }
 }
 </script>

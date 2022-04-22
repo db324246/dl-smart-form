@@ -1,136 +1,38 @@
-// import Bus from '../createForm/Bus'
+import allOriginField from '../components/fields'
+const allOriginField_Map = {}
+allOriginField.forEach(item => {
+  allOriginField_Map[item.field.type] = item.field
+})
+// 同步完善固定字段信息
+export const syncFieldInitTo = (syncField) => {
+  if (syncField) {
+    const field = Object.assign(
+      {},
+      deepClone(allOriginField_Map[syncField.type]),
+      deepClone(syncField))
+    if (!['objectform', 'arrayform'].includes(field.type)) return field
 
-// 比较新值和旧值是否有改动 返回更新后的值
-export const diffValue = (newVal, oldVal, deep = false) => {
-  const recursionDiffer = (newVal, oldVal, level) => {
-    level++
-    const newType = typeOf(newVal)
-    const oldType = typeOf(oldVal)
-    if (newType !== oldType) return deepClone(newVal)
-
-    let differ
-    switch (newType) {
-      case 'object':
-        differ = {}
-        for (const key in newVal) {
-          const differvalue = recursionDiffer(newVal[key], oldVal[key], level)
-          if (differvalue !== '__empty__value__') {
-            differ[key] = differvalue
-          }
+    console.log('field', field)
+    // 重复上报和数据子项添加默认的内部字段附属规则
+    if (!Object.keys(field.attrs.fieldAttachedRule).length) {
+      field.modelFields.forEach(f => {
+        field.attrs.fieldAttachedRule[f.name] = {
+          showLabel: true,
+          required: false
         }
-        return Object.keys(differ).length
-          ? differ
-          : '__empty__value__'
-      case 'array':
-        differ = []
-        newVal.forEach((val, index) => {
-          const differvalue = recursionDiffer(val, oldVal[index], level)
-          if (differvalue !== '__empty__value__') {
-            differ.push(differvalue)
-          }
-        })
-        if (!deep && level === 2) {
-          return differ.length
-            ? deepClone(newVal)
-            : '__empty__value__'
-        } else {
-          return differ.length
-            ? differ
-            : '__empty__value__'
-        }
-        // return differ.length
-        //   ? differ
-        //   : '__empty__value__'
-      default:
-        return newVal === oldVal
-          ? '__empty__value__'
-          : newVal
+      })
     }
-  }
 
-  const differ = recursionDiffer(newVal, oldVal, 0)
-  if (differ !== '__empty__value__') return differ
+    if (field.type === 'arrayform') {
+      if (!field.attrs.tableColumns.length) {
+        field.attrs.tableColumns = field.modelFields.slice()
+      }
+    }
 
-  const type = typeOf(newVal)
-  switch (type) {
-    case 'object':
-      return {}
-    case 'array':
-      return []
-    default:
-      return null
+    return field
   }
 }
 
-const personalTargetConfig = {
-  teacher: {
-    activeTab: 'org', // 首先展示的tab， 'org'组织人员，'unit'单位/学校，'group'常用组
-    target: 'user', // 最终指向，'user'代表用户, 'unit'代表学校、部门, 'all' 所有
-    org: { // 组织人员配置
-      show: true // 是否展示
-    },
-    unit: { // 单位/学校 配置
-      show: false, // 是否展示
-      isShowDepart: false, // 是否展示部门
-      isOnlyChoseDepart: false // 是否只选部门
-    },
-    group: { // 常用组配置
-      show: false // 是否展示
-    }
-  },
-  unit: {
-    activeTab: 'unit', // 首先展示的tab， 'org'组织人员，'unit'单位/学校，'group'常用组
-    target: 'unit', // 最终指向，'user'代表用户, 'unit'代表学校、部门, 'all' 所有
-    org: { // 组织人员配置
-      show: false // 是否展示
-    },
-    unit: { // 单位/学校 配置
-      show: true, // 是否展示
-      isShowDepart: false, // 是否展示部门
-      isOnlyChoseDepart: false // 是否只选部门
-    },
-    group: { // 常用组配置
-      show: false // 是否展示
-    }
-  },
-  student: {
-    activeTab: 'classStudent', // 首先展示的tab， 'org'组织人员，'unit'单位/学校，'group'常用组
-    target: 'user', // 最终指向，'user'代表用户, 'unit'代表学校、部门, 'all' 所有
-    org: { // 组织人员配置
-      show: false // 是否展示
-    },
-    unit: { // 单位/学校 配置
-      show: false, // 是否展示
-      isShowDepart: false, // 是否展示部门
-      isOnlyChoseDepart: false // 是否只选部门
-    },
-    group: { // 常用组配置
-      show: false // 是否展示
-    },
-    classStudent: { // 班级、学生配置
-      show: true, // 是否展示
-      isOnlyChoseClass: false // 是否只选班级
-    }
-  }
-}
-
-export const generatePersonalConfig = config => {
-  const {
-    isSingle,
-    placeholder,
-    rangeType,
-    target
-  } = config
-  return {
-    placeholder, // 按钮或点击input的提示性文字
-    dialogTitle: placeholder, // 弹出框标题
-    rangeType, // 范围类型，发布范围 'release' 还是 管理范围 'manage'
-    isSingle, // 是否单选
-    ...personalTargetConfig[target]
-  }
-}
-
-// ----------------------------------------
 // 深度克隆
 export function deepClone(source) {
   if (!source || typeof source !== 'object') {

@@ -1,4 +1,4 @@
-import { validateEmail, validatePhone, validateCardId, validateURL } from '@/components/dlSmartForm/utils/validate'
+import { validateEmail, validatePhone, validateCardId, validateURL } from '../utils/validate'
 
 const inputValideObj = {
   cardId: validateCardId,

@@ -257,21 +257,6 @@ export default {
       cursor: move;
     }
   }
-  .subForm-actions {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    height: 28px;
-    line-height: 28px;
-    background: #00bfc4;
-    z-index: 20;
-    i{
-      font-size: 14px;
-      color: #fff;
-      margin: 0 5px;
-      cursor: pointer;
-    }
-  }
 }
 .active-row {
   z-index: 1;

@@ -46,13 +46,18 @@ export const fieldConfigComMap = {}
 // 字段模板组件集合
 export const fieldTempComMap = {}
 
+// 字段上报组件集合
+export const fieldReportComMap = {}
+
 basicComponents.forEach(f => {
   Reflect.set(fieldConfigComMap, `${f.field.type}-config`, f.configComponent)
   Reflect.set(fieldTempComMap, `${f.field.type}-template`, f.templateComponent)
+  Reflect.set(fieldReportComMap, `${f.field.type}-report`, f.reportComponent)
 })
 layoutComponents.forEach(f => {
   Reflect.set(fieldConfigComMap, `${f.field.type}-config`, f.configComponent)
   Reflect.set(fieldTempComMap, `${f.field.type}-template`, f.templateComponent)
+  Reflect.set(fieldReportComMap, `${f.field.type}-report`, f.reportComponent)
 })
 
 // 所有元字段的类型集合

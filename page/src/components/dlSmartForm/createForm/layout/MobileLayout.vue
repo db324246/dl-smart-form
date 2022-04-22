@@ -135,6 +135,11 @@ export default {
     // 设置行数据
     setRows(rowsData = []) {
       console.log('rowsData', rowsData)
+      if (this.layout === 'vertical') {
+        rowsData.forEach(field => {
+          this.$emit('ver_add-field', field)
+        })
+      }
       this.rowsData.splice(0, this.rowsData.length)
       this.rowsData.push(
         ...rowsData

@@ -77,7 +77,7 @@ import {
 
 export default {
   name: 'flex-layout',
-  inject: ['fieldsArr', 'createSubFormBox'],
+  inject: ['fieldsArr'],
   data() {
     return {
       rowsData: [],
@@ -322,25 +322,21 @@ export default {
       const location = index === undefined
         ? this.rowsData.length
         : index
-      if (field.type === 'subform') {
-        const row = this.createSubFormBox(-1)
-        this.rowsData.splice(index, 0, row)
-      } else {
-        const defaultRow = createRow(-1)
-        const colData = defaultRow.children[0]
-        colData.children.push({
-          domtype: 'field',
-          parentKey: colData.key,
-          fieldName: field.name,
-          key: field.name
-        })
-        Bus.$emit('add-field', {
-          field,
-          domKey: colData.key
-        })
-        Bus.$emit('edit-node', field)
-        this.rowsData.splice(location, 0, defaultRow)
-      }
+
+      const defaultRow = createRow(-1)
+      const colData = defaultRow.children[0]
+      colData.children.push({
+        domtype: 'field',
+        parentKey: colData.key,
+        fieldName: field.name,
+        key: field.name
+      })
+      Bus.$emit('add-field', {
+        field,
+        domKey: colData.key
+      })
+      Bus.$emit('edit-node', field)
+      this.rowsData.splice(location, 0, defaultRow)
     },
     // 获取布局数据
     getLayout() {

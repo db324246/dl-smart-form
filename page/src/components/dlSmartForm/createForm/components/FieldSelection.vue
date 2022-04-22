@@ -52,7 +52,6 @@
       :close-on-click-modal='false'
       :before-close='handleClose'>
       <template v-if="customField.modelFields.length">
-
         <el-checkbox-group
           v-model="chooseFields"
           value-key="name">

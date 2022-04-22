@@ -1,42 +1,7 @@
 import Bus from './Bus'
-import allOriginField from '../components/fields'
 import { deepClone, typeOf } from '../utils'
 
 export { deepClone, typeOf }
-
-const allOriginField_Map = {}
-allOriginField.forEach(item => {
-  allOriginField_Map[item.field.type] = item.field
-})
-// 同步完善固定字段信息
-export const syncFieldInitTo = (syncField) => {
-  if (syncField) {
-    const field = Object.assign(
-      {},
-      deepClone(allOriginField_Map[syncField.type]),
-      deepClone(syncField))
-    if (!['objectform', 'arrayform'].includes(field.type)) return field
-
-    console.log('field', field)
-    // 重复上报和数据子项添加默认的内部字段附属规则
-    if (!Object.keys(field.attrs.fieldAttachedRule).length) {
-      field.modelFields.forEach(f => {
-        field.attrs.fieldAttachedRule[f.name] = {
-          showLabel: true,
-          required: false
-        }
-      })
-    }
-
-    if (field.type === 'arrayform') {
-      if (!field.attrs.tableColumns.length) {
-        field.attrs.tableColumns = field.modelFields.slice()
-      }
-    }
-
-    return field
-  }
-}
 
 // 关闭右击菜单
 export const hideContextMenu = () => {

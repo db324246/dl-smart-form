@@ -12,26 +12,23 @@
 <script>
 import Bus from './Bus'
 import { mapGetters } from 'vuex'
+import { syncFieldInitTo } from '../utils'
 import FlexLayout from './layout/FlexTableLayout/index'
 import VerticalLayout from './layout/VerticalLayout'
-import { syncFieldInitTo, computeCorrelativeRule, diffValue } from '../utils'
+import { computeCorrelativeRule, diffValue } from './utils'
 
 export default {
-  name: 'custom-form-report',
+  name: 'smart-form-report',
   components: {
     FlexLayout,
     VerticalLayout
   },
   provide() {
     return {
-      fileCode: this.fileCode,
       isEditable: this.isEditable,
       isFieldShow: this.isFieldShow,
       loadDictList: this.loadDictList,
-      arrayformWay: this.arrayformWay,
       arrayformSubmit: this.arrayformSubmit,
-      queryImportArrayformData: this.queryImportArrayformData,
-      getFormId: () => this.formId,
       getLayoutData: () => {
         return this.layoutData
       },
@@ -50,14 +47,6 @@ export default {
     }
   },
   props: {
-    formId: {
-      type: [String, Number],
-      default: 'root'
-    },
-    covered: {
-      type: Boolean,
-      default: true
-    },
     /**
      * default: 自定义布局
      * vertical: 垂直布局 - 针对于重复上报表单
@@ -94,10 +83,6 @@ export default {
     isFieldShow: {
       type: Function
     },
-    // 文件上传的标识符
-    fileCode: {
-      type: String
-    },
     /**
      * 获取字典项的操作函数
      * 函数应返回一个resolve 状态的 Promise，并传递字典选项数组
@@ -110,11 +95,6 @@ export default {
       type: Function,
       default: null
     },
-    // 重复上报表单使用 上报方式 true  选择方式 false
-    arrayformWay: {
-      type: Boolean,
-      default: true
-    },
     /**
      * 重复上报提交函数 返回一个Promise
      * 一个默认参数 { done(), field, data, type }
@@ -126,21 +106,6 @@ export default {
     arrayformSubmit: {
       type: Function,
       default: null
-    },
-    /**
-     * 获取重复上报的导入的分页数据
-     * 函数应返回一个resolve 状态的 Promise，并传递导入的数据分页数组和统计
-     * data： {
-     *   records: [...],
-     *   total: 10
-     * }
-     */
-    queryImportArrayformData: {
-      type: Function,
-      default: () => Promise.resolve({
-        records: [],
-        total: 0
-      })
     }
   },
   data() {
@@ -157,16 +122,13 @@ export default {
       'getRuleShow'
     ]),
     fieldsMap() {
-      return this.getFields(this.formId)
+      // return this.getFields(this.formId)
     },
     ruleShow() {
-      return this.getRuleShow(this.formId)
+      // return this.getRuleShow(this.formId)
     }
   },
   watch: {
-    formId() {
-      this.loadingForm = true
-    },
     attachedRule: {
       handler(val) {
         this.fieldAttachedRule = val.fieldAttachedRule || {}
@@ -181,28 +143,15 @@ export default {
     initReportForm() {
       this.loadingForm = true
       this.$nextTick(() => {
-        // 注册仓库表单实例
-        this.$store.dispatch('customForm/registerCoutomFormer', {
-          formId: this.formId,
-          covered: this.covered
-        })
-        this.$store.commit('customForm/setReportData', {
-          formId: this.formId,
-          reportData: this.reportData
-        })
+        Bus.setReportData(this.reportData)
         // 计算保存关联规则
-        computeCorrelativeRule(this.formId, this.fieldCorrelativeRules)
+        const correlativeRuleMap = computeCorrelativeRule(this.fieldCorrelativeRules)
+        Bus.setCorrelativeRuleMap(correlativeRuleMap)
         // 存储字段附属规则
-        this.$store.commit('customForm/setAttachedRule', {
-          formId: this.formId,
-          fieldAttachedRule: this.fieldAttachedRule
-        })
+        Bus.setAttachedRule(this.fieldAttachedRule)
 
         this.form.forEach(f => {
-          this.$store.dispatch('customForm/setField', {
-            formId: this.formId,
-            field: syncFieldInitTo(f)
-          })
+          Bus.setField(syncFieldInitTo(f))
         })
         setTimeout(() => {
           this.loadingForm = false

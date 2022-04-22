@@ -103,51 +103,6 @@
         <el-button type='primary' @click='handleSave'>确 定</el-button>
       </span>
     </el-dialog>
-
-    <!-- 导入对话框 -->
-    <el-dialog
-      :title='fieldObj.label'
-      :visible.sync='importDialogVisible'
-      width='580px'
-      :close-on-click-modal='false'
-      :before-close='handleImportClose'>
-      <div class="edu-toolbars__btns">
-        <el-button class="edu-toolbars__item">
-          <!-- <svg-icon icon-class="add" /> -->
-          新建记录
-        </el-button>
-      </div>
-      <el-table
-        :data='importTableData'
-        style='width: 100%'
-        @selection-change="handleChange">
-        <el-table-column
-          type="selection"
-          width="50">
-        </el-table-column>
-        <el-table-column
-          :label="item.label"
-          :key="item.name"
-          v-for="item in fieldObj.attrs.tableColumns">
-        </el-table-column>
-      </el-table>
-
-      <div class='pagination-container'>
-        <el-pagination
-          @size-change='handleSizeChange'
-          @current-change='handleCurrentChange'
-          :current-page='queryPage.pageNumber'
-          :page-sizes='[10, 20, 50, 100]'
-          :page-size='queryPage.pageSize'
-          layout='total, sizes, prev, pager, next, jumper'
-          :total='total'>
-        </el-pagination>
-      </div>
-      <span slot='footer' class='dialog-footer'>
-        <el-button @click='handleImportClose'>取 消</el-button>
-        <el-button type='primary' @click='handleSaveImport' :disabled="isDisabled">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -165,9 +120,7 @@ export default {
   inject: [
     'fileCode',
     'isEditable',
-    'arrayformWay',
-    'arrayformSubmit',
-    'queryImportArrayformData'
+    'arrayformSubmit'
   ],
   props: {
     fieldObj: {
@@ -181,19 +134,11 @@ export default {
   data() {
     return {
       isDisabled: false,
-      queryPage: {
-        pageNumber: 1,
-        pageSize: 10
-      },
-      importFlag: false,
       editFlag: false,
       formDialogVisible: false,
-      importDialogVisible: false,
       detailDialogVisible: false,
       detailData: {},
       reportData: {},
-      importTableData: [],
-      total: 0,
       selectionData: []
     }
   },
@@ -206,9 +151,7 @@ export default {
       }
     },
     buttonTitle() {
-      return this.arrayformWay
-        ? `新建${this.fieldObj.label}`
-        : `选择${this.fieldObj.label}`
+      return `新建${this.fieldObj.label}`
     },
     dialogTitle() {
       return `${this.fieldObj.label}${this.editFlag ? '编辑' : '新增'}`
@@ -231,17 +174,11 @@ export default {
     },
     // 新建数据
     async handleAddData() {
-      if (this.arrayformWay) {
-        this.formDialogVisible = true
-        this.isDisabled = false
-        this.$nextTick(() => {
-          this.$refs.customFormReport.initReportForm()
-        })
-      } else {
-        await this.getList()
-        this.importDialogVisible = true
-        this.importFlag = true
-      }
+      this.formDialogVisible = true
+      this.isDisabled = false
+      this.$nextTick(() => {
+        this.$refs.customFormReport.initReportForm()
+      })
     },
     // 编辑记录
     handleEdit(data) {
@@ -301,9 +238,7 @@ export default {
               : '',
             ...data
           },
-          type: this.importFlag
-            ? 'import'
-            : (this.editFlag ? 'modify' : 'add')
+          type: this.editFlag ? 'modify' : 'add'
         })
       } catch (error) {
         console.log(error)
@@ -313,52 +248,17 @@ export default {
     handleChange(selection) {
       this.selectionData = selection
     },
-    // 保存导入
-    handleSaveImport() {
-      this.selectionData.forEach(
-        this.insertData
-      )
-      this.handleImportClose()
-    },
     // 操作数据
     insertData(data) {
       this.fieldObj.value.unshift(data)
     },
-    handleImportClose() {
-      this.importDialogVisible = false
-    },
     async handleClose(data) {
-      if (this.importFlag) {
-        await this.getList()
-      } else if (data) {
+      if (data) {
         this.insertData(data)
       }
       this.formDialogVisible = false
-      this.importFlag = false
       this.editFlag = false
       this.reportData = {}
-    },
-    // 获取重复上报的导入的分页数据
-    async getList() {
-      try {
-        const { records, total } = await this.queryImportArrayformData(
-          this.queryPage
-        )
-        this.importTableData = records
-        this.total = total
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    // 导入的数据分页
-    handleSizeChange(val) {
-      this.queryPage.pageSize = val
-      this.queryPage.pageNumber = 1
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.queryPage.pageNumber = val
-      this.getList()
     }
   }
 }

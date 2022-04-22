@@ -6,8 +6,8 @@ import 'v-contextmenu/dist/index.css'
 import RowCom from './createForm/layout/FlexTableLayout/RowCom'
 import ColCom from './createForm/layout/FlexTableLayout/ColCom'
 // import CustomFormShow from './showForm'
-// import CustomFormReport from './reportForm'
-// import ArrayformField from './reportForm/components/ArrayformField'
+import CustomFormReport from './reportForm'
+import ArrayformField from './reportForm/components/ArrayformField'
 
 // 安装智能表单（创建）
 export const createrInstaller = {
@@ -40,19 +40,19 @@ export const createrInstaller = {
 //   }
 // }
 
-// // 安装智能表单（上报）
-// export const reporterInstaller = {
-//   install(Vue) {
-//     Vue.component(CustomFormReport.name, CustomFormReport)
-//     Vue.component(ArrayformField.name, ArrayformField)
-//   }
-// }
+// 安装智能表单（上报）
+export const reporterInstaller = {
+  install(Vue) {
+    Vue.component(CustomFormReport.name, CustomFormReport)
+    Vue.component(ArrayformField.name, ArrayformField)
+  }
+}
 
 // 全部安装
 export default {
   install(Vue) {
     createrInstaller.install(Vue)
     // showerInstaller.install(Vue)
-    // reporterInstaller.install(Vue)
+    reporterInstaller.install(Vue)
   }
 }

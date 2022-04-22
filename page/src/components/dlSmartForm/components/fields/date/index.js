@@ -1,6 +1,7 @@
 export default {
   templateComponent: () => import('./template'), // 模板组件
   configComponent: () => import('./config'), // 配置组件
+  reportComponent: () => import('./report'), // 上报组件
   field: {
     type: 'date',
     label: '日期选择器',
