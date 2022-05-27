@@ -2,6 +2,10 @@
   <div class='judge-value'>
     <!-- C_value修改值，字段filedType为'input', 'textarea', 'number' -->
     <template v-if="handleItem.type === 'C_value'">
+      <component
+        :is='componentId'
+        :field-obj="copyField">
+      </component>
       <!-- 数组 类型 -->
       <el-select
         v-if="handleItem.valueType === 'array'"
@@ -46,6 +50,15 @@
         active-color="#13ce66"
         inactive-color="#ff4949">
       </el-switch>
+      <!-- 开关 类型 -->
+      <el-date-picker
+        v-if="condition.filedType === 'dateRange'"
+        v-model="condition.value"
+        :type="dateType"
+        :format="curFieldAttrs.format"
+        :value-format="curFieldAttrs.format"
+        placeholder="请选择日期">
+      </el-date-picker>
     </template>
 
     <!-- C_show显示、隐藏 -->
@@ -72,27 +85,48 @@
 </template>
 
 <script>
+import { deepClone } from '../../../../utils'
+import { fieldReportComMap } from '../../../../components/fields'
 export default {
   name: 'judge-value',
+  components: {
+    ...fieldReportComMap
+  },
   props: {
     handleItem: {
       props: Object,
       required: true
+    },
+    fieldList: {
+      type: Array,
+      default: () => ([])
     }
   },
   data() {
     return {
-      singleSelect: ['select', 'radioGroup'],
-      multipleSelect: ['mulSelect', 'checkboxGroup'],
-      textInput: ['input', 'textarea']
+      copyField: {}
     }
   },
   computed: {
     filedType() {
       return this.handleItem.filedType || ''
+    },
+    curField() {
+      return this.fieldList.find(f => f.name === this.condition.fieldName) || {}
+    },
+    computedField: {
+      get() {
+        return this.copyField
+      },
+      set(f) {
+        this.copyField = f
+      }
     }
   },
   watch: {
+    'condition.fieldName'(val) {
+      this.copyField = deepClone(this.curField)
+    },
     'handleItem.type'(val) {
       if (val === 'C_value' &&
       this.filedType === 'switch' &&

@@ -42,7 +42,16 @@
       class="width200"
       v-else-if="containList.includes(condition.judge)"
       key="contains">
+      <el-date-picker
+        v-if="condition.filedType === 'dateRange'"
+        v-model="condition.value"
+        :type="dateType"
+        :format="curFieldAttrs.format"
+        :value-format="curFieldAttrs.format"
+        placeholder="请选择日期">
+      </el-date-picker>
       <el-select
+        v-else
         multiple
         v-model="condition.value"
         placeholder="请选择值"
@@ -79,6 +88,10 @@ export default {
     condition: {
       type: Object,
       default: () => ({})
+    },
+    fieldList: {
+      type: Array,
+      default: () => ([])
     }
   },
   data() {
@@ -94,6 +107,16 @@ export default {
     },
     filedType() {
       return this.condition.filedType || ''
+    },
+    curField() {
+      return this.fieldList.find(f => f.name === this.condition.fieldName) || {}
+    },
+    curFieldAttrs() {
+      return this.curField.attrs || {}
+    },
+    dateType() {
+      if (this.condition.filedType !== 'dateRange') return ''
+      return this.curFieldAttrs.comType.replace('range', '')
     }
   }
 }
@@ -110,5 +133,8 @@ export default {
 .el-switch {
   padding-top: 10px;
   margin-right: 50px;
+}
+.el-date-picker >>> .el-date-editor.el-input__inner {
+  width: 190px;
 }
 </style>

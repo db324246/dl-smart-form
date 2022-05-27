@@ -37,13 +37,10 @@ export default {
   watch: {
     'form.attrs.comType'(val) {
       switch (val) {
-        case 'date':
+        case 'daterange':
           this.form.attrs.format = 'yyyy-MM-dd'
           break;
-        case 'month':
-          this.form.attrs.format = 'yyyy-MM'
-          break;
-        case 'datetime':
+        case 'datetimerange':
           this.form.attrs.format = 'yyyy-MM-dd HH:mm'
           break;
       }

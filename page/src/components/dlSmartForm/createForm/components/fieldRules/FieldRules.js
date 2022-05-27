@@ -35,15 +35,6 @@ export default {
         { type: 'connector', label: '或者', value: '||' },
         { type: 'connector', label: '异或', value: '^' }
       ],
-      actionTypeOpt: [
-        { label: '修改值', value: 'C_value' },
-        { label: '显示隐藏', value: 'C_show' },
-        { label: '修改选项列表', value: 'C_options' }
-      ],
-      actionTypeOpt2: [
-        { label: '修改值', value: 'C_value' },
-        { label: '显示隐藏', value: 'C_show' }
-      ],
       fieldCorrelativeRulesOld: [] // 旧的数据--如果设置了关联关系。然后点击取消、或者关闭的弹窗。要用旧的数据覆盖
     }
   },

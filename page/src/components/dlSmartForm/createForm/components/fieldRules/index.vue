@@ -2,7 +2,7 @@
   <el-dialog
     title="设置表单关联规则"
     :visible.sync="dialogVisible"
-    width="850px"
+    width="900px"
     id="dialogVisible"
     :close-on-click-modal='false'
     :append-to-body="true">
@@ -53,7 +53,8 @@
                 </el-select>
 
                 <!-- 选择条件 -->
-                <validate-value :condition="conditionItem">
+                <validate-value :condition="conditionItem"
+                  :field-list="fieldList">
                 </validate-value>
 
                 <div class="widget-view-action">
@@ -88,24 +89,21 @@
                 <!-- 操作类型 -->
                 <el-select
                   placeholder="请选择操作类型"
-                  v-model="THandleItem.type"
-                  v-if="THandleItem.optionsList">
-                  <el-option
-                    v-for="handleFieldItem in actionTypeOpt"
-                    :key="handleFieldItem.value"
-                    :label="handleFieldItem.label"
-                    :value="handleFieldItem.value">
+                  v-model="THandleItem.type">
+                  <el-option label="修改值" value="C_value">
+                  </el-option>
+                  <el-option label="显示隐藏" value="C_show">
+                  </el-option>
+                  <el-option v-if="THandleItem.optionsList"
+                    label="修改选项列表"
+                    value="C_options">
                   </el-option>
                 </el-select>
-                <el-select
-                  placeholder="请选择操作类型"
-                  v-model="THandleItem.type"
-                  v-else>
-                  <el-option v-for="handleFieldItem in actionTypeOpt2" :key="handleFieldItem.value" :label="handleFieldItem.label" :value="handleFieldItem.value"> </el-option>
-                </el-select>
-                <!-- 操作类型 -->
 
-                <judge-value :handle-item="THandleItem"></judge-value>
+                <!-- 操作结果 -->
+                <judge-value :handle-item="THandleItem"
+                  :field-list="fieldList">
+                </judge-value>
 
                 <div class="widget-view-action">
                   <i class="el-icon-delete" title="删除" @click.stop="delTHandle(rule, THandleIndex)"></i>
@@ -140,29 +138,21 @@
                 <!-- 操作类型 -->
                 <el-select
                   placeholder="请选择操作类型"
-                  v-model="FHandleItem.type"
-                  v-if="FHandleItem.optionsList">
-                  <el-option
-                    v-for="handleFieldItem in actionTypeOpt"
-                    :key="handleFieldItem.value"
-                    :label="handleFieldItem.label"
-                    :value="handleFieldItem.value">
+                  v-model="FHandleItem.type">
+                  <el-option label="修改值" value="C_value">
+                  </el-option>
+                  <el-option label="显示隐藏" value="C_show">
+                  </el-option>
+                  <el-option v-if="FHandleItem.optionsList"
+                    label="修改选项列表"
+                    value="C_options">
                   </el-option>
                 </el-select>
-                <el-select
-                  placeholder="请选择操作类型"
-                  v-model="FHandleItem.type"
-                  v-else>
-                  <el-option
-                    v-for="handleFieldItem in actionTypeOpt2"
-                    :key="handleFieldItem.value"
-                    :label="handleFieldItem.label"
-                    :value="handleFieldItem.value">
-                  </el-option>
-                </el-select>
-                <!-- 操作类型 -->
 
-                <judge-value :handle-item="FHandleItem"></judge-value>
+                <!-- 操作结果 -->
+                <judge-value :handle-item="FHandleItem"
+                  :field-list="fieldList">
+                </judge-value>
 
                 <div class="widget-view-action">
                   <i class="el-icon-delete" title="删除" @click.stop="delFHandle(rule, FHandleIndex)"></i>
