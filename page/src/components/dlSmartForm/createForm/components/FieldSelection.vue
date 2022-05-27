@@ -1,7 +1,7 @@
 <template>
   <div class='field-selection'>
     <smart-title title="字段选择"></smart-title>
-    <el-collapse v-model="activeNames" accordion>
+    <el-collapse v-model="activeNames">
       <el-collapse-item
         v-for="item in showOriginFields"
         :key="item.key"
@@ -10,6 +10,9 @@
         <div :ref="`drag-wrapper_${item.key}`" class="drag-wrapper">
           <div
             class="field-component drag-item"
+            :class="{
+              'array-com': com.field.type === 'arrayform'
+            }"
             :key="'base' + index"
             v-for="(com, index) in item.components">
             <span>{{com.field.label}}</span>
@@ -18,60 +21,26 @@
         </div>
       </el-collapse-item>
 
-      <template v-if="layout !== 'singleField'">
-        <el-collapse-item
-          v-for="(item, index) in customFields"
-          :key="index"
-          :title="item.groupName" :name="item.groupName">
+      <el-collapse-item
+        v-for="(item, index) in customFields"
+        :key="index"
+        :title="item.groupName" :name="item.groupName">
+        <div
+          :ref="`drag-wrapper_${item.groupKey}`"
+          class="drag-wrapper">
           <div
-            :ref="`drag-wrapper_${item.groupKey}`"
-            class="drag-wrapper">
-            <div
-              v-for="(field, index) in item.fields"
-              class="field-component"
-              :class="{
-                'drag-item': field.type !== 'objectform',
-                'complex-com': complexFields.includes(field.type),
-                'array-com': field.type === 'arrayform',
-              }"
-              :key="item.groupKey + index"
-              @click="quoteCustomFields(field)">
-              <span>{{field.label}}</span>
-            </div>
-            <div class="field-component hide-com"></div>
+            v-for="(com, index) in item.components"
+            class="field-component drag-item"
+            :class="{
+              'array-com': com.field.type === 'arrayform'
+            }"
+            :key="item.groupKey + index">
+            <span>{{com.field.label}}</span>
           </div>
-        </el-collapse-item>
-      </template>
+          <div class="field-component hide-com"></div>
+        </div>
+      </el-collapse-item>
     </el-collapse>
-
-    <!-- 勾选数据子项的字段 -->
-    <el-dialog
-      :title='dialogTitle'
-      :visible.sync='dialogVisible'
-      width='580px'
-      :close-on-click-modal='false'
-      :before-close='handleClose'>
-      <template v-if="customField.modelFields.length">
-        <el-checkbox-group
-          v-model="chooseFields"
-          value-key="name">
-          <el-checkbox
-            v-for="field in customField.modelFields"
-            :key="field.name"
-            :label="field"
-            border
-            class="field-item"
-            :disabled="choosedFieldKeys.includes(field.name)">
-            {{field.label}}
-          </el-checkbox>
-        </el-checkbox-group>
-      </template>
-      <div v-else class="empty-tip">暂无字段</div>
-      <span slot='footer' class='dialog-footer'>
-        <el-button @click='handleClose'>取 消</el-button>
-        <el-button type='primary' @click='handleSave'>确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -81,7 +50,7 @@ import store from '../../store'
 import Sortable from 'sortablejs'
 import { deepClone, syncFieldInitTo } from '../utils'
 import smartTitle from '../../components/smartTitle'
-import { basicComponents, layoutComponents } from '../../components/fields'
+import { basicComponents, advanceComponents, layoutComponents } from '../../components/fields'
 export default {
   name: 'field-selection',
   components: {
@@ -102,11 +71,11 @@ export default {
           title: '基础字段',
           components: basicComponents
         },
-        // high: {
-        //   key: 'high',
-        //   title: '高级字段',
-        //   components: advanceComponents
-        // },
+        high: {
+          key: 'high',
+          title: '高阶字段',
+          components: advanceComponents
+        },
         layout: {
           key: 'layout',
           title: '布局字段',
@@ -114,16 +83,8 @@ export default {
         }
       },
       complexFields: [
-        'arrayform',
-        'objectform'
-      ],
-      customField: {
-        modelFields: []
-      },
-      dialogVisible: false,
-      draggedObjectFormKeys: [], // 已经拖拽使用过数据子项字段
-      choosedFieldKeys: [], // 已经添加到表单的字段
-      chooseFields: [] // 本次选择的字段
+        'arrayform'
+      ]
     }
   },
   computed: {
@@ -132,12 +93,6 @@ export default {
     },
     showOriginFields() {
       return this.$parent.showOriginFields.map(item => this.originFieldsConfig[item]).filter(item => item)
-    },
-    dialogTitle() {
-      return this.customField && this.customField.label
-    },
-    chooseFieldKeys() {
-      return this.chooseFields.map(field => field.name)
     }
   },
   created() {
@@ -156,15 +111,11 @@ export default {
   methods: {
     // 计算字段字段
     computedCoustomFields() {
-      if (this.layout === 'singleField') return
-
       this.$nextTick(() => {
         this.customFields.forEach(item => {
           Sortable.create(
-            this.$refs['drag-wrapper_' + item.groupName][0],
-            this.genenrateConfig(
-              item.fields.map(field => ({ field }))
-            )
+            this.$refs['drag-wrapper_' + item.groupKey][0],
+            this.genenrateConfig(item.components)
           )
         })
       })
@@ -176,51 +127,6 @@ export default {
           this.genenrateConfig(item.components)
         )
       })
-    },
-    // 监听删除字段
-    handleDelField({ fieldKey }) {
-      const index = this.choosedFieldKeys.indexOf(fieldKey)
-      if (index >= 0) {
-        this.choosedFieldKeys.splice(index, 1)
-      }
-    },
-    // 引用数据子项的字段
-    quoteCustomFields(field) {
-      if (field.type !== 'objectform') return
-      this.customField = field
-      this.chooseFields.push(
-        ...this.customField.modelFields
-          .filter(f => {
-            if (this.choosedFieldKeys.includes(f.name)) return true
-            if (this.fieldsArr.some(field => field.name === f.name)) {
-              this.choosedFieldKeys.push(f.name)
-              return true
-            }
-            return false
-          })
-      )
-      this.$nextTick(() => {
-        this.dialogVisible = true
-      })
-    },
-    // 关闭对话框
-    handleClose() {
-      this.dialogVisible = false
-      this.$nextTick(() => {
-        this.chooseFields = []
-      })
-    },
-    // 确定选择
-    handleSave() {
-      this.chooseFields.forEach(field => {
-        if (!this.choosedFieldKeys.includes(field.name)) {
-          this.choosedFieldKeys.push(field.name)
-          Bus.$emit('insert-field', {
-            ...field
-          })
-        }
-      })
-      this.handleClose()
     },
     // 开始拖拽
     handleDragStart(evt, components) {
@@ -264,6 +170,7 @@ export default {
   height: 100%;
   padding-bottom: 50px;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 .smart-title >>> .smart-title__name{
   font-size: 18px;

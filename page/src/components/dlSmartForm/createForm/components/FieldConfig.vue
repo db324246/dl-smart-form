@@ -10,11 +10,12 @@
         v-else
         :form="filedData"
         :is="componentId"
-        :disabled="!filedData.editable">
+        :disabled="!filedData.configurable">
       </component>
 
+      <!-- 非单字段模式 && 字段name && 表单字段 -->
       <el-form
-        v-if="layout !== 'singleField' && filedData.name"
+        v-if="layout !== 'singleField' && filedData.name && filedData.isFormField"
         label-position="top"
         class="attache-rule-form">
         <el-form-item >
@@ -33,9 +34,17 @@
           <div>
             标题宽度：<el-input type="number" v-model.number="fieldRule.labelWidth" min="1"></el-input>
           </div>
-
           <div>
             内容宽度：<el-input type="number" v-model.number="fieldRule.mediumWidth" min="0"></el-input>
+          </div>
+          <div>
+            标题对齐方式：
+            <el-select v-model="fieldRule.labelPosition" placeholder="请选择">
+              <el-option value="left" label="左对齐"></el-option>
+              <el-option value="right" label="右对齐"></el-option>
+              <el-option value="justify" label="两边对齐"></el-option>
+              <el-option value="top" label="顶部对齐"></el-option>
+            </el-select>
           </div>
         </el-form-item>
       </el-form>
@@ -65,7 +74,7 @@ export default {
   data() {
     return {
       filedData: {
-        editable: true,
+        configurable: true,
         type: 'default'
       },
       hasNoAttachRuleFields
@@ -88,14 +97,14 @@ export default {
   created() {
     Bus.$on('edit-node', (field) => {
       this.filedData = field || {
-        editable: true,
+        configurable: true,
         type: 'default'
       }
     })
     Bus.$on('delete-field', ({ fieldKey }) => {
       if (fieldKey === this.filedData.name) {
         this.filedData = {
-          editable: true,
+          configurable: true,
           type: 'default'
         }
       }
@@ -118,8 +127,9 @@ export default {
 }
 .field-config .field-config-wrapper {
   padding-bottom: 50px;
-  max-height: calc(100% - 40px);
+  max-height: calc(100% - 43px);
   overflow-y: auto;
+  box-sizing: border-box;
 }
 .field-config .attache-rule-form {
   padding: 0 10px;

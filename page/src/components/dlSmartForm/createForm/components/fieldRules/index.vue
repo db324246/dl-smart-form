@@ -2,7 +2,7 @@
   <el-dialog
     title="设置表单关联规则"
     :visible.sync="dialogVisible"
-    width="800px"
+    width="850px"
     id="dialogVisible"
     :close-on-click-modal='false'
     :append-to-body="true">
@@ -30,7 +30,7 @@
                     <el-option v-for="connectorItem in connectorList" :key="connectorItem.label" :label="connectorItem.value" :value="connectorItem.value" > </el-option>
                   </el-select>
                 </div>
-                <el-select placeholder="请选择字段" v-model="conditionItem.fieldName" @change="v=>conditionFieldChange(v,conditionItem)">
+                <el-select placeholder="请选择字段" v-model="conditionItem.fieldName" @change="conditionFieldChange($event, conditionItem)">
                   <el-option
                     v-for="fieldItem in fieldList"
                     :key="fieldItem.name"
@@ -43,7 +43,7 @@
                 <el-select
                   placeholder="请选择条件"
                   v-model="conditionItem.judge"
-                  @change="v=>conditionJudgeChange(v,conditionItem)">
+                  @change="conditionJudgeChange($event, conditionItem)">
                   <el-option
                     v-for="judgeItem in fieldJudgeMap.get(conditionItem.valueType)"
                     :key="judgeItem.value"
@@ -51,8 +51,8 @@
                     :value="judgeItem.value">
                   </el-option>
                 </el-select>
-                <!-- 选择条件 -->
 
+                <!-- 选择条件 -->
                 <validate-value :condition="conditionItem">
                 </validate-value>
 
@@ -76,7 +76,7 @@
                 <el-select
                   placeholder="请选择字段"
                   v-model="THandleItem.fieldName"
-                  @change="v=>THandleFieldChange(v,THandleItem)">
+                  @change="THandleFieldChange($event, THandleItem)">
                   <el-option
                     v-for="fieldItem in fieldList"
                     :key="fieldItem.name"
@@ -128,7 +128,7 @@
                 <el-select
                   placeholder="请选择字段"
                   v-model="FHandleItem.fieldName"
-                  @change="v=>FHandleFieldChange(v,FHandleItem)">
+                  @change="FHandleFieldChange($event, FHandleItem)">
                   <el-option
                     v-for="fieldItem in fieldList"
                     :key="fieldItem.name"
@@ -141,7 +141,7 @@
                 <el-select
                   placeholder="请选择操作类型"
                   v-model="FHandleItem.type"
-                  v-if="hasOptionsFields.includes(FHandleItem.filedType)">
+                  v-if="FHandleItem.optionsList">
                   <el-option
                     v-for="handleFieldItem in actionTypeOpt"
                     :key="handleFieldItem.value"

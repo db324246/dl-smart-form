@@ -1,11 +1,11 @@
 <template>
-  <div class="page-container">
-    <div class="page-header">
+  <div class="Home-container">
+    <div class="Home-header">
       <el-button @click="handleLog">打印表单数据</el-button>
       <el-button @click="handleExport">导出表单数据</el-button>
       <el-button @click="handleImport">导入表单数据</el-button>
     </div>
-    <div class="page-body">
+    <div class="Home-body">
       <smart-form-create
         ref="createForm"
         layout="vertical">
@@ -47,16 +47,16 @@ export default {
 </script>
 
 <style scoped>
-.page-container {
-  height: 100vh;
+.Home-container {
+  height: calc(100vh - 70px);
 }
-.page-header {
+.Home-header {
   display: flex;
   align-items: center;
   padding: 0 20px;
   height: 50px;
 }
-.page-body {
+.Home-body {
   height: calc(100% - 50px);
 }
 </style>

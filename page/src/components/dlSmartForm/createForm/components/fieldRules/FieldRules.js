@@ -44,24 +44,12 @@ export default {
         { label: '修改值', value: 'C_value' },
         { label: '显示隐藏', value: 'C_show' }
       ],
-      hasOptionsFields: [ // 操作类型 的字段类别判断(有选项的字段)
-        'select',
-        'mulSelect',
-        'radioGroup',
-        'checkboxGroup'
-      ],
-      complexField: [
-        'divider',
-        'title',
-        'dateRange',
-        'timeRange'
-      ],
       fieldCorrelativeRulesOld: [] // 旧的数据--如果设置了关联关系。然后点击取消、或者关闭的弹窗。要用旧的数据覆盖
     }
   },
   computed: {
     fieldList() {
-      return this.modelFields || this.fieldsArr.filter(f => !this.complexField.includes(f.type))
+      return this.modelFields || this.fieldsArr.filter(f => f.isFormField)
     }
   },
   methods: {

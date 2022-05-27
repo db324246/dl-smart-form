@@ -1,190 +1,55 @@
 <template>
   <!-- @click.stop="handleSelectWidget()" -->
   <div class="widget-view "
-    v-if="computedShowField"
-    :class="{
-      'is_req': curFieldAttachedRule.required
-    }">
+    v-if="computedShowField">
 
-    <!-- 重复上报 -->
-    <arrayform-field
-      v-if="fieldType === 'arrayform'"
-      :field-obj="fieldObj"
-      :show-label="showLabel">
-    </arrayform-field>
-
-    <!-- 标题/段落 -->
-    <div
-      v-else-if="fieldType === 'title'"
-      class="el-title"
-      v-text="fieldObj.value"
-      :style="{
-        'font-size': fieldObj.attrs.fontSize,
-        'font-weight': fieldObj.attrs.fontWeight,
-        'color': fieldObj.attrs.color,
-        'background-color': fieldObj.attrs.backgroundColor
-      }">
-    </div>
-
-    <!-- 分割线 -->
-    <el-divider v-else-if="fieldType === 'divider'"></el-divider>
+    <!-- 非表单字段 -->
+    <component
+      v-if="!fieldObj.isFormField"
+      :is='componentId'
+      :field-obj="fieldObj">
+    </component>
 
     <!-- 禁止编辑 -->
     <template v-else-if="!fieldIsEditable">
-      <span class="widge-field-item_divider" :style="{'left': labelWidth}" v-if="showLabel"></span>
+      <span v-if="showLabel && labelPosition !== 'top'"
+        class="widge-field-item_divider"
+        :style="{
+          'left': labelWidth
+        }">
+      </span>
       <el-form-item
-        :label="showLabel && fieldObj.label"
         class="widge-field-item"
-        :label-width="showLabel ? labelWidth : '0'">
-        <field-data-com :field-obj="fieldObj" :style="getMediumWidth"></field-data-com>
+        :label="showLabel && fieldObj.label"
+        :label-width="showLabel ? labelWidth : '0'"
+        :required="curFieldAttachedRule.required"
+        :class="`el-form-item--label-${labelPosition}`">
+        <component :is='detailComId' :field-obj="fieldObj">
+        </component>
         <field-tag :field="fieldObj"></field-tag>
       </el-form-item>
     </template>
 
     <!-- 可编辑 -->
     <template v-else>
-      <span class="widge-field-item_divider" :style="{'left': labelWidth}" v-if="showLabel"></span>
+      <span v-if="showLabel && labelPosition !== 'top'"
+        class="widge-field-item_divider"
+        :style="{
+          'left': labelWidth
+        }">
+      </span>
       <el-form-item
         class="widge-field-item"
         :label="showLabel ? fieldObj.label : ''"
         :label-width="showLabel ? labelWidth : '0'"
         :prop="fieldObj.name"
-        >
-
-        <!-- 单行文本 -->
-        <template v-if="fieldType === 'input'">
-          <el-input
-            v-model="fieldObj.value"
-            :style="getMediumWidth"
-            :placeholder="fieldObj.attrs.placeholder"
-            :maxlength="fieldObj.attrs.maxlength">
-          </el-input>
-        </template>
-
-        <!-- 多行文本 -->
-        <template v-else-if="fieldType == 'textarea'">
-          <el-input type="textarea" :rows="5"
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            :placeholder="fieldObj.attrs.placeholder">
-          </el-input>
-        </template>
-
-        <!-- 数字输入 -->
-        <template v-else-if="fieldType == 'number'">
-          <el-input-number
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            :min="fieldObj.attrs.min"
-            :max="fieldObj.attrs.max"
-            :step="fieldObj.attrs.step">
-          </el-input-number>
-        </template>
-
-        <!-- 单选框组 -->
-        <template v-else-if="fieldType == 'radioGroup'">
-          <el-radio-group v-model="fieldObj.value" :style="getMediumWidth">
-            <el-radio
-              :label="item.key" v-for="item in fieldObj.options" :key="item.key">
-              {{ item.value }}
-            </el-radio>
-          </el-radio-group>
-        </template>
-
-        <!-- 多选框组 -->
-        <template v-else-if="fieldType == 'checkboxGroup'">
-          <el-checkbox-group v-model="fieldObj.value" :style="getMediumWidth">
-            <el-checkbox
-              :label="item.key" v-for="item in fieldObj.options" :key="item.key">
-              {{ item.value }}
-            </el-checkbox>
-          </el-checkbox-group>
-        </template>
-
-        <!-- 日期选择器 -->
-        <template v-else-if="fieldType == 'date'">
-          <el-date-picker
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            :type="fieldObj.attrs.comType"
-            :format="fieldObj.attrs.format"
-            :placeholder="fieldObj.attrs.placeholder"
-            :value-format="fieldObj.attrs.format">
-          </el-date-picker>
-        </template>
-
-        <!-- 日期范围 -->
-        <template v-else-if="fieldType == 'dateRange'">
-          <el-date-picker
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            :type="fieldObj.attrs.comType"
-            :format="fieldObj.attrs.format"
-            :value-format="fieldObj.attrs.format"
-            :start-placeholder="fieldObj.attrs.startPlaceholder"
-            :end-placeholder="fieldObj.attrs.endPlaceholder"
-            range-separator="至">
-          </el-date-picker>
-        </template>
-
-        <!-- 时间选择器 -->
-        <template v-else-if="fieldType == 'time'">
-          <el-time-picker
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            :placeholder="fieldObj.attrs.placeholder"
-            :format="fieldObj.attrs.format"
-            :value-format="fieldObj.attrs.format"
-          >
-          </el-time-picker>
-        </template>
-
-        <!-- 时间范围 -->
-        <template v-else-if="fieldType == 'timeRange'">
-          <el-time-picker
-            :style="getMediumWidth"
-            is-range
-            v-model="fieldObj.value"
-            :start-placeholder="fieldObj.attrs.startPlaceholder"
-            :end-placeholder="fieldObj.attrs.endPlaceholder"
-            range-separator="至"
-          >
-          </el-time-picker>
-        </template>
-
-        <!-- 下拉选择框 -->
-        <template v-else-if="fieldType == 'select'">
-          <el-select
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            clearable
-            :placeholder="fieldObj.attrs.placeholder"
-          >
-            <el-option v-for="item in fieldObj.options" :key="item.value" :value="item.key" :label="item.value"></el-option>
-          </el-select>
-        </template>
-
-        <!-- 多选下拉框 -->
-        <template v-else-if="fieldType == 'mulSelect'">
-          <el-select
-            :style="getMediumWidth"
-            v-model="fieldObj.value"
-            clearable
-            :multiple="true"
-            :placeholder="fieldObj.attrs.placeholder"
-          >
-            <el-option v-for="item in fieldObj.options" :key="item.value" :value="item.key" :label="item.value"></el-option>
-          </el-select>
-        </template>
-
-        <!-- switch -->
-        <template v-else-if="fieldType=='switch'">
-          <el-switch
-            :style="getMediumWidth"
-            v-model="fieldObj.value">
-          </el-switch>
-        </template>
-
+        :required="curFieldAttachedRule.required"
+        :class="`el-form-item--label-${labelPosition}`">
+        <component
+          :is='componentId'
+          :field-obj="fieldObj"
+          :get-medium-width="getMediumWidth">
+        </component>
         <field-tag :field="fieldObj"></field-tag>
       </el-form-item>
     </template>
@@ -192,18 +57,19 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import FieldTag from './FieldTag'
-import FieldDataCom from '@/components/dlSmartForm/showForm/components/FieldDataCom'
+import Bus from '../Bus'
+import FieldTag from '../../components/FieldTag'
+import { fieldReportComMap, fieldDetailComMap } from '../../components/fields'
 
 export default {
   name: 'widget-item',
   components: {
     FieldTag,
-    FieldDataCom
+    ...fieldDetailComMap,
+    ...fieldReportComMap
   },
   inject: [
-    'getFormId',
+    'formId',
     'isEditable',
     'isFieldShow'
   ],
@@ -218,23 +84,20 @@ export default {
     }
   },
   data() {
-    return {
-      baseFieldTypes: ['input', 'textarea', 'number', 'date', 'time'], // 基础类型字段
-      rangeFieldTypes: ['dateRange', 'timeRange'], // 范围类型的字段
-      hasOptionsField: ['select', 'radioGroup', 'checkboxGroup', 'mulSelect'] // 拥有选项的字段类型
-    }
+    return {}
   },
   computed: {
-    ...mapGetters('customForm', [
-      'getRuleShow',
-      'getFields',
-      'fieldAttachedRule'
-    ]),
-    formId() {
-      return this.getFormId()
+    busFormer() {
+      return Bus.formerMap.get(this.formId)
+    },
+    fieldAttachedRule() {
+      return this.busFormer.fieldAttachedRule
     },
     fieldsMap() {
-      return this.getFields(this.formId)
+      return this.busFormer.formWatcher.fieldsMap
+    },
+    ruleShow() {
+      return this.busFormer.formWatcher.ruleShow
     },
     fieldObj() {
       return this.fieldData || this.fieldsMap[this.fieldName]
@@ -242,8 +105,11 @@ export default {
     fieldType() {
       return this.fieldObj.type
     },
-    ruleShow() {
-      return this.getRuleShow(this.formId)
+    componentId() {
+      return this.fieldObj.type + '-report'
+    },
+    detailComId() {
+      return this.fieldObj.type + '-detail'
     },
     // 计算关联规则 - 是否展示字段
     fieldRuleShow() {
@@ -269,7 +135,7 @@ export default {
       }
     },
     curFieldAttachedRule() {
-      return this.fieldAttachedRule(this.formId)[this.fieldName] || {}
+      return this.fieldAttachedRule[this.fieldName] || {}
     },
     showLabel() {
       return this.curFieldAttachedRule.showLabel
@@ -277,8 +143,11 @@ export default {
     labelWidth() {
       return `${this.curFieldAttachedRule.labelWidth || 100}px`
     },
+    labelPosition() {
+      return this.curFieldAttachedRule.labelPosition
+    },
     getMediumWidth() {
-      if (this.curFieldAttachedRule.hasOwnProperty('mediumWidth') && this.curFieldAttachedRule.mediumWidth > 0) {
+      if (this.curFieldAttachedRule.mediumWidth && this.curFieldAttachedRule.mediumWidth > 0) {
         return {
           width: this.curFieldAttachedRule.mediumWidth + 'px'
         }
@@ -294,85 +163,61 @@ export default {
       },
       immediate: true
     }
-  },
-  async created() {
   }
 }
 </script>
 
-<style lang="scss" scoped>
-$primary-color: #00bfc4;
-$primary-background-color: rgba(0, 191, 196,.01);
-
-.widget-view{
+<style scoped>
+.widget-view {
   height: 100%;
   position: relative;
-  padding-bottom: 10px;
   box-sizing: border-box;
-  // overflow: hidden;
-  .el-form-item {
-    padding-right: 30px;
-    ::v-deep .el-form-item__content {
-      display: flex;
-    }
-    .el-radio-group {
-      display: flex;
-      align-items: center;
-      min-height: 36px;
-    }
-  }
 }
-.widget-view.is_req {
-  .citeform_box__title span::before {
-    display: inline-block;
-  }
-  ::v-deep .el-form-item__label::before{
-    content: '*';
-    color: #f56c6c;
-    margin-right: 4px;
-  }
+.widget-view .el-form-item {
+  padding-right: 30px;
 }
-.el-divider {
-  margin: 10px 0;
+.widge-field-item_divider {
+  display: none;
+  position: absolute;
+  height: calc(100% + 10px);
+  width: 1px;
+  background: #999;
+  top: -5px;
+  margin-left: -5px;
 }
-// .el-select {
-//   ::v-deep .el-input__suffix-inner {
-//     pointer-events: none;
-//   }
-// }
-.el-title {
-  padding: 5px 10px;
-  background-color: #efdebb;
-}
-.upload-hint {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  .upload-btn {
-    width: 90px;
-    height: 65px;
-    border: 1px dashed #ccc;
-    border-radius: 4px;
-    background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAD0AAAA9CAYAAAAeYmHpAAAA5klEQVRoge3aIRJBURyF8e+hSOJ9ySgyS7ADRVRVyQYsSrEA1QYUybtBNALBXNpdwH/MnPObUW459ws3PQ2BupzLXr9ebFN6R96jFzkGzIBX9bsE3yE8+i84WoWjVThahaNVOFqFo1U4WoWjVThahaNVOFqFo1VIRjddzitgHbQ3AhbV2RM4Bu0XmwEwBZaBo7Vh8P7Wb1qFZHR50wfgFrQ3BvbV2R3YBe1/96L/iTAHztXxtU1pEnkPv2kVjlbhaBWOVuFoFY5W4WgVjlbhaBWOVuFoFY5WIftZJ9IDOFWDUZ+UfoAPv7EcqSgpZEQAAAAASUVORK5CYII=) no-repeat 50%;
-    background-size: 37px;
-    cursor: pointer;
-  }
-}
-.widge-field-item{
+.widget-view >>> .el-form-item__content {
+  /* display: flex; */
   position: relative;
-  ::v-deep .el-form-item__label {
-    font-weight: bold;
-  }
+  padding-left: 5px;
 }
-// .widge-field-item_divider {
-//   position: absolute;
-//   height: calc(100% + 10px);
-//   width: 1px;
-//   background: #999;
-//   top: -5px;
-//   margin-left: -5px;
-// }
+
+.widge-field-item {
+  position: relative;
+}
+.widge-field-item >>> .el-form-item__label {
+  font-weight: bold;
+}
+.el-form-item--label-left >>> .el-form-item__label {
+  text-align: left;
+}
+.el-form-item--label-right >>> .el-form-item__label {
+  text-align: right;
+}
+.el-form-item--label-justify >>> .el-form-item__label {
+  text-align-last: justify;
+}
+.el-form-item--label-top {
+  padding-top: 5px;
+}
+.el-form-item--label-top >>> .el-form-item__label {
+  float: none;
+  display: inline-block;
+  text-align: left;
+  padding: 0 0 10px;
+  line-height: 30px;
+}
+.el-form-item--label-top >>> .el-form-item__content {
+  margin: 0!important;
+  padding-left: 0;
+}
 </style>

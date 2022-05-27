@@ -8,7 +8,6 @@
         size="mini"
         type="primary"
         plain>
-        <!-- <svg-icon icon-class="add" /> -->
         添加表单关联规则
       </el-button>
     </smart-title>
@@ -148,10 +147,11 @@ export default {
   padding-left: 20px;
 }
 .vertical-layout .vertical-layout-wrapper {
-  height: calc(100% - 40px - 28px - 20px);
+  height: calc(100% - 40px - 28px - 30px);
 }
 .vertical-layout .vertical-layout-wrapper .el-form {
   padding: 5px;
+  box-sizing: border-box;
   border: 1px dashed #ccc;
 }
 .vertical-layout .rules-btn {

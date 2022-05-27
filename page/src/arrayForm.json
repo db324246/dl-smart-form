@@ -1,0 +1,118 @@
+{
+  "modelFields": [
+    {
+      "name": "input_field_1653380234611128",
+      "type": "input",
+      "label": "姓名",
+      "value": "",
+      "editable": true,
+      "insideForm": true,
+      "attrs": {
+        "placeholder": "占位符文字",
+        "maxlength": 10,
+        "dataType": "string",
+        "pattern": ""
+      }
+    },
+    {
+      "name": "input_field_1653380263907797",
+      "type": "input",
+      "label": "手机号",
+      "value": "",
+      "editable": true,
+      "insideForm": true,
+      "attrs": {
+        "placeholder": "占位符文字",
+        "maxlength": 100,
+        "dataType": "string",
+        "pattern": ""
+      }
+    },
+    {
+      "name": "input_field_1653380291627638",
+      "type": "input",
+      "label": "地址",
+      "value": "",
+      "editable": true,
+      "insideForm": true,
+      "attrs": {
+        "placeholder": "占位符文字",
+        "maxlength": 100,
+        "dataType": "string",
+        "pattern": ""
+      }
+    }
+  ],
+  "name": "arrayform_field_1653380325623158",
+  "type": "arrayform",
+  "label": "我的重复上报",
+  "attrs": {
+    "dialogWidth": 500,
+    "tableColumns": [
+      {
+        "name": "input_field_1653380234611128",
+        "type": "input",
+        "label": "单行文本",
+        "value": "",
+        "editable": true,
+        "insideForm": true,
+        "attrs": {
+          "placeholder": "占位符文字",
+          "maxlength": 100,
+          "dataType": "string",
+          "pattern": ""
+        }
+      },
+      {
+        "name": "input_field_1653380263907797",
+        "type": "input",
+        "label": "单行文本",
+        "value": "",
+        "editable": true,
+        "insideForm": true,
+        "attrs": {
+          "placeholder": "占位符文字",
+          "maxlength": 100,
+          "dataType": "string",
+          "pattern": ""
+        }
+      },
+      {
+        "name": "input_field_1653380291627638",
+        "type": "input",
+        "label": "单行文本",
+        "value": "",
+        "editable": true,
+        "insideForm": true,
+        "attrs": {
+          "placeholder": "占位符文字",
+          "maxlength": 100,
+          "dataType": "string",
+          "pattern": ""
+        }
+      }
+    ],
+    "queryFields": [],
+    "fieldAttachedRule": {
+      "input_field_1653380234611128": {
+        "showLabel": true,
+        "required": true,
+        "labelWidth": 100,
+        "mediumWidth": 0
+      },
+      "input_field_1653380263907797": {
+        "showLabel": true,
+        "required": true,
+        "labelWidth": 100,
+        "mediumWidth": 0
+      },
+      "input_field_1653380291627638": {
+        "showLabel": true,
+        "required": false,
+        "labelWidth": 100,
+        "mediumWidth": 0
+      }
+    },
+    "fieldCorrelativeRules": []
+  }
+}

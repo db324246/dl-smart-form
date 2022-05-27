@@ -1,13 +1,14 @@
 export default {
   templateComponent: () => import('./template'), // 模板组件
   configComponent: () => import('./config'), // 配置组件
+  detailComponent: () => import('./detail'), // 详情组件
   reportComponent: () => import('./report'), // 上报组件
   field: {
     type: 'textarea',
     label: '多行文本',
     value: '',
-    editable: true,
-    insideForm: true, // 控件是否展示再表单组件内
+    configurable: true,
+    isFormField: true, // 是否是表单字段
     attrs: {
       placeholder: '占位符文字',
       maxlength: 1000

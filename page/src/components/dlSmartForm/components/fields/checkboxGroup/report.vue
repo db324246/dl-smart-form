@@ -21,7 +21,7 @@ export default {
       default: () => ({})
     }
   },
-  created() {
+  async created() {
     if (this.fieldObj.attrs.bindDicts &&
     this.fieldObj.attrs.constantId && this.loadDictList) {
       try {
@@ -40,6 +40,6 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 
 </style>

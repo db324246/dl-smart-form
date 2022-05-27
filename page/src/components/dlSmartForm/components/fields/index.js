@@ -15,18 +15,21 @@ import checkboxGroup from './checkboxGroup'
 
 // 基础字段
 export const basicComponents = [
-  date,
-  time,
   input,
   number,
-  select,
   textarea,
+  date,
+  time,
   dateRange,
+  select,
   mulSelect,
-  switchCom,
   radioGroup,
-  checkboxGroup
+  checkboxGroup,
+  switchCom
 ]
+
+// 高阶字段
+export const advanceComponents = []
 
 // 布局字段
 export const layoutComponents = [
@@ -34,37 +37,41 @@ export const layoutComponents = [
   divider
 ]
 
-// 复杂类型字典
-export const complexField = [
-  // 重复上报
+// 复杂类型字段（一个字段内部集成了多个字段）
+export const complexComponents = [
+  // 重复上报表格
   arrayForm
 ]
 
 // 字段配置组件集合
 export const fieldConfigComMap = {}
-
 // 字段模板组件集合
 export const fieldTempComMap = {}
-
 // 字段上报组件集合
 export const fieldReportComMap = {}
+// 字段详情组件集合
+export const fieldDetailComMap = {}
 
-basicComponents.forEach(f => {
-  Reflect.set(fieldConfigComMap, `${f.field.type}-config`, f.configComponent)
-  Reflect.set(fieldTempComMap, `${f.field.type}-template`, f.templateComponent)
-  Reflect.set(fieldReportComMap, `${f.field.type}-report`, f.reportComponent)
-})
-layoutComponents.forEach(f => {
-  Reflect.set(fieldConfigComMap, `${f.field.type}-config`, f.configComponent)
-  Reflect.set(fieldTempComMap, `${f.field.type}-template`, f.templateComponent)
-  Reflect.set(fieldReportComMap, `${f.field.type}-report`, f.reportComponent)
+const comsMap = {
+  basicComponents,
+  advanceComponents,
+  layoutComponents,
+  complexComponents
+}
+Object.values(comsMap).forEach(item => {
+  item.forEach(f => {
+    Reflect.set(fieldConfigComMap, `${f.field.type}-config`, f.configComponent)
+    Reflect.set(fieldTempComMap, `${f.field.type}-template`, f.templateComponent)
+    Reflect.set(fieldReportComMap, `${f.field.type}-report`, f.reportComponent)
+    Reflect.set(fieldDetailComMap, `${f.field.type}-detail`, f.detailComponent)
+  })
 })
 
 // 所有元字段的类型集合
 const allOriginField = [
   ...basicComponents,
   ...layoutComponents,
-  ...complexField
+  ...complexComponents
 ]
 
 // 没有附属规则的字段

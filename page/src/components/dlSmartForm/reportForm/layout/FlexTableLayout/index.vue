@@ -1,11 +1,14 @@
 <template>
   <div
     class='flex-table-wr'
-    :class="{ 'has-border': hasBorder }"
+    :class="{
+      'has-border': hasBorder,
+      'no-border': !hasBorder
+    }"
     :style="{
       width: boxWidth + 'px'
     }">
-    <el-form ref="flexForm" :label-width="labelWidth + 'px'" :model="form" :rules="rules">
+    <el-form ref="flexForm" :model="form" :rules="rules">
       <flex-row
         v-for="row in rowsData"
         :key="row.key"
@@ -18,30 +21,27 @@
 <script>
 import Bus from '../../Bus'
 import FlexRow from './FlexRow'
-import { mapGetters } from 'vuex'
 export default {
   name: 'flex-layout',
   components: { FlexRow },
-  inject: ['getFormId', 'getLayoutData'],
+  inject: [
+    'formId',
+    'getLayoutData'
+  ],
   provide() {
     return {
       hasBorder: this.hasBorder
     }
   },
   computed: {
-    ...mapGetters('customForm', [
-      'getFields',
-      'formModel',
-      'formModelRules'
-    ]),
-    formId() {
-      return this.getFormId()
+    busFormer() {
+      return Bus.formerMap.get(this.formId)
     },
     form() {
-      return this.formModel(this.formId)
+      return this.busFormer.formWatcher.formModel
     },
     rules() {
-      return this.formModelRules(this.formId)
+      return this.busFormer.formWatcher.formModelRules
     },
     layoutData() {
       const layout = this.getLayoutData() || {}
@@ -55,30 +55,29 @@ export default {
     },
     boxWidth() {
       return (this.layoutData.layoutConfig && this.layoutData.layoutConfig.width) || 1000
-    },
-    labelWidth() {
-      return (this.layoutData.layoutConfig && this.layoutData.layoutConfig.labelWidth) || 100
     }
   },
   created() {
-    Bus.$on('valide-form', (formId, callback) => {
-      if (formId && formId !== this.formId) return
-      this.$refs.flexForm.validate(valide => {
-        if (!valide) {
-          this.$message.error(`您有必填内容没有填写，请查看`)
-          return
-        }
-        callback()
-      })
+    Bus.$on(`valide-form-${this.formId}`, async({ formId, resolve }) => {
+      if (formId !== this.formId) return
+      try {
+        console.log(this.$refs.flexForm)
+        await this.$refs.flexForm.validate()
+        resolve()
+      } catch (err) {
+        console.warn(err)
+        this.$message.error('您有必填内容没有填写，请查看')
+        resolve(Promise.reject(err))
+      }
     })
     this.$on('hook:destroyed', () => {
-      Bus.$off('valide-form')
+      Bus.$off(`valide-form-${this.formId}`)
     })
   }
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .flex-table-wr {
   margin: 0 auto;
 }
@@ -86,7 +85,16 @@ export default {
   border: 1px solid #999;
   border-bottom: none;
 }
-::v-deep .el-form-item__error {
+.has-border >>> .el-form-item__error {
   position: static;
+}
+.has-border >>> .widge-field-item_divider {
+  display: block;
+}
+.has-border >>> .el-form-item {
+  margin-bottom: 0;
+}
+.has-border >>> .flex-col {
+  padding: 5px;
 }
 </style>

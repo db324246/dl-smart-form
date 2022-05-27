@@ -1,6 +1,6 @@
 <template>
   <div class='vertical-layout'>
-    <el-form ref="flexForm" :label-width="labelWidth + 'px'" :model="form" :rules="rules">
+    <el-form ref="flexForm" class="detail-form" :model="form" :rules="rules">
       <template v-for="field in modelFields">
         <widget-item
           :key="field.key"
@@ -12,29 +12,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import Bus from '../../reportForm/Bus'
 import WidgetItem from '../components/WidgetItem'
 export default {
   name: 'vertical-layout',
-  inject: ['getFormId'],
+  inject: ['formId'],
   components: { WidgetItem },
   computed: {
-    ...mapGetters('customForm', [
-      'getFields',
-      'formModel',
-      'formModelRules'
-    ]),
-    formId() {
-      return this.getFormId()
+    former() {
+      return Bus.formerMap.get(this.formId)
     },
     form() {
-      return this.formModel(this.formId)
+      return this.former.formWatcher.formModel
     },
     rules() {
-      return this.formModelRules(this.formId)
-    },
-    labelWidth() {
-      return 100
+      return this.former.formWatcher.formModelRules
     },
     modelFields() {
       return this.$parent.form
@@ -43,6 +35,12 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
-
+<style scoped>
+.detail-form >>> .el-form-item {
+  margin-bottom: 0;
+}
+.detail-form >>> .el-form-item__content,
+.detail-form >>> .el-form-item__label {
+  line-height: 28px;
+}
 </style>

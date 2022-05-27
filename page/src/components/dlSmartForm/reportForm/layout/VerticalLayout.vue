@@ -1,6 +1,6 @@
 <template>
   <div class='vertical-layout'>
-    <el-form ref="flexForm" :label-width="labelWidth + 'px'" :model="form" :rules="rules">
+    <el-form ref="flexForm" :model="form" :rules="rules">
       <template v-for="field in modelFields">
         <widget-item
           :key="field.key"
@@ -13,55 +13,50 @@
 
 <script>
 import Bus from '../Bus'
-import { mapGetters } from 'vuex'
 import WidgetItem from '../components/WidgetItem'
 export default {
   name: 'vertical-layout',
   components: { WidgetItem },
-  inject: ['getFormId'],
+  inject: ['formId'],
   data() {
-    return {
-
-    }
+    return {}
   },
   computed: {
-    ...mapGetters('customForm', [
-      'getFields',
-      'formModel',
-      'formModelRules'
-    ]),
-    formId() {
-      return this.getFormId()
+    busFormer() {
+      return Bus.formerMap.get(this.formId)
     },
     form() {
-      return this.formModel(this.formId)
+      return this.busFormer.formWatcher.formModel
     },
     rules() {
-      return this.formModelRules(this.formId)
-    },
-    labelWidth() {
-      return 100
+      return this.busFormer.formWatcher.formModelRules
     },
     modelFields() {
       return this.$parent.form
     }
   },
   created() {
-    Bus.$on('valide-form', (formId, callback) => {
-      if (formId && formId !== this.formId) return
-      this.$refs.flexForm.validate(valide => {
-        if (!valide) return
+    Bus.$on(`valide-form-${this.formId}`, async({ formId, resolve }) => {
+      if (formId !== this.formId) return
+      try {
+        await this.$refs.flexForm.validate()
         for (let i = 0, len = this.modelFields.length; i < len; i++) {
           const field = this.modelFields[i]
-          if (['arrayform', 'subform'].includes(field.type)) {
-            if (!field.value || !field.value.length) return this.$message.error(`请上报${field.label}`)
+          if (['arrayform'].includes(field.type)) {
+            if (!field.value || !field.value.length) {
+              this.$message.error(`请上报${field.label}`)
+              return resolve(Promise.reject(new Error(`请上报${field.label}`)))
+            }
           }
         }
-        callback()
-      })
+        resolve()
+      } catch (err) {
+        console.warn(err)
+        resolve(Promise.reject(err))
+      }
     })
     this.$on('hook:destroyed', () => {
-      Bus.$off('valide-form')
+      Bus.$off(`valide-form-${this.formId}`)
     })
   }
 }

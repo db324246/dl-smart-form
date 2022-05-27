@@ -16,18 +16,25 @@
           :value="i.key">
         </el-option>
       </el-select>
-      <!-- input、textarea类型 -->
+      <!-- 字符串 类型 -->
       <el-input
         v-else-if="condition.valueType === 'string'"
         v-model="condition.value"
         placeholder="请输入值">
       </el-input>
-      <!-- number 类型 -->
+      <!-- 数字 类型 -->
       <el-input-number
         v-else-if="condition.valueType === 'number'"
         v-model="condition.value"
         label="请输入值">
       </el-input-number>
+      <!-- 开关 类型 -->
+      <el-switch
+        v-else-if="condition.valueType === 'boolean'"
+        v-model="condition.value"
+        active-color="#13ce66"
+        inactive-color="#ff4949">
+      </el-switch>
     </div>
 
     <!-- 包含、不包含 -->
@@ -94,9 +101,14 @@ export default {
 
 <style scoped>
 .validate-value {
+  min-width: 120px;
   margin-right: 0!important;
 }
 .validate-value >>> .el-input-number--medium {
   width: 180px;
+}
+.el-switch {
+  padding-top: 10px;
+  margin-right: 50px;
 }
 </style>

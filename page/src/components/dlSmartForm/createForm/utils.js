@@ -1,7 +1,7 @@
 import Bus from './Bus'
-import { deepClone, typeOf } from '../utils'
+import { deepClone, typeOf, syncFieldInitTo } from '../utils'
 
-export { deepClone, typeOf }
+export { deepClone, typeOf, syncFieldInitTo }
 
 // 关闭右击菜单
 export const hideContextMenu = () => {
@@ -27,7 +27,7 @@ export const createCol = (parentKey, config = {}) => {
     width: 0,
     align: 'middle_left',
     domtype: 'col',
-    editable: true,
+    configurable: true,
     parentKey, // 列的父节点key值
     children: []
   }

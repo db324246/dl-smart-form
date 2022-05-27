@@ -33,6 +33,10 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="上报弹框宽度">
+        <el-input type="number" v-model.number="form.attrs.dialogWidth" min="400"></el-input>
+      </el-form-item>
+
       <el-form-item>
         <el-button size='mini' type='primary' @click='dialogVisible = true'>对象集内部附属规则</el-button>
       </el-form-item>

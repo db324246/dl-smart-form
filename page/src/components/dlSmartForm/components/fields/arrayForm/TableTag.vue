@@ -27,9 +27,10 @@ export default {
 }
 </script>
 
-<style lang='scss' scoped>
+<style scoped>
 .field-te-t-table-box {
   display: inline-block;
   min-width: fit-content;
+  margin-left: 10px;
 }
 </style>

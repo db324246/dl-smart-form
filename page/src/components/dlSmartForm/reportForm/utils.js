@@ -1,31 +1,4 @@
-// 转化模板字段关联规则为 可让 vue 识别的结构（使用watcher监听方式）
-export const computeCorrelativeRule = (fieldCorrelativeRules = []) => {
-  const correlativeRules = getCorrelativeRules(fieldCorrelativeRules)
-  const correlativeRuleMap = {}
-  for (let i = 0, len = correlativeRules.length; i < len; i++) {
-    const conditions = correlativeRules[i].conditions || [] // 条件s
-    if (!conditions.length) continue
-
-    // 遍历条件
-    conditions.forEach(c => {
-      if (c.type === 'condition') {
-        const fieldName = c.fieldName
-        if (!correlativeRuleMap[fieldName]) {
-          correlativeRuleMap[fieldName] = []
-        }
-
-        const watchFunStr = `return !!(${exportRuleConditionsStr(conditions, 'form')})`
-        // eslint-disable-next-line
-        const handler = new Function('form', watchFunStr)
-        correlativeRuleMap[fieldName].push({
-          handler,
-          ...correlativeRules[i]
-        })
-      }
-    })
-  }
-  return correlativeRuleMap
-}
+import { deepClone, typeOf } from '../utils'
 
 // 比较新值和旧值是否有改动 返回更新后的值
 export const diffValue = (newVal, oldVal, deep = false) => {

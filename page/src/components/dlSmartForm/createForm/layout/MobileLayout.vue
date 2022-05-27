@@ -1,12 +1,11 @@
-<!-- ！！！！只能排序,不能编辑和删除字段  自定义表单模板-移动端布局 -->
 <template>
-  <el-form label-width="120px">
+  <el-form>
     <v-contextmenu
       ref="contextmenu"
       :style="{
         'border-width': showFieldHandler ? '1px' : '0px'
       }">
-      <v-contextmenu-item v-show="showFieldHandler && focusField.type !== 'divider'" @click="handleCommand('editField')">编辑字段</v-contextmenu-item>
+      <v-contextmenu-item v-show="showFieldHandler && focusField.configurable" @click="handleCommand('editField')">编辑字段</v-contextmenu-item>
       <v-contextmenu-item v-show="showFieldHandler" @click="handleCommand('delField')">删除字段</v-contextmenu-item>
     </v-contextmenu>
     <div ref="drag-wrapper" class="drag-wrapper">
@@ -134,7 +133,7 @@ export default {
     },
     // 设置行数据
     setRows(rowsData = []) {
-      console.log('rowsData', rowsData)
+      console.log('22222222', rowsData)
       if (this.layout === 'vertical') {
         rowsData.forEach(field => {
           this.$emit('ver_add-field', field)
@@ -155,14 +154,8 @@ export default {
       this.hideContextMenu()
       if (!this.editable) return
       this.subIndex = subIndex
-      // immobilization: 表示固定字段
-      if (!node.immobilization) {
-        this.focusFieldIn = true
-        this.focusField = node
-      } else {
-        this.focusFieldIn = false
-        this.focusField = null
-      }
+      this.focusFieldIn = true
+      this.focusField = node
     },
     // 字段点击编辑
     handleContentEdit(field) {
@@ -250,6 +243,7 @@ export default {
     height: 100%;
     padding-bottom: 50px;
     overflow-y: auto;
+    box-sizing: border-box;
     .drag-item {
       position: relative;
       padding: 10px;

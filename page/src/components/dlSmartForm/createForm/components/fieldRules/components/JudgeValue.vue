@@ -27,13 +27,13 @@
           :value="item.key">
         </el-option>
       </el-select>
-      <!-- input、textarea类型 -->
+      <!-- 字符串 类型 -->
       <el-input
         v-else-if="handleItem.valueType === 'string'"
         v-model="handleItem.value"
         placeholder="请输入值">
       </el-input>
-      <!-- number 类型 -->
+      <!-- 数字 类型 -->
       <el-input-number
         v-else-if="handleItem.valueType === 'number'"
         v-model="handleItem.value"
@@ -110,5 +110,8 @@ export default {
 }
 .judge-value .el-switch {
   margin-top: 8px;
+}
+.el-radio-group {
+  padding-top: 10px;
 }
 </style>

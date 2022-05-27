@@ -9,7 +9,7 @@ export default new Vue({
   computed: {
     customFieldsMap() {
       return this.customFields.reduce((p, c) => {
-        return p.concat(c.fields || [])
+        return p.concat(c.components || [])
       }, [])
     },
     // 自定义字段配置组件集合

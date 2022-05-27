@@ -31,3 +31,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.el-select >>>.el-input__suffix-inner {
+  pointer-events: none;
+}
+</style>

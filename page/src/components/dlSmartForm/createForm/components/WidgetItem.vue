@@ -1,14 +1,13 @@
 <template>
   <div class="widget-view "
-    v-if="fieldObj && fieldObj.name"
-    :class="{
-      'is_req': curFieldAttachedRule.required
-    }">
+    v-if="fieldObj && fieldObj.name">
 
     <el-form-item
-      v-if="fieldObj.insideForm"
+      v-if="fieldObj.isFormField"
       :label="showLabel ? fieldObj.label : ''"
-      :label-width="showLabel ? labelWidth : '0'">
+      :label-width="showLabel ? labelWidth : '0'"
+      :class="`el-form-item--label-${labelPosition}`"
+      :required="curFieldAttachedRule.required">
       <component
         :field-obj="fieldObj"
         :show-label="showLabel"
@@ -22,6 +21,7 @@
       :show-label="showLabel"
       :field-obj="fieldObj"
       :template-style="getMediumWidth"
+      :label-width="labelWidth"
       :is="componentId">
     </component>
 
@@ -71,6 +71,9 @@ export default {
     showLabel() {
       return this.curFieldAttachedRule.showLabel
     },
+    labelPosition() {
+      return this.curFieldAttachedRule.labelPosition
+    },
     getMediumWidth() {
       if (this.curFieldAttachedRule.mediumWidth > 0) {
         return {
@@ -84,89 +87,42 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-$primary-color: #00bfc4;
-$primary-background-color: rgba(0, 191, 196,.01);
-
-.widget-view{
+<style scoped>
+.widget-view {
   position: relative;
   padding-bottom: 10px;
   box-sizing: border-box;
   user-select: none;
   overflow: hidden;
-  .el-form-item__content{
-    position: unset;
-  }
+}
+.widget-view::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: block;
+  z-index: 10;
+}
 
-  .widget-view-description{
-    height: 15px;
-    line-height: 15px;
-    font-size:13px;
-    margin-top: 6px;
-    color:#909399;
-  }
-
-  &:after{
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: block;
-    z-index: 10;
-  }
-  .image-uploader {
-    width: 135px;
-    height: 75px;
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .avatar-uploader-icon {
-      color: #8c939d;
-      font-size: 28px;
-    }
-  }
-  .avatar_uploader {
-    display: flex;
-    align-items: center;
-    img {
-      height: 80px;
-      width: 80px;
-      border-radius: 10px;
-    }
-    .avatar_uploader-tips {
-      margin-left: 30px;
-      p {
-        color: #b0b0b0;
-        margin: 0;
-        font-size: 12px;
-        line-height: 20px;
-      }
-      .el-button {
-        margin-top: 10px;
-      }
-    }
-  }
+.el-form-item--label-left >>> .el-form-item__label {
+  text-align: left;
 }
-.widget-view.is_req {
-  .citeform_box__title::before {
-    display: inline-block;
-  }
-  ::v-deep .el-form-item__label::before {
-    content: '*';
-    color: #f56c6c;
-    margin-right: 4px;
-  }
+.el-form-item--label-right >>> .el-form-item__label {
+  text-align: right;
 }
-.el-divider {
-  margin: 10px 0;
+.el-form-item--label-justify >>> .el-form-item__label {
+  text-align-last: justify;
 }
-.el-select {
-  ::v-deep .el-input__suffix-inner {
-    pointer-events: none;
-  }
+.el-form-item--label-top >>> .el-form-item__label {
+  float: none;
+  display: inline-block;
+  text-align: left;
+  padding: 0 0 10px;
+  line-height: 20px;
+}
+.el-form-item--label-top >>> .el-form-item__content {
+  margin: 0!important;
 }
 </style>

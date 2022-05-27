@@ -1,0 +1,41 @@
+<template>
+  <div class='textarea-detail'>
+    <span class="field-data-com_textarea" :title="compVal">
+      {{ compVal }}
+    </span>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'textarea-detail',
+  props: [
+    'fieldObj',
+    'fieldVal'
+  ],
+  computed: {
+    compVal() {
+      if (this.fieldVal === undefined || this.fieldVal === null || this.fieldVal === '') {
+        return this.fieldObj.value || '空'
+      } else {
+        return this.fieldVal
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+.field-data-com_textarea {
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  overflow: hidden;
+  /*! autoprefixer: ignore next */
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  text-overflow: -o-ellipsis-lastline;
+  word-break: break-all;
+}
+</style>

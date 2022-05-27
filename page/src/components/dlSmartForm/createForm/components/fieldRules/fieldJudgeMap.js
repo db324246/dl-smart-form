@@ -25,11 +25,6 @@ const compareList = [
   { name: '小于等于', value: '<=' }
 ]
 
-const switchList = [
-  { name: '开', value: 'true' },
-  { name: '关', value: 'false' }
-]
-
 const fieldJudgeMap = new Map()
 fieldJudgeMap.set('array', [
   ...containsList,
@@ -43,7 +38,7 @@ fieldJudgeMap.set('string', [
 fieldJudgeMap.set('null', [])
 fieldJudgeMap.set('undefined', [])
 fieldJudgeMap.set('boolean', [
-  switchList
+  ...equalList
 ])
 fieldJudgeMap.set('number', [
   ...equalList,

@@ -46,13 +46,8 @@ export default {
     // 展示元字段
     showOriginFields: { // 创建模板时展示的元字段
       type: Array,
-      // default: () => (['base', 'layout'])
-      default: () => (['base', 'high', 'layout'])
-    },
-    // 是否可选择重复上报表单字段 (创建重复上报表单时这个设为false)
-    hasCiteFormFie: {
-      type: Boolean,
-      default: true
+      default: () => (['base', 'layout'])
+      // default: () => (['base', 'high', 'layout'])
     },
     // 字段扩展属性
     extendedAttrs: {
@@ -118,7 +113,8 @@ export default {
         showLabel: true,
         required: false,
         labelWidth: 100,
-        mediumWidth: 0
+        mediumWidth: 0,
+        labelPosition: 'right'
       }
     }
   },
@@ -175,7 +171,8 @@ export default {
     },
     // 添加字段
     handleAddField({ field }) {
-      if (!['title', 'divider'].includes(field.type)) {
+      // 是否是表单字段
+      if (field.isFormField) {
         this.$set(this.fieldAttachedRule, field.name, deepClone(this.defaultAttachedRule))
       }
       this.fieldsArr.push(field)

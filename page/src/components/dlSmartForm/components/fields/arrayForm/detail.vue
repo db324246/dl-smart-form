@@ -1,24 +1,16 @@
 <template>
-  <div class='arrayform-field citeform_box'>
-    <div
-      class="citeform_box__title">
-      <div class="citeform_box__title-box">
-        <span v-if="showLabel">{{ fieldObj.label }}</span>
-        <span v-else></span>
-        <field-tag :field="fieldObj"></field-tag>
-      </div>
-    </div>
+  <div class='arrayform-detail'>
     <el-table :data="fieldObj.value" border>
       <el-table-column
         :label="item.label"
         :key="item.name"
         v-for="item in tableColumns">
         <template slot-scope="{row}">
-          <field-data-com
+          <component
             :field-obj="item"
-            :is-table="true"
+            :is="item.type + '-detail'"
             :field-val="row[item.name]">
-          </field-data-com>
+          </component>
         </template>
       </el-table-column>
       <el-table-column label="操作" width="160">
@@ -41,33 +33,38 @@
 
     <!-- 记录详情对话框 -->
     <el-dialog
+      class="detail-dialog arrayform-dialog"
       title='查看详情'
       :visible.sync='detailDialogVisible'
-      width='580px'
+      :width='dialogWidth'
       append-to-body
       :close-on-click-modal='false'>
-      <custom-form-show
-        ref="customFormShow"
-        :form="fieldObj.modelFields"
+      <smart-form-show
+        ref="smartFormShow"
         :formId="fieldObj.name"
-        layout="vertical"
-        :attached-rule="attachedRule"
-        :report-data="detailData">
-      </custom-form-show>
+        :report-data="detailData"
+        :form-data="{
+          layout: {
+            layoutType: 'vertical',
+          },
+          form: fieldObj.modelFields,
+          attachedRule: attachedRule,
+        }">
+      </smart-form-show>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import TableTag from './TableTag'
-import FieldTag from './FieldTag'
-import FieldDataCom from '@/components/dlSmartForm/showForm/components/FieldDataCom'
+import FieldTag from '../../FieldTag'
+import { fieldDetailComMap } from '../index'
 export default {
-  name: 'arrayform-field',
+  name: 'arrayform-detail',
   components: {
     TableTag,
     FieldTag,
-    FieldDataCom
+    ...fieldDetailComMap
   },
   props: {
     fieldObj: {
@@ -85,12 +82,17 @@ export default {
     }
   },
   computed: {
+    modelFields() {
+      return this.fieldObj.modelFields || []
+    },
     tableColumns() {
-      if (this.fieldObj.attrs.tableColumns.length) {
-        return this.fieldObj.attrs.tableColumns
-      } else {
-        return this.fieldObj.modelFields
-      }
+      return this.fieldObj.attrs.tableColumns.map(f => {
+        const field = this.modelFields.find(item => item.name === f.name)
+        return field || f
+      })
+    },
+    dialogWidth() {
+      return this.fieldObj.attrs.dialogWidth + 'px'
     },
     attachedRule() {
       const {
@@ -101,54 +103,30 @@ export default {
     }
   },
   methods: {
-    computedEditable(data) {
-      if (this.isEditable) {
-        return this.isEditable(this.fieldObj, data)
-      } else {
-        return true
-      }
-    },
     // 查看记录
     handleCheck(data) {
       this.detailData = data
       this.detailDialogVisible = true
       this.$nextTick(() => {
-        this.$refs.customFormShow.initShowForm()
+        this.$refs.smartFormShow.initShowForm()
       })
     }
   }
 }
 </script>
 
-<style lang='scss' scoped>
-.citeform_box {
-  .citeform_box__title {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    color: #606266;
-    padding: 10px 20px;
-    span {
-      font-weight: bold;
-      &::before {
-        display: none;
-        content: '*';
-        color: #f56c6c;
-        margin-right: 4px;
-      }
-    }
-  }
+<style scoped>
+.arrayform-detail {
+  line-height: 23px;
 }
-.el-table {
-  ::v-deep .cell {
-    display: flex;
-  }
-}
-.el-button {
-  margin-right: 5px;
-}
-
-.citeform_box__title-box {
+.el-table >>> .cell {
   display: flex;
+}
+.arrayform-dialog >>> .el-dialog__header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+.detail-dialog >>> .el-dialog__body {
+  padding: 10px 20px 30px;
 }
 </style>

@@ -13,10 +13,10 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="颜色：">
+    <el-form-item label="背景色：">
       <el-color-picker v-model="form.attrs.backgroundColor" :disabled="disabled"></el-color-picker>
     </el-form-item>
-    <el-form-item label="颜色：">
+    <el-form-item label="文本颜色：">
       <el-color-picker v-model="form.attrs.color" :disabled="disabled"></el-color-picker>
     </el-form-item>
     <el-form-item label="是否加粗：">
