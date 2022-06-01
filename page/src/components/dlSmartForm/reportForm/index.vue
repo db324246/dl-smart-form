@@ -96,9 +96,9 @@ export default {
       default: null
     },
     // 不需要上报数据的字段类型
-    unReportFieldsType: {
-      type: Array,
-      default: () => layoutComponents.map(com => com.field.type)
+    unReportFields: {
+      type: Function,
+      default: null
     }
   },
   data() {
@@ -177,14 +177,20 @@ export default {
         const result = {}
         console.log('获取this.fieldsMap', this.fieldsMap)
         const fieldsMap = this.fieldsMap
+        // 布局字段类型
+        const layoutTypes = layoutComponents.map(com => com.field.type)
         for (const key in fieldsMap) {
           const field = fieldsMap[key]
+          if (layoutTypes.includes(field.type)) continue
+          if (this.unReportFields) {
+            // 自定义计算无需上报的字段
+            if (!this.unReportFields(field)) continue
+          }
           const flag = this.ruleShow[key] === undefined
             ? true
             : this.ruleShow[key]
-          if (!this.unReportFieldsType.includes(field.type) && flag) {
-            result[key] = field.value
-          }
+          if (!flag) continue
+          result[key] = field.value
         }
         return {
           currentData: this.reportData,

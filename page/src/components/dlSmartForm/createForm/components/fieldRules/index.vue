@@ -32,7 +32,7 @@
                 </div>
                 <el-select placeholder="请选择字段" v-model="conditionItem.fieldName" @change="conditionFieldChange($event, conditionItem)">
                   <el-option
-                    v-for="fieldItem in fieldList"
+                    v-for="fieldItem in ruleFiels"
                     :key="fieldItem.name"
                     :label="fieldItem.label"
                     :value="fieldItem.name" >
@@ -90,7 +90,7 @@
                 <el-select
                   placeholder="请选择操作类型"
                   v-model="THandleItem.type">
-                  <el-option label="修改值" value="C_value">
+                  <el-option v-if="isComplexField(THandleItem)" label="修改值" value="C_value">
                   </el-option>
                   <el-option label="显示隐藏" value="C_show">
                   </el-option>
@@ -139,7 +139,7 @@
                 <el-select
                   placeholder="请选择操作类型"
                   v-model="FHandleItem.type">
-                  <el-option label="修改值" value="C_value">
+                  <el-option v-if="isComplexField(FHandleItem)" label="修改值" value="C_value">
                   </el-option>
                   <el-option label="显示隐藏" value="C_show">
                   </el-option>

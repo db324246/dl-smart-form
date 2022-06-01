@@ -1,8 +1,32 @@
+import { inputRule } from '../../../utils/attachedRuleConfig'
+
 export default {
   templateComponent: () => import('./template'), // 模板组件
   configComponent: () => import('./config'), // 配置组件
   detailComponent: () => import('./detail'), // 详情组件
   reportComponent: () => import('./report'), // 上报组件
+  attachedRule: inputRule, // 字段的附属规则计算函数
+  correlativeRule(value, judge, fieldName) { // 字段的关联规则
+    const fieldVal = `form['${fieldName}'].value`
+    let str = ''
+    switch (judge) {
+      case '>':
+      case '<':
+      case '>=':
+      case '<=':
+      case '==':
+      case '!=':
+        str += `${_value} ${c.judge} '${c.value}'`
+        break;
+      case 'nullStr':
+        str += `(${_value} !== 0 && !${_value})`
+        break;
+      case 'unnullStr':
+        str += `(${_value} === 0 || ${_value})`
+        break;
+    }
+    return str
+  },
   field: {
     type: 'number',
     label: '数字输入',

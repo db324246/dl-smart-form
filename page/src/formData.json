@@ -1282,6 +1282,44 @@
             ]
           }
         ]
+      },
+      {
+        "key": "rule_1654075199919137",
+        "conditions": [
+          {
+            "key": "condition_1654075201511881",
+            "type": "condition",
+            "fieldName": "dateRange_field_1653397443276620",
+            "filedType": "dateRange",
+            "valueType": "array",
+            "judge": "contains",
+            "value": "2022-05-20"
+          }
+        ],
+        "T_handle": [
+          {
+            "key": "handle_165407521195128",
+            "type": "C_show",
+            "fieldName": "arrayform_field_1653380325623158",
+            "filedType": "arrayform",
+            "valueType": "array",
+            "value": [],
+            "show": true,
+            "options": []
+          }
+        ],
+        "F_handle": [
+          {
+            "key": "condition_1654075215695437",
+            "type": "C_show",
+            "fieldName": "arrayform_field_1653380325623158",
+            "filedType": "arrayform",
+            "valueType": "array",
+            "value": [],
+            "show": false,
+            "options": []
+          }
+        ]
       }
     ]
   }

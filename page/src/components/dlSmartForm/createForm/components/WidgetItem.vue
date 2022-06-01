@@ -32,14 +32,12 @@
 <script>
 import store from '../../store'
 import FieldTag from './FieldTag'
-import { fieldTempComMap } from '../../components/fields'
 
 export default {
   name: 'widget-item',
   components: {
     FieldTag,
-    ...fieldTempComMap,
-    ...store.customFieldTempMap
+    ...store.fieldTempComMap
   },
   inject: ['getFieldAttachedRules', 'fieldsArr'],
   props: {

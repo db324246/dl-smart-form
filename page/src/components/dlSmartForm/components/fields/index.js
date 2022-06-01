@@ -58,6 +58,7 @@ const comsMap = {
   layoutComponents,
   complexComponents
 }
+
 Object.values(comsMap).forEach(item => {
   item.forEach(f => {
     Reflect.set(fieldConfigComMap, `${f.field.type}-config`, f.configComponent)
@@ -72,11 +73,6 @@ const allOriginField = [
   ...basicComponents,
   ...layoutComponents,
   ...complexComponents
-]
-
-// 没有附属规则的字段
-export const hasNoAttachRuleFields = [
-  'title'
 ]
 
 export default allOriginField

@@ -57,15 +57,13 @@ import Bus from '../Bus'
 import store from '../../store'
 import ColConfig from './ColConfig'
 import smartTitle from '../../components/smartTitle'
-import { fieldConfigComMap, hasNoAttachRuleFields } from '../../components/fields'
 
 export default {
   name: 'field-config',
   components: {
     ColConfig,
     smartTitle,
-    ...fieldConfigComMap,
-    ...store.customFieldConfigMap
+    ...store.fieldConfigComMap
   },
   inject: [
     'layout',
@@ -76,8 +74,7 @@ export default {
       filedData: {
         configurable: true,
         type: 'default'
-      },
-      hasNoAttachRuleFields
+      }
     }
   },
   computed: {
@@ -86,9 +83,6 @@ export default {
     },
     fieldAttachedRule() {
       return this.getFieldAttachedRules()
-    },
-    showAttachedRule() {
-      return this.layout !== 'singleField' && this.filedData.name && !this.hasNoAttachRuleFields.includes(this.filedData.type)
     },
     fieldRule() {
       return this.fieldAttachedRule[this.filedData.name] || {}

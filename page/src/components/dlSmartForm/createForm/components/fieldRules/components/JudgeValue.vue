@@ -6,59 +6,6 @@
         :is='componentId'
         :field-obj="copyField">
       </component>
-      <!-- 数组 类型 -->
-      <el-select
-        v-if="handleItem.valueType === 'array'"
-        multiple
-        placeholder="请选择"
-        v-model="handleItem.value">
-        <el-option
-          v-for="item in handleItem.optionsList"
-          :key="item.key"
-          :label="item.value"
-          :value="item.key">
-        </el-option>
-      </el-select>
-      <!-- 单选 类型 -->
-      <el-select
-        v-else-if="(handleItem.valueType === 'string') && handleItem.optionsList"
-        placeholder="请选择"
-        v-model="handleItem.value">
-        <el-option
-          v-for="item in handleItem.optionsList"
-          :key="item.key"
-          :label="item.value"
-          :value="item.key">
-        </el-option>
-      </el-select>
-      <!-- 字符串 类型 -->
-      <el-input
-        v-else-if="handleItem.valueType === 'string'"
-        v-model="handleItem.value"
-        placeholder="请输入值">
-      </el-input>
-      <!-- 数字 类型 -->
-      <el-input-number
-        v-else-if="handleItem.valueType === 'number'"
-        v-model="handleItem.value"
-        label="请输入值">
-      </el-input-number>
-      <!-- 开关 类型 -->
-      <el-switch
-        v-else-if="handleItem.valueType === 'boolean'"
-        v-model="handleItem.value"
-        active-color="#13ce66"
-        inactive-color="#ff4949">
-      </el-switch>
-      <!-- 开关 类型 -->
-      <el-date-picker
-        v-if="condition.filedType === 'dateRange'"
-        v-model="condition.value"
-        :type="dateType"
-        :format="curFieldAttrs.format"
-        :value-format="curFieldAttrs.format"
-        placeholder="请选择日期">
-      </el-date-picker>
     </template>
 
     <!-- C_show显示、隐藏 -->
@@ -85,12 +32,12 @@
 </template>
 
 <script>
+import Store from '../../../../store'
 import { deepClone } from '../../../../utils'
-import { fieldReportComMap } from '../../../../components/fields'
 export default {
   name: 'judge-value',
   components: {
-    ...fieldReportComMap
+    ...Store.fieldReportComMap
   },
   props: {
     handleItem: {
@@ -111,21 +58,19 @@ export default {
     filedType() {
       return this.handleItem.filedType || ''
     },
-    curField() {
-      return this.fieldList.find(f => f.name === this.condition.fieldName) || {}
-    },
-    computedField: {
-      get() {
-        return this.copyField
-      },
-      set(f) {
-        this.copyField = f
-      }
+    componentId() {
+      return this.filedType + '-report'
     }
   },
   watch: {
-    'condition.fieldName'(val) {
-      this.copyField = deepClone(this.curField)
+    'handleItem.fieldName': {
+      handler(val) {
+        this.copyField = deepClone(this.fieldList.find(f => f.name === this.handleItem.fieldName) || {})
+      },
+      immediate: true
+    },
+    'copyField.value'(val) {
+      this.handleItem.value = val
     },
     'handleItem.type'(val) {
       if (val === 'C_value' &&
@@ -141,6 +86,9 @@ export default {
 <style scoped>
 .judge-value {
   min-width: 120px;
+}
+.judge-value>div {
+  max-width: 100%;
 }
 .judge-value .el-switch {
   margin-top: 8px;

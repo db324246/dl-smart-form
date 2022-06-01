@@ -33,14 +33,14 @@
 </template>
 
 <script>
+import Store from '../../store'
 import Bus from '../../reportForm/Bus'
 import FieldTag from '../../components/FieldTag'
-import { fieldDetailComMap } from '../../components/fields'
 export default {
   name: 'widget-item',
   components: {
     FieldTag,
-    ...fieldDetailComMap
+    ...Store.fieldDetailComMap
   },
   inject: [
     'formId',

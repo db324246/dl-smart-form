@@ -113,14 +113,14 @@
 
 <script>
 import TableTag from './TableTag'
+import Store from '../../../store'
 import FieldTag from '../../FieldTag'
-import { fieldDetailComMap } from '../index'
 export default {
   name: 'arrayform-report',
   components: {
     TableTag,
     FieldTag,
-    ...fieldDetailComMap
+    ...Store.fieldDetailComMap
   },
   inject: [
     'hasBorder',

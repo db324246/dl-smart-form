@@ -51,7 +51,7 @@
         placeholder="请选择日期">
       </el-date-picker>
       <el-select
-        v-else
+        v-else-if="condition.optionsList"
         multiple
         v-model="condition.value"
         placeholder="请选择值"
@@ -63,9 +63,19 @@
           :value="i.key">
         </el-option>
       </el-select>
+      <el-input
+        v-else-if="condition.valueType === 'string'"
+        v-model="condition.value"
+        placeholder="请输入值">
+      </el-input>
+      <el-input-number
+        v-else-if="condition.valueType === 'number'"
+        v-model="condition.value"
+        label="请输入值">
+      </el-input-number>
     </div>
 
-    <!--大于、大于等于、小于、小于等于 -->
+    <!-- 数字类型 大于、大于等于、小于、小于等于 -->
     <div
       class="width200"
       v-else-if="compareList.includes(condition.judge)"

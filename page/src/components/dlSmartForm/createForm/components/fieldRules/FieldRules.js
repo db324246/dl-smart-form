@@ -3,6 +3,8 @@ import fieldJudgeMap from './fieldJudgeMap'
 import JudgeValue from './components/JudgeValue.vue'
 import ValidateValue from './components/ValidateValue.vue'
 import { generateKey, deepClone, typeOf } from '../../utils'
+// 复杂类型字段
+import { complexComponents } from '../../../components/fields'
 export default {
   name: 'field-rules',
   components: {
@@ -27,6 +29,7 @@ export default {
   },
   data() {
     return {
+      complexFieldTypes: complexComponents.map(com => com.field.type),
       fieldJudgeMap,
       fieldCorrelativeRules: [],
       dialogVisible: false,
@@ -41,6 +44,9 @@ export default {
   computed: {
     fieldList() {
       return this.modelFields || this.fieldsArr.filter(f => f.isFormField)
+    },
+    ruleFiels() {
+      return this.fieldList.filter(f => !this.complexFieldTypes.includes(f.type))
     }
   },
   methods: {
@@ -250,6 +256,10 @@ export default {
         Bus.$emit('update-correlativeRules', deepClone(this.fieldCorrelativeRules))
       }
       this.dialogVisible = false
+    },
+    // 判断条件字段是否是复杂类型的字段
+    isComplexField(handler) {
+      return !this.complexFieldTypes.includes(handler.filedType)
     }
   }
 }

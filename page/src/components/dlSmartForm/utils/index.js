@@ -1,10 +1,14 @@
-import allOriginField, { complexComponents } from '../components/fields'
+import Store from '../store'
+// 复杂类型字段
+import { complexComponents } from '../components/fields'
 
 const allOriginField_Map = {}
 const complexComTypes = complexComponents.map(com => com.field.type)
 
-allOriginField.forEach(item => {
-  allOriginField_Map[item.field.type] = item.field
+Store.allOriginField.forEach(item => {
+  if (!allOriginField_Map[item.field.type]) {
+    allOriginField_Map[item.field.type] = item.field
+  }
 })
 
 // 同步完善固定字段信息
@@ -101,15 +105,20 @@ const exportRuleConditionsStr = (conditions, formVar = 'form') => {
         case 'unnullArr':
           str += `(${_value} && ${_value}.length)`
           break;
-        // 包含、不包含的判断--只有多选下拉和复选框组有这个条件
+        // 包含、不包含的判断
         case 'contains':
-          c.value.forEach((v, i) => {
-            if (!i) {
-              str += `(${_value}.indexOf(${v}) >= 0)`
-            } else {
-              str += ` && (${_value}.indexOf(${v}) >= 0)`
-            }
-          })
+          // 日期范围字段
+          if () {
+          } else {
+            // 选项选字段
+            c.value.forEach((v, i) => {
+              if (!i) {
+                str += `(${_value}.indexOf(${v}) >= 0)`
+              } else {
+                str += ` && (${_value}.indexOf(${v}) >= 0)`
+              }
+            })
+          }
           break
         case 'uncontains':
           c.value.forEach((v, i) => {

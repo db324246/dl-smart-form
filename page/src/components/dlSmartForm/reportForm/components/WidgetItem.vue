@@ -58,15 +58,15 @@
 
 <script>
 import Bus from '../Bus'
+import Store from '../../store'
 import FieldTag from '../../components/FieldTag'
-import { fieldReportComMap, fieldDetailComMap } from '../../components/fields'
 
 export default {
   name: 'widget-item',
   components: {
     FieldTag,
-    ...fieldDetailComMap,
-    ...fieldReportComMap
+    ...Store.fieldDetailComMap,
+    ...Store.fieldReportComMap
   },
   inject: [
     'formId',
