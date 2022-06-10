@@ -11,28 +11,28 @@ export default {
     let str = ''
     switch (judge) {
       case 'contains':
-        c.value.forEach((v, i) => {
+        value.forEach((v, i) => {
           if (!i) {
-            str += `${_value}.includes(${v})`
+            str += `${fieldVal}.includes(${v})`
           } else {
-            str += ` && ${_value}.includes(${v})`
+            str += ` && ${fieldVal}.includes(${v})`
           }
         })
         break;
       case 'uncontains':
-        c.value.forEach((v, i) => {
+        value.forEach((v, i) => {
           if (!i) {
-            str += `!${_value}.includes(${v})`
+            str += `!${fieldVal}.includes(${v})`
           } else {
-            str += ` && !${_value}.includes(${v})`
+            str += ` && !${fieldVal}.includes(${v})`
           }
         })
         break;
       case 'nullArr':
-        str += `(!${_value}] || !${_value}.length)`
+        str += `(!${fieldVal}] || !${fieldVal}.length)`
         break;
       case 'unnullArr':
-        str += `(${_value} && ${_value}.length)`
+        str += `(${fieldVal} && ${fieldVal}.length)`
         break;
     }
     return str

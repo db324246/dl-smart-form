@@ -9,30 +9,22 @@ export default {
   correlativeRule(value, judge, fieldName) { // 字段的关联规则
     const fieldVal = `form['${fieldName}'].value`
     let str = ''
+    const st = `${fieldVal}[0] || ''`
+    const et = `${fieldVal}[1] || ''`
+    // eslint-disable-next-line no-useless-escape
+    const valueDate = `new Date('${value}'.replace(/\-/g, '/'))`
     switch (judge) {
-      // case 'contains':
-      //   c.value.forEach((v, i) => {
-      //     if (!i) {
-      //       str += `${_value}.includes(${v})`
-      //     } else {
-      //       str += ` && ${_value}.includes(${v})`
-      //     }
-      //   })
-      //   break;
-      // case 'uncontains':
-      //   c.value.forEach((v, i) => {
-      //     if (!i) {
-      //       str += `!${_value}.includes(${v})`
-      //     } else {
-      //       str += ` && !${_value}.includes(${v})`
-      //     }
-      //   })
-      //   break;
+      case 'contains':
+        str += `${valueDate} >= new Date(${st}) && ${valueDate} <= new Date(${et})`
+        break;
+      case 'uncontains':
+        str += `${valueDate} < new Date(${st}) && ${valueDate} > new Date(${et})`
+        break;
       case 'nullArr':
-        str += `(!${_value}] || !${_value}.length)`
+        str += `(!${fieldVal}] || !${fieldVal}.length)`
         break;
       case 'unnullArr':
-        str += `(${_value} && ${_value}.length)`
+        str += `(${fieldVal} && ${fieldVal}.length)`
         break;
     }
     return str

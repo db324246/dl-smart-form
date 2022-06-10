@@ -43,7 +43,7 @@
       v-else-if="containList.includes(condition.judge)"
       key="contains">
       <el-date-picker
-        v-if="condition.filedType === 'dateRange'"
+        v-if="condition.fieldType === 'dateRange'"
         v-model="condition.value"
         :type="dateType"
         :format="curFieldAttrs.format"
@@ -115,8 +115,8 @@ export default {
     judge() {
       return this.condition.judge || ''
     },
-    filedType() {
-      return this.condition.filedType || ''
+    fieldType() {
+      return this.condition.fieldType || ''
     },
     curField() {
       return this.fieldList.find(f => f.name === this.condition.fieldName) || {}
@@ -125,7 +125,7 @@ export default {
       return this.curField.attrs || {}
     },
     dateType() {
-      if (this.condition.filedType !== 'dateRange') return ''
+      if (this.condition.fieldType !== 'dateRange') return ''
       return this.curFieldAttrs.comType.replace('range', '')
     }
   }

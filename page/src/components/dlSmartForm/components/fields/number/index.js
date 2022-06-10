@@ -16,13 +16,13 @@ export default {
       case '<=':
       case '==':
       case '!=':
-        str += `${_value} ${c.judge} '${c.value}'`
+        str += `${fieldVal} ${judge} '${value}'`
         break;
       case 'nullStr':
-        str += `(${_value} !== 0 && !${_value})`
+        str += `(${fieldVal} !== 0 && !${fieldVal})`
         break;
       case 'unnullStr':
-        str += `(${_value} === 0 || ${_value})`
+        str += `(${fieldVal} === 0 || ${fieldVal})`
         break;
     }
     return str

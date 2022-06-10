@@ -80,7 +80,7 @@ export default {
         key: generateKey('condition_'),
         type: 'condition', // 类型为条件
         fieldName: '', // 字段name
-        filedType: '', // 字段类型
+        fieldType: '', // 字段类型
         valueType: undefined, // 值的类型
         judge: '', // 条件判断语句， 值的种类见下表 1.1
         value: '' // 用于条件判断的值， 条件判断语句为 “为空”、“不为空”时， 没有这个
@@ -94,7 +94,7 @@ export default {
     // 规则监听字段选择
     conditionFieldChange(v, conditionItem) {
       const field = this.fieldList.find(field => field.name === v)
-      conditionItem.filedType = field.type
+      conditionItem.fieldType = field.type
       conditionItem.valueType = typeOf(field.value)
       if (field.options && Array.isArray(field.options)) { // 有option选项的
         this.$set(conditionItem, 'optionsList', field.options)
@@ -115,7 +115,7 @@ export default {
         key: generateKey('handle_'),
         type: '', // 类型为条件
         fieldName: '', // 字段name
-        filedType: '', // 字段类型
+        fieldType: '', // 字段类型
         valueType: undefined, // 值的类型
         value: '',
         show: true,
@@ -130,7 +130,7 @@ export default {
     // 条件监听字段选择
     THandleFieldChange(v, THandleItem) {
       const field = this.fieldList.find(field => field.name === v)
-      THandleItem.filedType = field.type
+      THandleItem.fieldType = field.type
       THandleItem.valueType = typeOf(field.value)
       if (field.options && Array.isArray(field.options)) { // 有option选项的
         this.$set(THandleItem, 'optionsList', field.options)
@@ -145,7 +145,7 @@ export default {
         key: generateKey('condition_'),
         type: '', // 类型为条件
         fieldName: '', // 字段name
-        filedType: '', // 字段类型
+        fieldType: '', // 字段类型
         valueType: undefined, // 值的类型
         value: '',
         show: true, // 显示、隐藏
@@ -160,7 +160,7 @@ export default {
     // 不满足条件 监听 字段选择
     FHandleFieldChange(v, FHandleItem) {
       const field = this.fieldList.find(field => field.name === v)
-      FHandleItem.filedType = field.type
+      FHandleItem.fieldType = field.type
       FHandleItem.valueType = typeOf(field.value)
       if (field.options && Array.isArray(field.options)) { // 有option选项的
         this.$set(FHandleItem, 'optionsList', field.options)
@@ -259,7 +259,7 @@ export default {
     },
     // 判断条件字段是否是复杂类型的字段
     isComplexField(handler) {
-      return !this.complexFieldTypes.includes(handler.filedType)
+      return !this.complexFieldTypes.includes(handler.fieldType)
     }
   }
 }

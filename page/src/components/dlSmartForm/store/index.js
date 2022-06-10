@@ -110,6 +110,34 @@ export default new Vue({
         ...fieldDetailComMap,
         ...this.customFieldDetailMap
       }
+    },
+    // 所有字段的表单必填校验规则
+    fieldRuleMap() {
+      const fieldRuleMap = {}
+      this.allOriginField.forEach(f => {
+        // 自定义字段存在模板组件的情况下，注册模板组件
+        if (!f.attachedRule) return
+        Reflect.set(
+          fieldRuleMap,
+          f.field.type,
+          f.attachedRule
+        )
+      })
+      return fieldRuleMap
+    },
+    // 所有字段的管理校验规则
+    fieldCorrectRuleMap() {
+      const fieldCorrectRuleMap = {}
+      this.allOriginField.forEach(f => {
+        // 自定义字段存在模板组件的情况下，注册模板组件
+        if (!f.correlativeRule) return
+        Reflect.set(
+          fieldCorrectRuleMap,
+          f.field.type,
+          f.correlativeRule
+        )
+      })
+      return fieldCorrectRuleMap
     }
   },
   watch: {

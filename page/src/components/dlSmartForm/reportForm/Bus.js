@@ -1,6 +1,6 @@
 import Vue from 'vue'
+import Store from '../store'
 import { Message } from 'element-ui'
-import fieldRule from './fieldRuleConfig'
 
 // 智能表单实例对象
 class CustomFormer {
@@ -93,6 +93,7 @@ export default new Vue({
         const former = this.formerMap.get(formId)
         const watcher = former.formWatcher
         const fieldName = field.name
+        const fieldRule = Store.fieldRuleMap
         if (Object.keys(former.reportData).includes(fieldName)) {
           field.value = former.reportData[fieldName]
         }

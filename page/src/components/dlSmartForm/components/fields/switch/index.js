@@ -12,7 +12,7 @@ export default {
     switch (judge) {
       case '==':
       case '!=':
-        str += `${_value} ${c.judge} '${c.value}'`
+        str += `${fieldVal} ${judge} '${value}'`
         break;
     }
     return str

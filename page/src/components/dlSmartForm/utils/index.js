@@ -75,68 +75,13 @@ const getCorrelativeRules = fieldCorrelativeRules => {
 }
 
 // 计算判断条件字符串
-const exportRuleConditionsStr = (conditions, formVar = 'form') => {
+const exportRuleConditionsStr = (conditions) => {
   let str = ''
+  const fieldCorrectRuleMap = Store.fieldCorrectRuleMap
   conditions.forEach(c => {
-    if (c.type === 'condition') {
-      const fieldName = c.fieldName
-      const _value = `${formVar}['${fieldName}'].value`
-      switch (c.judge) {
-        // 可以直接判断的条件符
-        case '>':
-        case '<':
-        case '>=':
-        case '<=':
-        case '==':
-        case '!=':
-          str += `${_value} ${c.judge} '${c.value}'`
-          break;
-        // 字符串数字为空、不为空的判断
-        case 'nullStr':
-          str += `(${_value} !== 0 && !${_value})`
-          break;
-        case 'unnullStr':
-          str += `(${_value} === 0 || ${_value})`
-          break;
-        // 数组为空、不为空的判断
-        case 'nullArr':
-          str += `(!${_value}] || !${_value}.length)`
-          break;
-        case 'unnullArr':
-          str += `(${_value} && ${_value}.length)`
-          break;
-        // 包含、不包含的判断
-        case 'contains':
-          // 日期范围字段
-          if () {
-          } else {
-            // 选项选字段
-            c.value.forEach((v, i) => {
-              if (!i) {
-                str += `(${_value}.indexOf(${v}) >= 0)`
-              } else {
-                str += ` && (${_value}.indexOf(${v}) >= 0)`
-              }
-            })
-          }
-          break
-        case 'uncontains':
-          c.value.forEach((v, i) => {
-            if (!i) {
-              str += `(${_value}.indexOf(${v}) < 0)`
-            } else {
-              str += ` && (${_value}.indexOf(${v}) < 0)`
-            }
-          })
-          break
-        // 开关布尔值的判断
-        case 'true':
-          str += `${_value}`
-          break;
-        case 'false':
-          str += `！${_value}`
-          break;
-      }
+    const handler = fieldCorrectRuleMap[c.fieldType]
+    if (c.type === 'condition' && handler) {
+      str += handler(c.value, c.judge, c.fieldName)
     } else if (c.type === 'connector') {
       // 如果类型为连接符
       str += ` ${c.value} `
@@ -161,7 +106,7 @@ export const computeCorrelativeRule = (fieldCorrelativeRules = []) => {
           correlativeRuleMap[fieldName] = []
         }
 
-        const watchFunStr = `return !!(${exportRuleConditionsStr(conditions, 'form')})`
+        const watchFunStr = `return Boolean(${exportRuleConditionsStr(conditions, 'form')})`
         // eslint-disable-next-line
         const handler = new Function('form', watchFunStr)
         correlativeRuleMap[fieldName].push({

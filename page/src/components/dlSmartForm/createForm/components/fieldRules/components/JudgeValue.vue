@@ -55,11 +55,11 @@ export default {
     }
   },
   computed: {
-    filedType() {
-      return this.handleItem.filedType || ''
+    fieldType() {
+      return this.handleItem.fieldType || ''
     },
     componentId() {
-      return this.filedType + '-report'
+      return this.fieldType + '-report'
     }
   },
   watch: {
@@ -74,7 +74,7 @@ export default {
     },
     'handleItem.type'(val) {
       if (val === 'C_value' &&
-      this.filedType === 'switch' &&
+      this.fieldType === 'switch' &&
       typeof this.handleItem.value !== 'boolean') {
         this.handleItem.value = true
       }
