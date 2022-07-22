@@ -16,6 +16,8 @@
 </template>
 
 <script>
+// import formData from '@/uploader.json'
+// import reportFormData from '@/uploaderReport.json'
 import formData from '@/formData.json'
 import reportFormData from '@/reportData.json'
 export default {
@@ -57,6 +59,7 @@ export default {
 <style scoped>
 .detail-container {
   height: calc(100vh - 70px);
+  padding: 0 10px 20px;
 }
 .detail-header {
   display: flex;

@@ -5,14 +5,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build2": "vue-cli-service build --mode component --target lib --inline-vue --name dlSmartForm ./packages/index.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "element-ui": "^2.15.6",
+    "element-ui": "2.15.6",
     "sortablejs": "^1.14.0",
     "v-contextmenu": "^2.9.0",
-    "vue": "^2.6.11",
+    "vue": "2.5.21",
     "vue-router": "^3.2.0",
     "vue-runtime-helpers": "^1.1.2",
     "vuedraggable": "^2.24.3",
@@ -25,16 +26,20 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
+    "babel-plugin-component": "^1.1.1",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "html-loader": "^1.3.2",
     "lint-staged": "^9.5.0",
+    "marked-essay-loader": "^1.0.5",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-highlightjs": "^1.3.3",
+    "vue-template-compiler": "2.5.21"
   },
   "gitHooks": {
     "pre-commit": "lint-staged"

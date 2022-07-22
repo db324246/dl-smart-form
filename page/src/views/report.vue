@@ -18,6 +18,8 @@
 <script>
 import formData from '@/formData.json'
 import reportFormData from '@/reportData.json'
+// import formData from '@/uploader.json'
+// import reportFormData from '@/uploaderReport.json'
 export default {
   name: 'Home',
   data() {
@@ -61,6 +63,7 @@ export default {
 <style scoped>
 .report-container {
   height: calc(100vh - 70px);
+  padding: 0 10px 20px;
 }
 .report-header {
   display: flex;

@@ -21,6 +21,7 @@ module.exports = {
     'no-useless-return': 1,
     'object-curly-newline': 1,
     'promise/param-names': 0,
-    'import/no-named-default': 0
+    'import/no-named-default': 0,
+    'import/first': 0
   }
 }

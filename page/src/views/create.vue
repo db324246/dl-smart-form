@@ -7,8 +7,7 @@
     </div>
     <div class="create-body">
       <smart-form-create
-        ref="createForm"
-        layout="default">
+        ref="createForm">
       </smart-form-create>
     </div>
   </div>
@@ -49,6 +48,7 @@ export default {
 <style scoped>
 .create-container {
   height: calc(100vh - 70px);
+  padding: 0 10px 20px;
 }
 .create-header {
   display: flex;
