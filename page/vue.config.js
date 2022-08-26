@@ -4,6 +4,7 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 const config = {
+  publicPath: '/dlSmartForm/',
   configureWebpack: {
     module: {
       rules: [
@@ -20,6 +21,7 @@ const config = {
     resolve: {
       // 别名配置
       alias: {
+        '@plugin': resolve('./dlSmartForm'),
         '@pr': resolve('./packages')
       }
     }

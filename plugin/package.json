@@ -1,0 +1,14 @@
+{
+  
+  "name": "dl-smart-form",
+  "version": "0.1.2",
+  "private": false,
+  "author": "daixiaobin",
+  "description": "基于 vue 与 element-UI 设计的自定义表单",
+  "main": "lib/dl-smart-form.umd.min.js",
+  "keywords": ["vue", "draggable", "smartform", "element-UI"],
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

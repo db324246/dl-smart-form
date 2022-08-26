@@ -73,7 +73,7 @@ SmartForm.registerFields([{
 > 方法进行表单注册
 
 ### 注册一个上传字段
-1. 在个人项目种 `components` 目录下创建 `Uploader` 组件目录
+1. 在个人项目中 `components` 目录下创建 `Uploader` 组件目录
 + components
   + Uploader
     + config.vue // 配置组件

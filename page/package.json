@@ -1,15 +1,21 @@
 {
-  "name": "dl-smart-form",
+  "name": "dl-smart-form-web",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "author": "daixiaobin",
+  "description": "基于 vue 与 element-UI 设计的自定义表单",
+  "main": "lib/dlSmartForm.umd.min.js",
+  "keyword": "vue, draggable, smartform, element-UI",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build2": "vue-cli-service build --mode component --target lib --inline-vue --name dlSmartForm ./packages/index.js"
+    "lib": "vue-cli-service build --mode component --target lib --inline-vue --name dl-smart-form --dest lib ./packages/index.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "dl-smart-form": "^0.1.2",
     "element-ui": "2.15.6",
     "sortablejs": "^1.14.0",
     "v-contextmenu": "^2.9.0",

@@ -2,15 +2,15 @@ const installRoutes = [
   {
     path: 'install',
     component: () => import('@/views/doc/install'),
-    title: '安装',
-    name: 'install'
-  },
-  {
-    path: 'quick',
-    component: () => import('@/views/doc/quick'),
     title: '快速上手',
-    name: 'quick'
+    name: 'install'
   }
+  // {
+  //   path: 'quick',
+  //   component: () => import('@/views/doc/quick'),
+  //   title: '快速上手',
+  //   name: 'quick'
+  // }
 ]
 
 const guideRoutes = [

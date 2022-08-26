@@ -17,13 +17,7 @@ import SmartForm, {
   createrInstaller,
   reporterInstaller,
   showerInstaller
-} from 'dlSmartForm/dlSmartForm.umd'
-
-// const {
-//   createrInstaller,
-//   reporterInstaller,
-//   showerInstaller
-// } = SmartForm
+} from 'dl-smart-form'
 
 Vue.use(Element);
 Vue.component('ReadMe', ReadMe)
