@@ -10,6 +10,9 @@ export const syncFieldInitTo = (syncField) => {
     {},
     deepClone(allOriginField_Map[syncField.type]),
     deepClone(syncField))
+  if (field.name) {
+    field.key = field.key || field.name
+  }
 
   const complexComTypes = complexComponents.map(com => com.field.type)
   if (!complexComTypes.includes(field.type)) return field

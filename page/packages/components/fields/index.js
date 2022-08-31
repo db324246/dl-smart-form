@@ -9,6 +9,7 @@ import switchCom from './switch'
 import textarea from './textarea'
 import dateRange from './dateRange'
 import mulSelect from './mulSelect'
+import blankLine from './blankLine'
 // import arrayForm from './arrayForm'
 import radioGroup from './radioGroup'
 import checkboxGroup from './checkboxGroup'
@@ -34,7 +35,8 @@ export const advanceComponents = []
 // 布局字段
 export const layoutComponents = [
   title,
-  divider
+  divider,
+  blankLine
 ]
 
 // 复杂类型字段（一个字段内部集成了多个字段）

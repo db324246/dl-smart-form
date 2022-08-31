@@ -7,7 +7,7 @@
       <el-tab-pane label="PC端布局" name="PC">
         <flex-table-layout ref="flexTableLayout" />
       </el-tab-pane>
-      <el-tab-pane label="移动端预览" name="mobile">
+      <el-tab-pane label="移动端布局" name="mobile">
         <mobile-layout ref="mobileLayout" />
       </el-tab-pane>
     </el-tabs>

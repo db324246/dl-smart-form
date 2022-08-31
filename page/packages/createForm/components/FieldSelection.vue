@@ -130,10 +130,12 @@ export default {
     // 开始拖拽
     handleDragStart(evt, components) {
       const field = components[evt.oldIndex].field
+      const key = this.generateFieldName(field.type)
       Bus.setDraggingNode({
         type: 'field',
         data: {
-          name: this.generateFieldName(field.type),
+          key,
+          name: key,
           ...syncFieldInitTo(field),
           ...deepClone(this.extendedAttrs)
         }

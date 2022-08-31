@@ -46,7 +46,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="可查询列">
+        <!-- <el-form-item label="可查询列">
           <el-select v-model="formConfig.queryFields" value-key="name" multiple placeholder="请选择可查询列">
             <el-option
               v-for="item in modelFields"
@@ -55,7 +55,7 @@
               :key="item.name">
             </el-option>
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
     </el-dialog>
   </div>
@@ -63,13 +63,12 @@
 
 <script>
 import Bus from '../Bus'
-import { deepClone } from '@pr/utils'
 import MobileLayout from './MobileLayout'
 import smartTitle from '../../components/smartTitle'
 import FieldRules from '../components/fieldRules'
 export default {
   name: 'vertical-layout',
-  inject: ['layout'],
+  inject: ['layout', 'fieldsArr'],
   components: {
     MobileLayout,
     FieldRules,
@@ -113,17 +112,17 @@ export default {
     fieldCorrelativeRulesAdd() {
       this.$refs.fieldRules.showDialog()
     },
-    handleAddField(field) {
-      const _field = deepClone(field)
-      this.modelFields.push(_field)
+    handleAddField(fieldName) {
+      const field = this.fieldsArr.find(f => f.name === fieldName)
+      this.modelFields.push(field)
       if (this.formConfig.tableColumns.length < 3) {
-        this.formConfig.tableColumns.push(_field)
+        this.formConfig.tableColumns.push(field)
       }
     },
-    handleDelField(field) {
-      const index = this.modelFields.findIndex(f => f.name === field.name)
+    handleDelField(fieldName) {
+      const index = this.modelFields.findIndex(f => f.name === fieldName)
       this.modelFields.splice(index, 1)
-      const index2 = this.formConfig.tableColumns.findIndex(f => f.name === field.name)
+      const index2 = this.formConfig.tableColumns.findIndex(f => f.name === fieldName)
       if (index2 >= 0) {
         this.formConfig.tableColumns.splice(index, 1)
       }

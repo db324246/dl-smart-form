@@ -6,12 +6,18 @@
       <div v-if="filedData.type === 'default'" class="default-config">
         请选择字段
       </div>
-      <component
-        v-else
-        :form="filedData"
-        :is="componentId"
-        :disabled="!filedData.configurable">
-      </component>
+      <template v-else>
+        <el-form label-position="top" size="small" class="attache-rule-form">
+          <el-form-item label='字段唯一键'>
+            <el-input v-model='filedData.key' @blur="handleCompleteKey"></el-input>
+          </el-form-item>
+        </el-form>
+        <component
+          :form="filedData"
+          :is="componentId"
+          :disabled="!filedData.configurable">
+        </component>
+      </template>
 
       <!-- 非单字段模式 && 字段name && 表单字段 -->
       <el-form
@@ -130,6 +136,10 @@ export default {
           }
         })
       })
+    },
+    // key 值不可为空
+    handleCompleteKey() {
+      this.filedData.key = this.filedData.key || this.filedData.name
     }
   }
 }

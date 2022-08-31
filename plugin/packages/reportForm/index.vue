@@ -165,18 +165,18 @@ export default {
         const fieldsMap = this.fieldsMap
         // 布局字段类型
         const layoutTypes = layoutComponents.map(com => com.field.type)
-        for (const key in fieldsMap) {
-          const field = fieldsMap[key]
+        for (const fieldName in fieldsMap) {
+          const field = fieldsMap[fieldName]
           if (layoutTypes.includes(field.type)) continue
           if (this.unReportFields) {
             // 自定义计算无需上报的字段
             if (!this.unReportFields(field)) continue
           }
-          const flag = this.ruleShow[key] === undefined
+          const flag = this.ruleShow[fieldName] === undefined
             ? true
-            : this.ruleShow[key]
+            : this.ruleShow[fieldName]
           if (!flag) continue
-          result[key] = field.value
+          result[field.key] = field.value
         }
         return {
           currentData: this.reportData,

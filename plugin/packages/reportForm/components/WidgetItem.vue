@@ -28,14 +28,16 @@
         :label-width="showLabel ? labelWidth : '0'"
         :required="curFieldAttachedRule.required"
         :class="`el-form-item--label-${labelPosition}`">
-        <component :is='detailComId'
-          :field-obj="fieldObj"
-          :show-label="showLabel"
-          :label-width="labelWidth"
-          :label-position="labelPosition"
-          :report-style="getMediumWidth">
-        </component>
-        <field-tag :field="fieldObj"></field-tag>
+        <div class="widge-field-context">
+          <component :is='detailComId'
+            :field-obj="fieldObj"
+            :show-label="showLabel"
+            :label-width="labelWidth"
+            :label-position="labelPosition"
+            :report-style="getMediumWidth">
+          </component>
+          <field-tag :field="fieldObj"></field-tag>
+        </div>
       </el-form-item>
     </template>
 

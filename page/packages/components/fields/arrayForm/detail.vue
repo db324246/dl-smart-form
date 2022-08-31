@@ -9,7 +9,7 @@
           <component
             :field-obj="item"
             :is="item.type + '-detail'"
-            :field-val="row[item.name]">
+            :field-val="row[item.key]">
           </component>
         </template>
       </el-table-column>

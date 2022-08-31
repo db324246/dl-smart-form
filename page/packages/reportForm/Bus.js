@@ -92,10 +92,11 @@ export default new Vue({
       try {
         const former = this.formerMap.get(formId)
         const watcher = former.formWatcher
+        const fieldKey = field.key
         const fieldName = field.name
         const fieldRule = Store.fieldRuleMap
-        if (Object.keys(former.reportData).includes(fieldName)) {
-          field.value = former.reportData[fieldName]
+        if (Reflect.has(former.reportData, fieldKey)) {
+          field.value = former.reportData[fieldKey]
         }
         const attachedRule = former.fieldAttachedRule[fieldName] || {}
         this.$set(field, 'attachedRule', attachedRule)
@@ -105,9 +106,9 @@ export default new Vue({
         } else {
           rule = fieldRule[field.type](attachedRule.required, field.label)
         }
-        this.$set(watcher.formModel, fieldName, field.value)
         this.$set(watcher.fieldsMap, fieldName, field)
-        this.$set(watcher.formModelRules, fieldName, rule)
+        this.$set(watcher.formModelRules, fieldKey, rule)
+        this.$set(watcher.formModel, fieldKey, field.value)
       } catch (error) {
         console.log(error)
         Message.error('表单实例不存在')

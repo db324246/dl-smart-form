@@ -7,17 +7,17 @@ import Uploader from './components/Uploader'
 import Element from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-// import SmartForm, {
-//   createrInstaller,
-//   reporterInstaller,
-//   showerInstaller
-// } from '@pr/index.js'
-
 import SmartForm, {
   createrInstaller,
   reporterInstaller,
   showerInstaller
-} from 'dl-smart-form'
+} from '@pr/index.js'
+
+// import SmartForm, {
+//   createrInstaller,
+//   reporterInstaller,
+//   showerInstaller
+// } from 'dl-smart-form'
 
 Vue.use(Element);
 Vue.component('ReadMe', ReadMe)

@@ -24,9 +24,9 @@
   "reportData": {
     "arrayform_field_1653380325623158": [
       {
-        "input_field_1653380234611128": "张三",
-        "input_field_1653380263907797": "123456789",
-        "input_field_1653380291627638": "南京市江宁区"
+        "name": "张三",
+        "phoneNumber": "123456789",
+        "address": "南京市江宁区"
       }
     ],
     "input_field_1653397388791410": "测试单行文本",
@@ -53,9 +53,9 @@
   "updateData": {
     "arrayform_field_1653380325623158": [
       {
-        "input_field_1653380234611128": "张三",
-        "input_field_1653380263907797": "123456789",
-        "input_field_1653380291627638": "南京市江宁区"
+        "name": "张三",
+        "phoneNumber": "123456789",
+        "address": "南京市江宁区"
       }
     ]
   }

@@ -20,7 +20,7 @@
         @contextmenu.stop="handleContentFocus(field, index)"
         @click.stop="handleNodeFocus(field)">
         <widget-item
-          @click.native="handleContentEdit(field)"
+          @click.native="handleContentEdit(field.name)"
           :field-name="field.name"
           :data-index="index">
         </widget-item>
@@ -46,7 +46,7 @@ import {
 
 export default {
   name: 'mobile-layout',
-  inject: ['layout'],
+  inject: ['layout', 'fieldsArr'],
   components: {
     WidgetItem
   },
@@ -122,7 +122,12 @@ export default {
   methods: {
     // 新增字段
     handleAddField(field) {
-      this.rowsData.push(field)
+      const fieldInfo = {
+        key: field.key,
+        name: field.name,
+        type: field.type
+      }
+      this.rowsData.push(fieldInfo)
     },
     // 删除字段
     handleDelField(fieldKey) {
@@ -135,7 +140,7 @@ export default {
     setRows(rowsData = []) {
       if (this.layout === 'vertical') {
         rowsData.forEach(field => {
-          this.$emit('ver_add-field', field)
+          this.$emit('ver_add-field', field.name)
         })
       }
       this.rowsData.splice(0, this.rowsData.length)
@@ -157,13 +162,14 @@ export default {
       this.focusField = node
     },
     // 字段点击编辑
-    handleContentEdit(field) {
+    handleContentEdit(fieldName) {
+      const field = this.fieldsArr.find(f => f.name === fieldName)
       Bus.$emit('edit-node', field)
     },
     // 菜单操作
     handleCommand(type) {
       if (type === 'editField') {
-        this.focusField && Bus.$emit('edit-node', this.focusField)
+        this.focusField && this.handleContentEdit(this.focusField.name)
       } else if (type === 'delField') {
         this.focusField && this.$confirm('是否删除此字段?', {
           confirmButtonText: '确定',
@@ -171,7 +177,7 @@ export default {
           type: 'warning'
         }).then(() => {
           Bus.$emit('delete-field', { fieldKey: this.focusField.name })
-          this.layout === 'vertical' && this.$emit('ver_del-field', this.focusField)
+          this.layout === 'vertical' && this.$emit('ver_del-field', this.focusField.name)
         })
       }
     },

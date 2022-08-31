@@ -36,6 +36,7 @@
 | switchCom | 开关字段 | base（基础字段） |
 | title | 标题字段 | layout（布局字段） |
 | divider | 分割线字段 | layout（布局字段） |
+| blankLine | 空白行字段 | layout（布局字段） |
 
 
 ### AttachedRule 字段的附属规则计算
