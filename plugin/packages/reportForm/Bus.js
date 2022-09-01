@@ -107,8 +107,8 @@ export default new Vue({
           rule = fieldRule[field.type](attachedRule.required, field.label)
         }
         this.$set(watcher.fieldsMap, fieldName, field)
-        this.$set(watcher.formModelRules, fieldKey, rule)
-        this.$set(watcher.formModel, fieldKey, field.value)
+        this.$set(watcher.formModelRules, fieldName, rule)
+        this.$set(watcher.formModel, fieldName, field.value)
       } catch (error) {
         console.log(error)
         Message.error('表单实例不存在')
@@ -126,7 +126,8 @@ export default new Vue({
             if (!rules || !rules.length) return
             const handlers = []
             rules.forEach(r => {
-              if (r.handler(watcher.fieldsMap)) {
+              const flag = r.handler(watcher.fieldsMap)
+              if (flag) {
                 handlers.push(
                   ...(r.T_handle || [])
                 )
@@ -138,6 +139,7 @@ export default new Vue({
             })
             handlers.forEach(h => {
               const _field = watcher.fieldsMap[h.fieldName]
+              if (!_field) return
               switch (h.type) {
                 case 'C_value':
                   // eslint-disable-next-line
@@ -163,6 +165,7 @@ export default new Vue({
             })
           },
           {
+            immediate: true,
             deep: true
           }
         )

@@ -5,13 +5,6 @@
         px(像素)
       <div class="col-config-tip">宽度为 0 时，单元格的宽度会自动撑开</div>
     </el-form-item>
-    <el-form-item label="单元格对齐方式：">
-      <el-radio-group v-model="form.align" size="mini">
-        <el-radio label="middle_left" style="margin-top: 8px;">左对齐</el-radio>
-        <el-radio label="middle_center" style="margin-top: 8px;">水平居中&ensp;&ensp;&ensp;&ensp;</el-radio>
-        <el-radio label="middle_right" style="margin-top: 8px;">右对齐</el-radio>
-      </el-radio-group>
-    </el-form-item>
   </el-form>
 </template>
 

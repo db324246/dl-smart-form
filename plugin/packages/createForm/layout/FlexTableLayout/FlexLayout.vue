@@ -185,11 +185,12 @@ export default {
     // 插入行
     handleInsertRow(index, rowKey) {
       const row = this.nodesMap.get(rowKey)
-      const parent = row.parentKey === -1
+      const childrenList = row.parentKey === -1
         ? this.rowsData
         : this.nodesMap.get(row.parentKey).children
-      const defaultRow = createRow(-1)
-      parent.splice(index, 0, defaultRow)
+
+      const defaultRow = createRow(this.formId, row.parentKey)
+      childrenList.splice(index, 0, defaultRow)
     },
     // 交换行
     handleExchangeRow(sourceIndex, targetIndex, sourceKey) {

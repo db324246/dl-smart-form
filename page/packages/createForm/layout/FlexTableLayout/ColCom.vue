@@ -4,6 +4,7 @@
     :class="{
       'active-col': active
     }"
+    :style="computedStyles"
     v-bind="$attrs"
     v-contextmenu:contextmenu
     @contextmenu.stop.prevent="handlerFocus"
@@ -110,6 +111,14 @@ export default {
     },
     active() {
       return Bus.focusNodeKey === this.colData.key
+    },
+    computedStyles() {
+      const width = this.colData.width
+      return {
+        'max-width': width ? width + 22 + 'px' : '100%',
+        'min-width': width ? width + 22 + 'px' : 'auto',
+        width: width ? width + 22 + 'px' : '100%'
+      }
     }
   },
   created() {

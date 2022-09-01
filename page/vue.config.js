@@ -47,11 +47,11 @@ const config = {
 }
 
 if (process.env.smartForm == 1) {
-  config.outputDir = 'dlSmartForm'
   config.configureWebpack.externals = {
     vue: 'vue'
   }
 } else {
+  config.outputDir = 'dlSmartForm'
   config.publicPath = '/dlSmartForm/'
 }
 module.exports = config

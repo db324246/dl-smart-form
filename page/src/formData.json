@@ -665,7 +665,6 @@
   },
   "form": [
     {
-      "name": "arrayform_field_1653380325623158",
       "type": "arrayform",
       "label": "我的重复上报",
       "value": [],
@@ -743,12 +742,14 @@
         },
         "fieldCorrelativeRules": []
       },
+      "name": "arrayform_field_1653380325623158",
       "modelFields": [
         {
           "name": "input_field_1653380234611128",
           "type": "input",
           "label": "姓名",
           "value": "",
+          "key": "name",
           "configurable": true,
           "isFormField": true,
           "attrs": {
@@ -763,6 +764,7 @@
           "type": "input",
           "label": "手机号",
           "value": "",
+          "key": "phoneNumber",
           "configurable": true,
           "isFormField": true,
           "attrs": {
@@ -777,6 +779,7 @@
           "type": "input",
           "label": "地址",
           "value": "",
+          "key": "address",
           "configurable": true,
           "isFormField": true,
           "attrs": {
@@ -786,10 +789,10 @@
             "pattern": ""
           }
         }
-      ]
+      ],
+      "key": "arrayform_field_1653380325623158"
     },
     {
-      "name": "input_field_1653397388791410",
       "type": "input",
       "label": "单行文本",
       "value": "",
@@ -800,22 +803,24 @@
         "maxlength": 100,
         "dataType": "string",
         "pattern": ""
-      }
+      },
+      "name": "input_field_1653397388791410",
+      "key": "name"
     },
     {
-      "name": "number_field_165339740610296",
       "type": "number",
       "label": "数字输入",
-      "value": 0,
+      "value": 18,
       "configurable": true,
       "isFormField": true,
       "attrs": {
         "placeholder": "占位符文字",
         "step": 1
-      }
+      },
+      "name": "number_field_165339740610296",
+      "key": "age"
     },
     {
-      "name": "date_field_1653397410453707",
       "type": "date",
       "label": "日期选择器",
       "value": "",
@@ -826,10 +831,11 @@
         "placeholder": "请选择日期",
         "format": "yyyy-MM-dd",
         "comType": "date"
-      }
+      },
+      "name": "date_field_1653397410453707",
+      "key": "date_field_1653397410453707"
     },
     {
-      "name": "time_field_1653397412494217",
       "type": "time",
       "label": "时间选择器",
       "value": "",
@@ -838,10 +844,11 @@
       "attrs": {
         "placeholder": "请选择时间",
         "format": "HH:mm"
-      }
+      },
+      "name": "time_field_1653397412494217",
+      "key": "time_field_1653397412494217"
     },
     {
-      "name": "select_field_1653397433573194",
       "type": "select",
       "label": "下拉选择框",
       "value": "",
@@ -866,10 +873,11 @@
           "value": "选项3",
           "key": "3"
         }
-      ]
+      ],
+      "name": "select_field_1653397433573194",
+      "key": "select_field_1653397433573194"
     },
     {
-      "name": "textarea_field_16533974363244",
       "type": "textarea",
       "label": "多行文本",
       "value": "",
@@ -878,10 +886,11 @@
       "attrs": {
         "placeholder": "占位符文字",
         "maxlength": 1000
-      }
+      },
+      "name": "textarea_field_16533974363244",
+      "key": "textarea_field_16533974363244"
     },
     {
-      "name": "dateRange_field_1653397443276620",
       "type": "dateRange",
       "label": "日期范围",
       "value": [],
@@ -892,10 +901,11 @@
         "endPlaceholder": "请选择结束日期",
         "format": "yyyy-MM-dd",
         "comType": "daterange"
-      }
+      },
+      "name": "dateRange_field_1653397443276620",
+      "key": "dateRange_field_1653397443276620"
     },
     {
-      "name": "mulSelect_field_1653397445774922",
       "type": "mulSelect",
       "label": "多选下拉框",
       "value": [],
@@ -920,19 +930,21 @@
           "value": "选项3",
           "key": "3"
         }
-      ]
+      ],
+      "name": "mulSelect_field_1653397445774922",
+      "key": "mulSelect_field_1653397445774922"
     },
     {
-      "name": "switch_field_1653397451415264",
       "type": "switch",
       "label": "开关",
       "value": true,
       "configurable": true,
       "isFormField": true,
-      "attrs": {}
+      "attrs": {},
+      "name": "switch_field_1653397451415264",
+      "key": "switch_field_1653397451415264"
     },
     {
-      "name": "radioGroup_field_1653397456685616",
       "type": "radioGroup",
       "label": "单选框组",
       "value": "",
@@ -956,10 +968,11 @@
           "value": "选项3",
           "key": "3"
         }
-      ]
+      ],
+      "name": "radioGroup_field_1653397456685616",
+      "key": "radioGroup_field_1653397456685616"
     },
     {
-      "name": "checkboxGroup_field_1653397463437924",
       "type": "checkboxGroup",
       "label": "多选框组",
       "value": [],
@@ -983,10 +996,11 @@
           "value": "选项3",
           "key": "3"
         }
-      ]
+      ],
+      "name": "checkboxGroup_field_1653397463437924",
+      "key": "checkboxGroup_field_1653397463437924"
     },
     {
-      "name": "title_field_165339747062177",
       "type": "title",
       "label": "标题/段落",
       "value": "标题/段落",
@@ -997,15 +1011,18 @@
         "backgroundColor": "#efdebb",
         "color": "#303133",
         "fontWeight": "normal"
-      }
+      },
+      "name": "title_field_165339747062177",
+      "key": "title_field_165339747062177"
     },
     {
-      "name": "divider_field_1653397473501469",
       "type": "divider",
       "label": "分割线",
       "value": null,
       "configurable": false,
-      "isFormField": false
+      "isFormField": false,
+      "name": "divider_field_1653397473501469",
+      "key": "divider_field_1653397473501469"
     }
   ],
   "attachedRule": {

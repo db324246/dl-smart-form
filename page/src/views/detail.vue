@@ -1,9 +1,18 @@
 <template>
   <div class="detail-container">
     <div class="detail-header">
-      <el-button @click="handleLog">打印表单数据</el-button>
-      <el-button @click="handleExport">导出表单数据</el-button>
-      <el-button @click="handleImport">导入表单数据</el-button>
+      <el-button @click="$refs.formUpload.click()">导入表单数据</el-button>
+      <el-button @click="$refs.dataUpload.click()">导入上报数据</el-button>
+      <input style="visibility: hidden;"
+        type="file"
+        ref="formUpload"
+        @change="handleFormImport"
+        accept=".json" />
+      <input style="visibility: hidden;"
+        type="file"
+        ref="dataUpload"
+        @change="handleDataImport"
+        accept=".json" />
     </div>
     <div class="detail-body">
       <smart-form-show
@@ -16,8 +25,6 @@
 </template>
 
 <script>
-// import formData from '@/uploader.json'
-// import reportFormData from '@/uploaderReport.json'
 import formData from '@/formData.json'
 import reportFormData from '@/reportData.json'
 export default {
@@ -32,25 +39,39 @@ export default {
     this.$refs.showForm.initShowForm()
   },
   methods: {
-    async handleLog() {
-      const formData = await this.$refs.createForm.getCustomFormData()
-      console.log(formData)
-      return formData
+    handleFormImport(e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        try {
+          const formData = JSON.parse(reader.result)
+          console.log(formData)
+          this.formData = formData
+          this.$refs.showForm.initShowForm()
+        } catch (err) {
+          this.$message.error('请导入正确的表单数据')
+          console.log(err)
+        }
+      }
+      reader.readAsText(file)
     },
-    handleImport() {
-      this.$refs.createForm.initFormData(formData)
-    },
-    async handleExport() {
-      const formData = await this.handleLog()
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:json/plain;charset=utf-8,' + encodeURIComponent(
-        JSON.stringify(formData)
-      ));
-      element.setAttribute('download', 'formData.json');
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
+    handleDataImport(e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        try {
+          const reportFormData = JSON.parse(reader.result)
+          console.log(reportFormData)
+          this.reportData = reportFormData.reportData
+          this.$refs.showForm.initShowForm()
+        } catch (err) {
+          this.$message.error('请导入正确的上报数据')
+          console.log(err)
+        }
+      }
+      reader.readAsText(file)
     }
   }
 }

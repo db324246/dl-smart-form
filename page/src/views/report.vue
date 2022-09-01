@@ -1,9 +1,20 @@
 <template>
   <div class="report-container">
     <div class="report-header">
+      <el-button @click="$refs.formUpload.click()">导入表单数据</el-button>
+      <el-button @click="$refs.dataUpload.click()">导入上报数据</el-button>
       <el-button @click="handleSubmit">提交表单数据</el-button>
       <el-button @click="handleExport">导出上报数据</el-button>
-      <el-button @click="handleImport">导入上报数据</el-button>
+      <input style="visibility: hidden;"
+        type="file"
+        ref="formUpload"
+        @change="handleFormImport"
+        accept=".json" />
+      <input style="visibility: hidden;"
+        type="file"
+        ref="dataUpload"
+        @change="handleDataImport"
+        accept=".json" />
     </div>
     <div class="report-body">
       <smart-form-report
@@ -17,9 +28,6 @@
 
 <script>
 import formData from '@/formData.json'
-import reportFormData from '@/reportData.json'
-// import formData from '@/uploader.json'
-// import reportFormData from '@/uploaderReport.json'
 export default {
   name: 'Home',
   data() {
@@ -32,6 +40,40 @@ export default {
     this.$refs.reportForm.initReportForm()
   },
   methods: {
+    handleFormImport(e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        try {
+          const formData = JSON.parse(reader.result)
+          console.log(formData)
+          this.formData = formData
+          this.$refs.reportForm.initReportForm()
+        } catch (err) {
+          this.$message.error('请导入正确的表单数据')
+          console.log(err)
+        }
+      }
+      reader.readAsText(file)
+    },
+    handleDataImport(e) {
+      const file = e.target.files[0]
+      const reader = new FileReader()
+
+      reader.onload = () => {
+        try {
+          const reportFormData = JSON.parse(reader.result)
+          console.log(reportFormData)
+          this.reportData = reportFormData.reportData
+          this.$refs.reportForm.initReportForm()
+        } catch (err) {
+          this.$message.error('请导入正确的上报数据')
+          console.log(err)
+        }
+      }
+      reader.readAsText(file)
+    },
     async handleSubmit() {
       try {
         const data = await this.$refs.reportForm.getReportData()
@@ -39,10 +81,6 @@ export default {
       } catch (err) {
         console.log(2222, err)
       }
-    },
-    handleImport() {
-      this.reportData = reportFormData.reportData
-      this.$refs.reportForm.initReportForm()
     },
     async handleExport() {
       const formData = await this.$refs.reportForm.getReportData()

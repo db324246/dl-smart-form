@@ -5,14 +5,15 @@
     :class="{
       'row-has-border': hasBorder
     }">
-    <template v-for="col in colsData">
+    <template v-for="col in colsRenderData">
       <div
-        v-if="!hideColByNoData(col)"
+        v-show="!hideColByNoData(col)"
         :key="col.key"
         class='flex-col'
         :class="{
           'col-has-border': hasBorder
-        }">
+        }"
+        :style="col.style">
         <template v-for="node in (col.children || [])">
           <flex-row
             v-if="node.domtype === 'row'"
@@ -55,6 +56,19 @@ export default {
     colsData() {
       return this.value.children || []
     },
+    colsRenderData() {
+      return this.colsData.map(col => {
+        const width = col.width
+        return {
+          ...col,
+          style: {
+            'max-width': width ? width + 10 + 'px' : '100%',
+            'min-width': width ? width + 10 + 'px' : 'auto',
+            width: width ? width + 10 + 'px' : '100%'
+          }
+        }
+      })
+    },
     hideRowByNoData() {
       const showCols = this.colsData.filter(col => {
         return !this.hideColByNoData(col)
@@ -65,7 +79,7 @@ export default {
   watch: {
     hideRowByNoData: {
       handler(val) {
-        this.$emit('rule-show', val)
+        this.$emit('rule-show', !val)
       },
       immediate: true
     }
@@ -101,9 +115,19 @@ export default {
   justify-content: center;
   padding: 5px;
 }
+.flex-col .flex-row {
+  flex: 1;
+}
 .row-has-border {
   border-bottom: 1px solid #999;
 }
+.flex-col .row-has-border {
+  border: none;
+}
+.flex-col .row-has-border:not(:last-child) {
+  border-top: 1px solid #999;
+}
+
 .col-has-border {
   border-right: 1px solid #999;
   &:last-child {

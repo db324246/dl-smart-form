@@ -20,6 +20,7 @@ export const syncFieldInitTo = (syncField) => {
   // 复杂类型字段添加默认的内部字段附属规则
   if (!Object.keys(field.attrs.fieldAttachedRule).length) {
     field.modelFields.forEach(f => {
+      f.key = f.key || f.name
       field.attrs.fieldAttachedRule[f.name] = {
         showLabel: true,
         required: false
@@ -28,7 +29,12 @@ export const syncFieldInitTo = (syncField) => {
   }
 
   if (field.type === 'arrayform' && !field.attrs.tableColumns.length) {
-    field.attrs.tableColumns = field.modelFields.slice()
+    field.attrs.tableColumns = field.modelFields.map(f => ({
+      label: f.label,
+      key: f.key,
+      name: f.name,
+      type: f.type
+    }))
   }
 
   return field

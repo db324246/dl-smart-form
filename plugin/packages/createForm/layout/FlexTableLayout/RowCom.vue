@@ -32,10 +32,9 @@
         :col-data="item"
         :col-index="index"
         :style="{
-          'max-width': item.width ? item.width + 'px' : 'auto',
+          'max-width': item.width ? item.width + 'px' : '100%',
           'min-width': item.width ? item.width + 'px' : 'auto',
-          'text-align': item.align.split('_')[1],
-          'vertical-align': item.align.split('_')[0]
+          'width': item.width ? item.width + 'px' : '100%'
         }"/>
     </div>
 

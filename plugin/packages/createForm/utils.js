@@ -25,7 +25,6 @@ export const createCol = (parentKey, config = {}) => {
     ...config,
     key: colKey,
     width: 0,
-    align: 'middle_left',
     domtype: 'col',
     configurable: true,
     parentKey, // 列的父节点key值
