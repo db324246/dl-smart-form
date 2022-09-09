@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import formData from '@/formData.json'
+// import formData from '@/formData.json'
+import formData from '@/date.json'
 export default {
   name: 'Home',
   data() {

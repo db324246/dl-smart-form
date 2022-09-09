@@ -26,7 +26,7 @@
               <div class="condition-item" v-for="(conditionItem, conditionIndex) in rule.conditions" :key="conditionItem.key">
                 <div v-if="conditionIndex === 0"></div>
                 <div v-else>
-                  <el-select placeholder="请选择条件连接符" v-model="conditionItem.connector">
+                  <el-select class="w-100" placeholder="请选择条件连接符" v-model="conditionItem.connector">
                     <el-option v-for="connectorItem in connectorList" :key="connectorItem.label" :label="connectorItem.value" :value="connectorItem.value" > </el-option>
                   </el-select>
                 </div>
@@ -71,7 +71,10 @@
             <div class="condition-title">条件满足时操作:</div>
           </div>
           <div class="condition-content">
-            <el-button type="primary" size="mini"  plain @click="addTHandle(rule, index)" >新建条件满足时操作</el-button>
+            <div class="flex-box">
+              <el-input v-model="rule.T_message" placeholder="编辑条件满足时消息提示（非必填）" size="mini" maxlength="50" clearable></el-input>
+              <el-button type="primary" size="mini" plain @click="addTHandle(rule, index)" >新建条件满足时操作</el-button>
+            </div>
             <div class="condition-list" v-if="rule.T_handle.length > 0">
               <div class="condition-item" v-for="(THandleItem, THandleIndex) in rule.T_handle" :key="THandleItem.key">
                 <el-select
@@ -120,7 +123,10 @@
             <div class="condition-title">条件不满足时操作:</div>
           </div>
           <div class="condition-content">
-            <el-button type="primary" size="mini"  plain @click="addFHandle(rule, index)" >新建条件不满足时操作</el-button>
+            <div class="flex-box">
+              <el-input v-model="rule.F_message" placeholder="编辑条件不满足时消息提示（非必填）" size="mini" maxlength="50" clearable></el-input>
+              <el-button type="primary" size="mini"  plain @click="addFHandle(rule, index)" >新建条件不满足时操作</el-button>
+            </div>
             <div class="condition-list" v-if="rule.F_handle.length > 0">
               <div class="condition-item" v-for="(FHandleItem, FHandleIndex) in rule.F_handle" :key="FHandleItem.key">
                 <el-select
@@ -252,6 +258,17 @@ $primary-background-color: rgba(0, 191, 196,.01);
       display: block;
     }
 
+  }
+}
+.w-100 {
+  width: 100px;
+}
+.flex-box {
+  display: flex;
+  align-items: center;
+  .el-input {
+    width: 400px;
+    margin-right: 10px;
   }
 }
 </style>

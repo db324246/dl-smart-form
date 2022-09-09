@@ -42,9 +42,9 @@ export const syncFieldInitTo = (syncField) => {
 
 // 多个条件的时候（conditions多个），转换条件连接符
 const getCorrelativeRules = fieldCorrelativeRules => {
-  if (!fieldCorrelativeRules || fieldCorrelativeRules.length === 0) return []
+  const _correlativeRules = deepClone(fieldCorrelativeRules)
 
-  fieldCorrelativeRules.forEach(r => {
+  _correlativeRules.forEach(r => {
     r.conditions = r.conditions.reduce((p, c) => {
       if (c.connector) {
         let connectorJson
@@ -74,7 +74,7 @@ const getCorrelativeRules = fieldCorrelativeRules => {
     }, [])
   })
 
-  return fieldCorrelativeRules
+  return _correlativeRules
 }
 
 // 计算判断条件字符串
@@ -84,7 +84,7 @@ const exportRuleConditionsStr = (conditions) => {
   conditions.forEach(c => {
     const handler = fieldCorrectRuleMap[c.fieldType]
     if (c.type === 'condition' && handler) {
-      str += handler(c.value, c.judge, c.fieldName)
+      str += handler(c)
     } else if (c.type === 'connector') {
       // 如果类型为连接符
       str += ` ${c.value} `
@@ -100,23 +100,25 @@ export const computeCorrelativeRule = (fieldCorrelativeRules = []) => {
   for (let i = 0, len = correlativeRules.length; i < len; i++) {
     const conditions = correlativeRules[i].conditions || [] // 条件s
     if (!conditions.length) continue
-
+    const fieldNames = new Set()
     // 遍历条件
     conditions.forEach(c => {
       if (c.type === 'condition') {
-        const fieldName = c.fieldName
-        if (!correlativeRuleMap[fieldName]) {
-          correlativeRuleMap[fieldName] = []
-        }
-
-        const watchFunStr = `return Boolean(${exportRuleConditionsStr(conditions, 'form')})`
-        // eslint-disable-next-line
-        const handler = new Function('form', watchFunStr)
-        correlativeRuleMap[fieldName].push({
-          handler,
-          ...correlativeRules[i]
-        })
+        fieldNames.add(c.fieldName)
       }
+    })
+
+    const watchFunStr = `return !!(${exportRuleConditionsStr(conditions, 'form')})`
+    console.log(watchFunStr)
+    // eslint-disable-next-line
+    const handler = new Function('form', watchFunStr)
+    Array.from(fieldNames).forEach(f => {
+      const rules = correlativeRuleMap[f] || []
+      rules.push({
+        handler,
+        ...correlativeRules[i]
+      })
+      correlativeRuleMap[f] = rules
     })
   }
   return correlativeRuleMap

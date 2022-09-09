@@ -9,9 +9,12 @@
     v-contextmenu:contextmenu
     @contextmenu.stop.prevent="handlerFocus"
     @click.stop="handleNodeFocus">
-    <v-contextmenu ref="contextmenu" :style="{
-      'border-width': '1px'
-    }">
+    <v-contextmenu ref="contextmenu"
+      :node-key="colData.key"
+      :style="{
+        'border-width': '1px'
+      }"
+      @contextmenu.native.stop.prevent>
       <v-contextmenu-submenu title="新增">
         <v-contextmenu-item @click="handleCommand('newRow')">在单元格里新增表格行</v-contextmenu-item>
       </v-contextmenu-submenu>
@@ -262,7 +265,7 @@ export default {
     },
     // 隐藏 右击菜单项
     hideContextMenu() {
-      hideContextMenu()
+      hideContextMenu(this.colData.key)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽

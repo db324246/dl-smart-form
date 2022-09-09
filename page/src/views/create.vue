@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import formData from '@/formData.json'
+// import formData from '@/formData.json'
 export default {
   name: 'Home',
   mounted() {
-    this.$refs.createForm.initFormData(formData)
+    // this.$refs.createForm.initFormData(formData)
   },
   methods: {
     async handleLog() {

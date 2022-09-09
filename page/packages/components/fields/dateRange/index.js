@@ -10,7 +10,8 @@ export default {
   reportComponent, // 上报组件
   templateComponent, // 模板组件
   attachedRule: changeRule, // 字段的附属规则计算函数
-  correlativeRule(value, judge, fieldName) { // 字段的关联规则
+  correlativeRule(condition) { // 字段的关联规则
+    const { value, fieldName, judge } = condition
     const fieldVal = `form['${fieldName}'].value`
     let str = ''
     const st = `${fieldVal}[0] || ''`
@@ -29,6 +30,9 @@ export default {
         break;
       case 'unnullArr':
         str += `(${fieldVal} && ${fieldVal}.length)`
+        break;
+      default:
+        str += 'true'
         break;
     }
     return str

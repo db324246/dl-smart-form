@@ -8,9 +8,12 @@
     v-contextmenu:contextmenu
     @contextmenu.stop.prevent="hideContextMenu"
     @click.stop="handleNodeFocus">
-    <v-contextmenu ref="contextmenu" :style="{
-      'border-width': '1px'
-    }">
+    <v-contextmenu ref="contextmenu"
+      :node-key="rowKey"
+      :style="{
+        'border-width': '1px'
+      }"
+      @contextmenu.native.stop.prevent>
       <v-contextmenu-submenu title="插入">
         <v-contextmenu-item @click="handleCommand('insertCol')">单元格</v-contextmenu-item>
         <v-contextmenu-item @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
@@ -175,7 +178,7 @@ export default {
     },
     // 隐藏 右击菜单项
     hideContextMenu() {
-      hideContextMenu()
+      hideContextMenu(this.rowKey)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽

@@ -1,7 +1,7 @@
 import Bus from '@pr/createForm/Bus'
-import fieldJudgeMap from './fieldJudgeMap'
 import JudgeValue from './components/JudgeValue.vue'
 import ValidateValue from './components/ValidateValue.vue'
+import fieldJudgeMap, { emptyTypeList } from './fieldJudgeMap'
 import { generateKey, deepClone, typeOf } from '@pr/createForm/utils'
 // 复杂类型字段
 import { complexComponents } from '@pr/components/fields'
@@ -35,8 +35,7 @@ export default {
       dialogVisible: false,
       connectorList: [
         { type: 'connector', label: '并', value: '&&' },
-        { type: 'connector', label: '或者', value: '||' },
-        { type: 'connector', label: '异或', value: '^' }
+        { type: 'connector', label: '或者', value: '||' }
       ],
       fieldCorrelativeRulesOld: [] // 旧的数据--如果设置了关联关系。然后点击取消、或者关闭的弹窗。要用旧的数据覆盖
     }
@@ -65,6 +64,8 @@ export default {
       const defaultRulesItem = {
         key: generateKey('rule_'),
         conditions: [], // 条件
+        T_message: '', // 条件满足时的消息提示
+        F_message: '', // 条件不满足时的消息提示
         T_handle: [], // 条件满足时执行
         F_handle: [] // 条件不满足时执行
       }
@@ -81,9 +82,11 @@ export default {
         type: 'condition', // 类型为条件
         fieldName: '', // 字段name
         fieldType: '', // 字段类型
-        valueType: undefined, // 值的类型
         judge: '', // 条件判断语句， 值的种类见下表 1.1
-        value: '' // 用于条件判断的值， 条件判断语句为 “为空”、“不为空”时， 没有这个
+        valueCate: 0, // 0 比对自定义值 1 比对指定字段值
+        valueType: undefined, // 值的类型
+        value: '', // 用于条件判断的值， 条件判断语句为 “为空”、“不为空”时， 没有这个
+        compareFieldName: '' // 用于条件比对的字段
       }
       rule.conditions.push(deepClone(defaultJson))
     },
@@ -191,26 +194,22 @@ export default {
           this.$alert(`请添加规则${i + 1}的规则条件！`)
           return
         }
-        if (THandle.length + FHandle.length === 0) {
-          this.$alert(`请添加规则${i + 1}的操作！`)
-          return
-        }
+        const judgeList = emptyTypeList.map(i => i.value)
         for (const j in conditions) {
-          if (!conditions[j].fieldName) {
+          const condition = conditions[j]
+          if (!condition.fieldName) {
             this.$alert(`请完整填写规则${i + 1}的字段！`)
             return
           }
-          if (!conditions[j].judge) {
+          if (!condition.judge) {
             this.$alert(`请完整填写规则${i + 1}的条件！`)
             return
           }
-          // 为空和不为空时，不需要value值
-          const judgeList = ['null', 'unnull']
-          if (!conditions[j].value && !judgeList.includes(conditions[j].judge)) {
+          if (!condition.value && !judgeList.includes(condition.judge) && !condition.valueCate) {
             this.$alert(`请完整填写规则${i + 1}的条件值！`)
             return
           }
-          if (Number(j) !== 0 && !conditions[j].connector) {
+          if (Number(j) !== 0 && !condition.connector) {
             this.$alert(`请完整填写规则${i + 1}的条件连接符！`)
             return
           }
@@ -226,11 +225,6 @@ export default {
             this.$alert(`请完整填写规则${i + 1}的条件满足时的条件！`)
             return
           }
-
-          if (!THandle[T].value && THandle[T].type === 'C_value') {
-            this.$alert(`请完整填写规则${i + 1}的条件满足时的条件值！`)
-            return
-          }
         }
 
         for (const F in FHandle) {
@@ -241,11 +235,6 @@ export default {
 
           if (!FHandle[F].type) {
             this.$alert(`请完整填写规则${i + 1}的条件不满足时的条件！`)
-            return
-          }
-
-          if (!FHandle[F].value && THandle[F].type === 'C_value') {
-            this.$alert(`请完整填写规则${i + 1}的条件不满足时的条件值！`)
             return
           }
         }

@@ -25,6 +25,11 @@ const compareList = [
   { name: '小于等于', value: '<=' }
 ]
 
+export const emptyTypeList = [
+  ...emptyStrList,
+  ...emptyArrList
+]
+
 const fieldJudgeMap = new Map()
 fieldJudgeMap.set('array', [
   ...containsList,
@@ -33,6 +38,7 @@ fieldJudgeMap.set('array', [
 fieldJudgeMap.set('object', [])
 fieldJudgeMap.set('string', [
   ...equalList,
+  ...compareList,
   ...emptyStrList
 ])
 fieldJudgeMap.set('null', [])
