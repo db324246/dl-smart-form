@@ -15,8 +15,20 @@
 | showOriginFields | 选择展示组件提供的基础字段 | Array | base： 基础字段；layout：布局字段 | ['base', 'layout'] |
 | extendedAttrs | 字段扩展属性的对象集合 | Object | -- | {} |
 | prefixName | 自定义字段唯一值 name 前缀 | String | -- | 字段的type |
-| dictionaryArr | 含选项的字段可绑定的字典的数组对象，`Dictionary Object` 详细参数见下表 | Array | -- | [] |
-| loadDictList | 获取字典项的操作函数，返回一个Promise，数据在 reslove 中传递，`Dict Data Object` 参数如下表 | Function | -- | null |
+| customAttrs | 自定义的组件参数对象, **详细参数见下表** | Object | -- | -- |
+
+#### CustomAttrs 内置的自定义属性
+| 参数 | 说明 | 类型 | 可选值 | 默认值 |
+| -- | -- | -- | -- | -- |
+| dictionaryArr | 含选项的字段可绑定的字典的数组对象，`Dictionary Object` **详细参数见下表** | Array | -- | [] |
+| loadDictList | 获取字典项的操作函数，返回一个Promise，数据在 reslove 中传递，`Dict Data Object` **参数见下表** | Function | -- | null |
+
+#### formData
+| 参数 | 说明 | 类型 |
+| -- | -- | -- |
+| form | 表单字段集合 | Array |
+| layout | 布局数据对象 | Object |
+| attachedRule | 表单附属规则集合 | Object |
 
 #### Dictionary Object Attributes
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
@@ -36,9 +48,9 @@
 | getCustomFormData | 获取当前表单数据，返回一个 Promise | -- |
 | initFormData | 初始化表单数据，通常在编辑时使用。接受一个参数为表单数据对象 formData | Function(formData: Object) |
 
-#### formData
-| 参数 | 说明 | 类型 |
+### Slot
+**支持为字段自定义各种具名插槽，内置的具名插槽如下**
+
+| 方法名 | 说明 | 参数 |
 | -- | -- | -- |
-| form | 表单字段集合 | Array |
-| layout | 布局数据对象 | Object |
-| attachedRule | 表单附属规则集合 | Object |
+| tag | 字段的标签插槽 | field 对象 |

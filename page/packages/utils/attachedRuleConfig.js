@@ -52,7 +52,7 @@ export const changeRule = (required, label) => {
     trigger: 'change'
   }
 }
-export const arrayFormRule = (required, label) => {
+export const subformRule = (required, label) => {
   return {
     required,
     message: `请上报${label}`,

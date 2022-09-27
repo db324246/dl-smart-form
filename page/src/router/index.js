@@ -48,4 +48,16 @@ const router = new VueRouter({
   routes
 })
 
+const originPush = router.push
+router.push = function(path) {
+  return originPush.call(this, path)
+    .catch(() => {})
+}
+
+const originReplace = router.replace
+router.replace = function(path) {
+  return originReplace.call(this, path)
+    .catch(() => {})
+}
+
 export default router

@@ -1,7 +1,7 @@
 <template>
-  <div class='arrayform-report citeform_box'
+  <div class='subform-report citeform_box'
     :class="{
-      'arrayform-report-border': hasBorder
+      'subform-report-border': hasBorder
     }">
     <div class="citeform_box__title">
       <el-button
@@ -62,7 +62,7 @@
     <!-- 记录详情对话框 -->
     <el-dialog
       title='查看详情'
-      class="detail-dialog arrayform-dialog"
+      class="detail-dialog subform-dialog"
       :visible.sync='detailDialogVisible'
       :width='dialogWidth'
       append-to-body
@@ -84,7 +84,7 @@
     <!-- 新增编辑对话框 -->
     <el-dialog
       :title='dialogTitle'
-      class="arrayform-dialog"
+      class="subform-dialog"
       :visible.sync='formDialogVisible'
       append-to-body
       :width='dialogWidth'
@@ -93,7 +93,7 @@
       <smart-form-report
         v-if="formDialogVisible"
         ref="smartFormReport"
-        :formId="fieldObj.name"
+        :formId="formId"
         :reportData="reportData"
         :form-data="{
           layout: {
@@ -119,7 +119,7 @@ import {
 } from '@pr/components/fields'
 
 export default {
-  name: 'arrayform-report',
+  name: 'subform-report',
   components: {
     TableTag,
     FieldTag,
@@ -144,6 +144,7 @@ export default {
       editFlag: false,
       formDialogVisible: false,
       detailDialogVisible: false,
+      formId: '',
       reportData: {},
       selectionData: []
     }
@@ -154,8 +155,7 @@ export default {
     },
     tableColumns() {
       return this.fieldObj.attrs.tableColumns.map(f => {
-        const field = this.modelFields.find(item => item.name === f.name)
-        return field || f
+        return this.modelFields.find(item => item.name === f)
       })
     },
     dialogWidth() {
@@ -182,6 +182,7 @@ export default {
     },
     // 新建数据
     async handleAddData() {
+      this.formId = this.fieldObj.name + '_' + Date.now()
       this.formDialogVisible = true
       this.isDisabled = false
       this.$nextTick(() => {
@@ -190,6 +191,7 @@ export default {
     },
     // 编辑记录
     handleEdit(data, $index) {
+      this.formId = this.fieldObj.name + '_' + Date.now()
       this.reportData = data
       this.editFlag = true
       this.formDialogVisible = true
@@ -204,20 +206,21 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async() => {
-        // if (!this.arrayformSubmit) {
-        this.fieldObj.value.splice(index, 1)
-        // }
-        // await this.arrayformSubmit({
-        //   done: this.handleClose.bind(this),
-        //   field: this.fieldObj,
-        //   data: {
-        //     dataId: data.dataId,
-        //     currentData: data,
-        //     updateData: data
-        //   },
-        //   type: 'delete'
-        // })
+      }).then(() => {
+        if (this.arrayformSubmit) {
+          this.arrayformSubmit({
+            done: this.handleClose.bind(this),
+            field: this.fieldObj,
+            data: {
+              dataId: data.dataId,
+              currentData: data,
+              updateData: data
+            },
+            type: 'delete'
+          })
+        } else {
+          this.fieldObj.value.splice(index, 1)
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -237,9 +240,21 @@ export default {
     async handleSave() {
       if (this.isDisabled) return
       try {
-        const data = await this.$refs.smartFormReport.getReportData(this.fieldObj.name)
+        const data = await this.$refs.smartFormReport.getReportData(this.formId)
         this.isDisabled = true
-        // if (!this.arrayformSubmit) return this.handleClose(data.reportData)
+        if (this.arrayformSubmit) {
+          return this.arrayformSubmit({
+            done: this.handleClose.bind(this),
+            field: this.fieldObj,
+            data: {
+              dataId: this.editFlag
+                ? this.reportData.dataId
+                : '',
+              ...data
+            },
+            type: this.editFlag ? 'modify' : 'add'
+          })
+        }
         if (this.editFlag) {
           this.reportData = Object.assign(this.reportData, data.reportData)
         } else {
@@ -247,41 +262,28 @@ export default {
           this.fieldObj.value.unshift(data.reportData)
         }
         this.handleClose()
-        // await this.arrayformSubmit({
-        //   done: this.handleClose.bind(this),
-        //   field: this.fieldObj,
-        //   data: {
-        //     dataId: this.editFlag
-        //       ? this.reportData.dataId
-        //       : '',
-        //     ...data
-        //   },
-        //   type: this.editFlag ? 'modify' : 'add'
-        // })
       } catch (error) {
         console.log(error)
       }
     },
-    // 导入数据的选择
-    handleChange(selection) {
-      this.selectionData = selection
-    },
     async handleClose() {
       this.formDialogVisible = false
-      this.editFlag = false
-      this.reportData = {}
+      this.$nextTick(() => {
+        this.editFlag = false
+        this.reportData = {}
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-.arrayform-report {
+.subform-report {
   position: relative;
   line-height: 23px;
   width: 100%;
 }
-.arrayform-report .citeform_box__title {
+.subform-report .citeform_box__title {
   position: absolute;
   right: 10px;
   top: -38px;
@@ -290,7 +292,7 @@ export default {
 .el-table >>> .cell {
   display: flex;
 }
-.arrayform-dialog >>> .el-dialog__header {
+.subform-dialog >>> .el-dialog__header {
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
 }

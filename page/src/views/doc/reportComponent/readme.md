@@ -5,9 +5,10 @@
 
 ### Inject
 
-| 名称 | 说明 | 类型 | 默认值 | 必传 |
-| - | - | - | - | - |
-| loadDictList | 自定义加载字典方法 | Function | () => Promise.resolve([]) | false |
+| 名称 | 说明 | 类型 |
+| - | - | - |
+| customAttrs | 自定义的组件属性 | Object |
+| scopedSlotsMap | 自定义具名插槽的函数集合 | Function(slotName, data) |
 
 ### Props
 

@@ -10,9 +10,6 @@
         <div :ref="`drag-wrapper_${item.key}`" class="drag-wrapper">
           <div
             class="field-component drag-item"
-            :class="{
-              'array-com': com.field.type === 'arrayform'
-            }"
             :key="'base' + index"
             v-for="(com, index) in item.components">
             <span>{{com.field.label}}</span>
@@ -31,9 +28,6 @@
           <div
             v-for="(com, index) in item.components"
             class="field-component drag-item"
-            :class="{
-              'array-com': com.field.type === 'arrayform'
-            }"
             :key="item.groupKey + index">
             <span>{{com.field.label}}</span>
           </div>
@@ -45,7 +39,6 @@
 </template>
 
 <script>
-import Bus from '../Bus'
 import store from '@pr/store'
 import Sortable from 'sortablejs'
 import { deepClone, syncFieldInitTo } from '../utils'
@@ -59,6 +52,7 @@ export default {
   },
   inject: [
     'layout',
+    'eventBus',
     'fieldsArr',
     'extendedAttrs',
     'generateFieldName'
@@ -82,10 +76,7 @@ export default {
           title: '布局字段',
           components: layoutComponents
         }
-      },
-      complexFields: [
-        'arrayform'
-      ]
+      }
     }
   },
   computed: {
@@ -131,7 +122,7 @@ export default {
     handleDragStart(evt, components) {
       const field = components[evt.oldIndex].field
       const key = this.generateFieldName(field.type)
-      Bus.setDraggingNode({
+      this.eventBus.setDraggingNode({
         type: 'field',
         data: {
           key,
@@ -143,7 +134,7 @@ export default {
     },
     // 结束拖拽
     handleDragEnd() {
-      Bus.setDraggingNode(null)
+      this.eventBus.setDraggingNode(null)
     },
     genenrateConfig(components) {
       return {

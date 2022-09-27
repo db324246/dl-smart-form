@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import Bus from '../Bus'
 import Sortable from 'sortablejs'
 import WidgetItem from '@pr/createForm/components/WidgetItem'
 import {
@@ -46,7 +45,11 @@ import {
 
 export default {
   name: 'mobile-layout',
-  inject: ['layout', 'fieldsArr'],
+  inject: [
+    'layout',
+    'fieldsArr',
+    'eventBus'
+  ],
   components: {
     WidgetItem
   },
@@ -71,10 +74,10 @@ export default {
   },
   computed: {
     focusNodeKey() {
-      return Bus.focusNodeKey
+      return this.eventBus.focusNodeKey
     },
     nodesMap() {
-      return Bus.nodesMap
+      return this.eventBus.nodesMap
     },
     showFieldHandler() {
       return this.focusFieldIn && this.focusField
@@ -83,20 +86,20 @@ export default {
   created() {
     // 创建结构字段时，才可编辑
     if (this.editable) {
-      Bus.$on('insert-field', this.insertField)
+      this.eventBus.$on('insert-field', this.insertField)
 
       this.$on('hook:destroyed', () => {
-        Bus.$off('insert-field')
+        this.eventBus.$off('insert-field')
       })
     }
-    Bus.$on('set-mobile-rows', this.setRows)
-    Bus.$on('add-m-field', this.handleAddField)
-    Bus.$on('delete-m-field', this.handleDelField)
+    this.eventBus.$on('set-mobile-rows', this.setRows)
+    this.eventBus.$on('add-m-field', this.handleAddField)
+    this.eventBus.$on('delete-m-field', this.handleDelField)
 
     this.$on('hook:destroyed', () => {
-      Bus.$off('set-mobile-rows')
-      Bus.$off('add-m-field')
-      Bus.$off('delete-m-field')
+      this.eventBus.$off('set-mobile-rows')
+      this.eventBus.$off('add-m-field')
+      this.eventBus.$off('delete-m-field')
     })
   },
   mounted() {
@@ -138,11 +141,6 @@ export default {
     },
     // 设置行数据
     setRows(rowsData = []) {
-      if (this.layout === 'vertical') {
-        rowsData.forEach(field => {
-          this.$emit('ver_add-field', field.name)
-        })
-      }
       this.rowsData.splice(0, this.rowsData.length)
       this.rowsData.push(
         ...rowsData
@@ -151,7 +149,7 @@ export default {
     // 节点 聚焦
     handleNodeFocus(field) {
       this.hideContextMenu()
-      Bus.setFocusNodeKey(field.name)
+      this.eventBus.setFocusNodeKey(field.name)
     },
     // 内容 聚焦
     handleContentFocus(node, subIndex) {
@@ -164,7 +162,7 @@ export default {
     // 字段点击编辑
     handleContentEdit(fieldName) {
       const field = this.fieldsArr.find(f => f.name === fieldName)
-      Bus.$emit('edit-node', field)
+      this.eventBus.$emit('edit-node', field)
     },
     // 菜单操作
     handleCommand(type) {
@@ -176,8 +174,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Bus.$emit('delete-field', { fieldKey: this.focusField.name })
-          this.layout === 'vertical' && this.$emit('ver_del-field', this.focusField.name)
+          this.eventBus.$emit('delete-field', { fieldKey: this.focusField.name })
         })
       }
     },
@@ -188,16 +185,16 @@ export default {
     },
     // 开始拖拽
     handleDragStart(evt) {
-      Bus.setDraggingNode({
+      this.eventBus.setDraggingNode({
         type: 'col',
         data: this.rowsData[evt.oldIndex]
       })
     },
     // 添加元素
     handleDragAdd(evt) {
-      if (!Bus.draggingNode) return
+      if (!this.eventBus.draggingNode) return
       setDraggableAttr(evt.item)
-      const { type, data } = Bus.draggingNode
+      const { type, data } = this.eventBus.draggingNode
       type === 'field' && this.insertField(data, evt.newIndex)
 
       removeDragDom(
@@ -218,18 +215,17 @@ export default {
     },
     // 结束拖拽
     handleDragEnd() {
-      Bus.setDraggingNode(null)
+      this.eventBus.setDraggingNode(null)
     },
     // 插入字段
     insertField(field, index) {
-      if (this.layout === 'singleField') {
-        Bus.$emit('empty-fields')
+      if (this.layout === 'single') {
+        this.eventBus.$emit('empty-fields')
         this.rowsData.splice(0, this.rowsData.length)
       }
 
-      Bus.$emit('add-field', { field })
-      Bus.$emit('edit-node', field)
-      this.layout === 'vertical' && this.$emit('ver_add-field', field)
+      this.eventBus.$emit('add-field', { field })
+      this.eventBus.$emit('edit-node', field)
     },
     // 获取布局数据
     getLayout() {

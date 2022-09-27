@@ -1,5 +1,5 @@
 <template>
-  <div class='arrayform-detail' :style="detailStyle">
+  <div class='subform-detail' :style="detailStyle">
     <el-table :data="fieldObj.value" border>
       <el-table-column
         :label="item.label"
@@ -33,7 +33,7 @@
 
     <!-- 记录详情对话框 -->
     <el-dialog
-      class="detail-dialog arrayform-dialog"
+      class="detail-dialog subform-dialog"
       title='查看详情'
       :visible.sync='detailDialogVisible'
       :width='dialogWidth'
@@ -63,7 +63,7 @@ import {
 } from '@pr/components/fields'
 
 export default {
-  name: 'arrayform-detail',
+  name: 'subform-detail',
   components: {
     TableTag,
     FieldTag,
@@ -91,8 +91,7 @@ export default {
     },
     tableColumns() {
       return this.fieldObj.attrs.tableColumns.map(f => {
-        const field = this.modelFields.find(item => item.name === f.name)
-        return field || f
+        return this.modelFields.find(item => item.name === f)
       })
     },
     dialogWidth() {
@@ -120,14 +119,14 @@ export default {
 </script>
 
 <style scoped>
-.arrayform-detail {
+.subform-detail {
   line-height: 23px;
   width: 100%;
 }
 .el-table >>> .cell {
   display: flex;
 }
-.arrayform-dialog >>> .el-dialog__header {
+.subform-dialog >>> .el-dialog__header {
   padding: 15px 20px;
   border-bottom: 1px solid #eee;
 }

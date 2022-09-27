@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import arrayForm from '@pr/components/fields/arrayForm'
-import { basicComponents, layoutComponents, complexComponents } from '@pr/components/fields'
+import subform from '@pr/components/fields/subform'
+import { basicComponents, layoutComponents, advanceComponents, complexComponents } from '@pr/components/fields'
 
 export default new Vue({
   data() {
@@ -64,11 +64,12 @@ export default new Vue({
   },
   methods: {
     registerArrayForm() {
-      complexComponents.push(arrayForm)
-      Vue.component(arrayForm.configComponent.name, arrayForm.configComponent)
-      Vue.component(arrayForm.detailComponent.name, arrayForm.detailComponent)
-      Vue.component(arrayForm.reportComponent.name, arrayForm.reportComponent)
-      Vue.component(arrayForm.templateComponent.name, arrayForm.templateComponent)
+      complexComponents.push(subform)
+      advanceComponents.push(subform)
+      Vue.component(subform.configComponent.name, subform.configComponent)
+      Vue.component(subform.detailComponent.name, subform.detailComponent)
+      Vue.component(subform.reportComponent.name, subform.reportComponent)
+      Vue.component(subform.templateComponent.name, subform.templateComponent)
     },
     registerFields(fields = []) {
       fields.forEach(f => {

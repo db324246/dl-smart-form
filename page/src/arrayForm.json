@@ -44,7 +44,7 @@
     }
   ],
   "name": "arrayform_field_1653380325623158",
-  "type": "arrayform",
+  "type": "subform",
   "label": "我的重复上报",
   "attrs": {
     "dialogWidth": 500,

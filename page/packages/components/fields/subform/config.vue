@@ -1,33 +1,16 @@
 <template>
-  <div class="arrayform-config">
+  <div class="subform-config">
     <el-form label-position="top" size="small">
-      <el-form-item label="展示列">
+      <el-form-item label="表格展示列">
         <el-select
           v-model="form.attrs.tableColumns"
-          value-key="name"
           multiple
           placeholder="默认展示全部"
           :disabled="disabled">
           <el-option
             v-for="item in form.modelFields"
             :label="item.label"
-            :value="item"
-            :key="item.name">
-          </el-option>
-        </el-select>
-      </el-form-item>
-
-      <el-form-item label="可查询列">
-        <el-select
-          v-model="form.attrs.queryFields"
-          value-key="name"
-          multiple
-          placeholder="请选择可查询列"
-          :disabled="disabled">
-          <el-option
-            v-for="item in form.modelFields"
-            :label="item.label"
-            :value="item"
+            :value="item.name"
             :key="item.name">
           </el-option>
         </el-select>
@@ -74,7 +57,7 @@
 <script>
 import FieldRules from '../../../createForm/components/fieldRules'
 export default {
-  name: 'arrayform-config',
+  name: 'subform-config',
   components: {
     FieldRules
   },
@@ -104,10 +87,10 @@ export default {
 </script>
 
 <style scoped>
-.arrayform-config .el-form {
+.subform-config .el-form {
   padding: 0 10px;
 }
-.arrayform-config .el-form >>> .el-form--label-top .el-form-item__label {
+.subform-config .el-form >>> .el-form--label-top .el-form-item__label {
   padding: 0;
 }
 .el-form-item {

@@ -28,7 +28,7 @@ export const syncFieldInitTo = (syncField) => {
     })
   }
 
-  if (field.type === 'arrayform' && !field.attrs.tableColumns.length) {
+  if (field.type === 'subform' && !field.attrs.tableColumns.length) {
     field.attrs.tableColumns = field.modelFields.map(f => ({
       label: f.label,
       key: f.key,

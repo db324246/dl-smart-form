@@ -26,7 +26,7 @@ export default {
         str += `${valueDate} < new Date(${st}) && ${valueDate} > new Date(${et})`
         break;
       case 'nullArr':
-        str += `(!${fieldVal}] || !${fieldVal}.length)`
+        str += `(!${fieldVal} || !${fieldVal}.length)`
         break;
       case 'unnullArr':
         str += `(${fieldVal} && ${fieldVal}.length)`

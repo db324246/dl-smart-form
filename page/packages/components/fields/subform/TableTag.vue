@@ -1,7 +1,7 @@
 <script>
 export default {
   name: 'table-tag',
-  inject: ['tableTagScopedSlots'],
+  inject: ['scopedSlotsMap'],
   props: {
     field: {
       type: Object,
@@ -18,7 +18,7 @@ export default {
       {
         class: 'field-te-t-table-box'
       },
-      this.tableTagScopedSlots && this.tableTagScopedSlots({
+      this.scopedSlotsMap && this.scopedSlotsMap('table-tag', {
         field: this.field,
         rowData: this.rowData
       })

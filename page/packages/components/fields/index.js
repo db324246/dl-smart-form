@@ -10,7 +10,6 @@ import textarea from './textarea'
 import dateRange from './dateRange'
 import mulSelect from './mulSelect'
 import blankLine from './blankLine'
-// import arrayForm from './arrayForm'
 import radioGroup from './radioGroup'
 import checkboxGroup from './checkboxGroup'
 
@@ -41,8 +40,6 @@ export const layoutComponents = [
 
 // 复杂类型字段（一个字段内部集成了多个字段）
 export const complexComponents = [
-  // 重复上报表格
-  // arrayForm
 ]
 
 // 字段配置组件集合

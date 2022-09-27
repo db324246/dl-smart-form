@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import Bus from '../Bus'
 import MobileLayout from './MobileLayout'
 import FieldRules from '../components/fieldRules'
 import FlexTableLayout from './FlexTableLayout/FlexLayout'
 
 export default {
   name: 'two-layout-tab',
+  inject: ['eventBus'],
   components: {
     FlexTableLayout,
     MobileLayout,
@@ -45,7 +45,7 @@ export default {
     }
   },
   created() {
-    Bus.$on('get-layout', callBack => {
+    this.eventBus.$on('get-layout', callBack => {
       const pcLayout = this.$refs.flexTableLayout.getLayout()
       const mLayout = this.$refs.mobileLayout.getLayout()
 
@@ -56,7 +56,7 @@ export default {
     })
 
     this.$on('hook:destroyed', () => {
-      Bus.$off('get-layout')
+      this.eventBus.$off('get-layout')
     })
   },
   methods: {

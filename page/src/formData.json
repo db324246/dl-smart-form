@@ -319,7 +319,7 @@
     "mobileLayout": [
       {
         "name": "arrayform_field_1653380325623158",
-        "type": "arrayform",
+        "type": "subform",
         "label": "我的重复上报",
         "value": [],
         "configurable": true,
@@ -327,48 +327,9 @@
         "attrs": {
           "dialogWidth": 500,
           "tableColumns": [
-            {
-              "name": "input_field_1653380234611128",
-              "type": "input",
-              "label": "单行文本",
-              "value": "",
-              "configurable": true,
-              "isFormField": true,
-              "attrs": {
-                "placeholder": "占位符文字",
-                "maxlength": 100,
-                "dataType": "string",
-                "pattern": ""
-              }
-            },
-            {
-              "name": "input_field_1653380263907797",
-              "type": "input",
-              "label": "单行文本",
-              "value": "",
-              "configurable": true,
-              "isFormField": true,
-              "attrs": {
-                "placeholder": "占位符文字",
-                "maxlength": 100,
-                "dataType": "string",
-                "pattern": ""
-              }
-            },
-            {
-              "name": "input_field_1653380291627638",
-              "type": "input",
-              "label": "单行文本",
-              "value": "",
-              "configurable": true,
-              "isFormField": true,
-              "attrs": {
-                "placeholder": "占位符文字",
-                "maxlength": 100,
-                "dataType": "string",
-                "pattern": ""
-              }
-            }
+            "input_field_1653380234611128",
+            "input_field_1653380263907797",
+            "input_field_1653380291627638"
           ],
           "queryFields": [],
           "fieldAttachedRule": {
@@ -665,7 +626,7 @@
   },
   "form": [
     {
-      "type": "arrayform",
+      "type": "subform",
       "label": "我的重复上报",
       "value": [],
       "configurable": true,
@@ -673,48 +634,9 @@
       "attrs": {
         "dialogWidth": 500,
         "tableColumns": [
-          {
-            "name": "input_field_1653380234611128",
-            "type": "input",
-            "label": "单行文本",
-            "value": "",
-            "configurable": true,
-            "isFormField": true,
-            "attrs": {
-              "placeholder": "占位符文字",
-              "maxlength": 100,
-              "dataType": "string",
-              "pattern": ""
-            }
-          },
-          {
-            "name": "input_field_1653380263907797",
-            "type": "input",
-            "label": "单行文本",
-            "value": "",
-            "configurable": true,
-            "isFormField": true,
-            "attrs": {
-              "placeholder": "占位符文字",
-              "maxlength": 100,
-              "dataType": "string",
-              "pattern": ""
-            }
-          },
-          {
-            "name": "input_field_1653380291627638",
-            "type": "input",
-            "label": "单行文本",
-            "value": "",
-            "configurable": true,
-            "isFormField": true,
-            "attrs": {
-              "placeholder": "占位符文字",
-              "maxlength": 100,
-              "dataType": "string",
-              "pattern": ""
-            }
-          }
+          "input_field_1653380234611128",
+          "input_field_1653380263907797",
+          "input_field_1653380291627638"
         ],
         "queryFields": [],
         "fieldAttachedRule": {
@@ -1318,7 +1240,7 @@
             "key": "handle_165407521195128",
             "type": "C_show",
             "fieldName": "arrayform_field_1653380325623158",
-            "fieldType": "arrayform",
+            "fieldType": "subform",
             "valueType": "array",
             "value": [],
             "show": true,
@@ -1330,7 +1252,7 @@
             "key": "condition_1654075215695437",
             "type": "C_show",
             "fieldName": "arrayform_field_1653380325623158",
-            "fieldType": "arrayform",
+            "fieldType": "subform",
             "valueType": "array",
             "value": [],
             "show": false,
