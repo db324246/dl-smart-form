@@ -64,7 +64,6 @@
 </template>
 
 <script>
-import Bus from '../../Bus'
 import Sortable from 'sortablejs'
 import {
   createRow,
@@ -77,7 +76,7 @@ import {
 
 export default {
   name: 'flex-layout',
-  inject: ['fieldsArr'],
+  inject: ['fieldsArr', 'eventBus'],
   data() {
     return {
       rowsData: [],
@@ -97,36 +96,36 @@ export default {
   },
   computed: {
     nodesMap() {
-      return Bus.nodesMap
+      return this.eventBus.nodesMap
     }
   },
   created() {
     // 存储一个虚拟行
-    Bus.setNode({
+    this.eventBus.setNode({
       key: 'vRow-001',
       value: {
         parentKey: -1
       }
     })
-    Bus.$on('set-layout-config', this.setLayoutConfig)
-    Bus.$on('set-pc-rows', this.setRows)
-    Bus.$on('liquidation-rows', this.liquidationRows)
-    Bus.$on('insert-row', this.handleInsertRow)
-    Bus.$on('exchange-row', this.handleExchangeRow)
-    Bus.$on('delete-row', this.handleDeleteRow)
-    Bus.$on('insert-field', this.insertField)
+    this.eventBus.$on('set-layout-config', this.setLayoutConfig)
+    this.eventBus.$on('set-pc-rows', this.setRows)
+    this.eventBus.$on('liquidation-rows', this.liquidationRows)
+    this.eventBus.$on('insert-row', this.handleInsertRow)
+    this.eventBus.$on('exchange-row', this.handleExchangeRow)
+    this.eventBus.$on('delete-row', this.handleDeleteRow)
+    this.eventBus.$on('insert-field', this.insertField)
     window.addEventListener('click', this.handleWindowClick)
 
     this.$on('hook:destroyed', () => {
-      Bus.$off('set-layout-config')
-      Bus.$off('set-pc-rows')
-      Bus.$off('liquidation-rows')
-      Bus.$off('insert-row')
-      Bus.$off('exchange-row')
-      Bus.$off('delete-row')
-      Bus.$off('insert-field')
-      Bus.$off('get-layout')
-      Bus.$off('delete-col') // 在根级注销
+      this.eventBus.$off('set-layout-config')
+      this.eventBus.$off('set-pc-rows')
+      this.eventBus.$off('liquidation-rows')
+      this.eventBus.$off('insert-row')
+      this.eventBus.$off('exchange-row')
+      this.eventBus.$off('delete-row')
+      this.eventBus.$off('insert-field')
+      this.eventBus.$off('get-layout')
+      this.eventBus.$off('delete-col') // 在根级注销
       window.removeEventListener('click', this.handleWindowClick)
     })
   },
@@ -210,7 +209,7 @@ export default {
         row.children.map(col => col.key)
           .reverse()
           .forEach(key => {
-            Bus.$emit('delete-col', key)
+            this.eventBus.$emit('delete-col', key)
           })
       }
       const parent = row.parentKey === -1
@@ -235,8 +234,8 @@ export default {
     },
     // 监听全局点击事件
     handleWindowClick() {
-      if (!Bus.focusNodeKey) return
-      Bus.setFocusNodeKey('')
+      if (!this.eventBus.focusNodeKey) return
+      this.eventBus.setFocusNodeKey('')
     },
     // 右击菜单项点击- 事件
     handleCommand(type) {
@@ -256,7 +255,7 @@ export default {
     },
     // 开始拖拽
     handleDragStart(evt) {
-      Bus.setDraggingNode({
+      this.eventBus.setDraggingNode({
         type: 'row',
         data: this.rowsData[evt.oldIndex]
       })
@@ -267,9 +266,9 @@ export default {
     },
     // 添加元素
     handleDragAdd(evt) {
-      if (!Bus.draggingNode) return
+      if (!this.eventBus.draggingNode) return
       setDraggableAttr(evt.item)
-      const { type, data } = Bus.draggingNode
+      const { type, data } = this.eventBus.draggingNode
       switch (type) {
         case 'row':
           this.rowsData.splice(evt.newIndex, 0, data)
@@ -314,7 +313,7 @@ export default {
       this.rowsData.forEach(row => {
         row.parentKey = -1
       })
-      Bus.setDraggingNode(null)
+      this.eventBus.setDraggingNode(null)
     },
     // 插入字段
     insertField(field, index) {
@@ -331,11 +330,11 @@ export default {
         fieldName: field.name,
         key: field.name
       })
-      Bus.$emit('add-field', {
+      this.eventBus.$emit('add-field', {
         field,
         domKey: colData.key
       })
-      Bus.$emit('edit-node', field)
+      this.eventBus.$emit('edit-node', field)
       this.rowsData.splice(location, 0, defaultRow)
     },
     // 获取布局数据

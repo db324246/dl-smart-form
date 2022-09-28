@@ -77,7 +77,7 @@
 import Draggable from 'vuedraggable'
 export default {
   name: 'mulSelect-config',
-  inject: ['dictionaryArr', 'loadDictList'],
+  inject: ['customAttrs'],
   components: {
     Draggable
   },
@@ -98,6 +98,13 @@ export default {
     }
   },
   computed: {
+    dictionaryArr() {
+      return this.customAttrs.dictionaryArr || []
+    },
+    loadDictList() {
+      const fn = () => Promise.resolve([])
+      return this.customAttrs.loadDictList || fn
+    },
     dictionaryList() {
       if (this.dictionaryArr.length) return this.dictionaryArr
       if (this.form.attrs.constantId) {

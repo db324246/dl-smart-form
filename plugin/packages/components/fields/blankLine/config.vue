@@ -1,6 +1,6 @@
 <template>
   <el-form class='title-config' label-position="top" size="small">
-    <el-form-item label="字号：">
+    <el-form-item label="高度：">
       <el-input-number v-model="form.attrs.height" :min="0" step-strictly></el-input-number>
     </el-form-item>
   </el-form>

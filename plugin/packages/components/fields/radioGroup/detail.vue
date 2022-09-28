@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'radioGroup-detail',
-  inject: ['loadDictList'],
+  inject: ['customAttrs'],
   props: {
     detailStyle: {
       type: Object,
@@ -22,6 +22,10 @@ export default {
     }
   },
   computed: {
+    loadDictList() {
+      const fn = () => Promise.resolve([])
+      return this.customAttrs.loadDictList || fn
+    },
     compVal() {
       if (this.fieldVal === undefined || this.fieldVal === null || this.fieldVal === '') {
         return this.fieldObj.value

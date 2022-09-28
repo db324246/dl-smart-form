@@ -9,7 +9,7 @@
     </div>
     <div class='smart_form-wrapper'>
       <two-layout-tab v-if="layout === 'default'"/>
-      <vertical-layout v-else ref="verticalLayout"></vertical-layout>
+      <vertical-layout v-else-if="layout === 'single'" ref="verticalLayout"></vertical-layout>
     </div>
     <div class='smart_form-config'>
       <field-config></field-config>
@@ -36,8 +36,7 @@ export default {
   props: {
     /**
      * default: 自定义布局
-     * vertical: 垂直布局 - 针对于重复上报表单
-     * singleField：单字段布局
+     * single：单字段布局
      */
     layout: { // 布局方式
       type: String,
@@ -46,8 +45,7 @@ export default {
     // 展示元字段
     showOriginFields: { // 创建模板时展示的元字段
       type: Array,
-      default: () => (['base', 'layout'])
-      // default: () => (['base', 'high', 'layout'])
+      default: () => (['base', 'high', 'layout'])
     },
     // 字段扩展属性
     extendedAttrs: {
@@ -58,46 +56,27 @@ export default {
     prefixName: {
       type: String
     },
-    /**
-     * 含选项的字段可绑定的字典数组
-     *{
-        dictName: '',
-        constantId: 131315
-      }
-     */
-    dictionaryArr: {
-      type: Array,
-      default: () => []
-    },
-    /**
-     * 获取字典项的操作函数
-     * 函数应返回一个resolve 状态的 Promise，并传递字典选项数组
-     * 字典选项： {
-     *   key: '2020-2021',
-     *   value: '2020-2021学年'
-     * }
-     */
-    loadDictList: {
-      type: Function,
-      default: () => Promise.resolve([])
+    // 自定义的组件参数对象
+    customAttrs: {
+      type: Object
     }
   },
   provide() {
     return {
+      eventBus: Bus,
       layout: this.layout,
       fieldsArr: this.fieldsArr,
       extendedAttrs: this.extendedAttrs,
       generateFieldName: this.generateFieldName,
-      dictionaryArr: this.dictionaryArr,
-      loadDictList: this.loadDictList,
+      customAttrs: this.customAttrs,
       getCorrelativeRules: () => {
         return this.fieldCorrelativeRules
       },
       getFieldAttachedRules: () => {
         return this.fieldAttachedRule
       },
-      scopedSlots: (field) => {
-        return this.$scopedSlots.tag && this.$scopedSlots.tag(field)
+      scopedSlotsMap: (slotName, data) => {
+        return this.$scopedSlots[slotName] && this.$scopedSlots[slotName](data)
       }
     }
   },
@@ -161,7 +140,7 @@ export default {
       if (layout.layoutType === 'default') {
         Bus.$emit('set-layout-config', pcLayout.layoutConfig || {})
       }
-      if (layout.layoutType !== 'singleField') {
+      if (layout.layoutType !== 'single') {
         Bus.$emit('set-pc-rows', pcLayout.rowsData || [])
         Bus.$emit('set-mobile-rows', layout.mobileLayout || [])
       }
@@ -170,23 +149,27 @@ export default {
       )
     },
     // 添加字段
-    handleAddField({ field }) {
-      // 是否是表单字段
-      if (field.isFormField) {
+    handleAddField({ field, excludeMobile }) {
+      if (!['title', 'divider'].includes(field.type)) {
         this.$set(this.fieldAttachedRule, field.name, deepClone(this.defaultAttachedRule))
       }
       this.fieldsArr.push(field)
-      Bus.$emit('add-m-field', field)
+      // excludeMobile 排除添加到移动端模板
+      !excludeMobile && Bus.$emit('add-m-field', field)
     },
     // 删除字段
-    handleDelField({ fieldKey }) {
-      this.$delete(this.fieldAttachedRule, fieldKey)
-      const index = this.fieldsArr.findIndex(f => f.name === fieldKey)
-      if (index >= 0) {
-        this.fieldsArr.splice(index, 1)
-      }
-      this.handleDelCorrelativeRule(fieldKey)
-      Bus.$emit('delete-m-field', fieldKey)
+    handleDelField({ fieldKey, excludeMobile }) {
+      // excludeMobile 排除到移动端模板删除
+      !excludeMobile && Bus.$emit('delete-m-field', fieldKey)
+      // 微任务异步删除
+      this.$nextTick(() => {
+        this.$delete(this.fieldAttachedRule, fieldKey)
+        const index = this.fieldsArr.findIndex(f => f.name === fieldKey)
+        if (index >= 0) {
+          this.fieldsArr.splice(index, 1)
+        }
+        this.handleDelCorrelativeRule(fieldKey)
+      })
     },
     // 删除字段相关关联规则
     handleDelCorrelativeRule(fieldName) {
@@ -222,7 +205,7 @@ export default {
     // 获取整个表单的数据
     getCustomFormData() {
       return new Promise(r => {
-        if (this.layout === 'singleField') {
+        if (this.layout === 'single') {
           return r(
             this.fieldsArr[0]
           )
@@ -234,20 +217,6 @@ export default {
         }
         // 字段集合
         const form = this.fieldsArr.slice()
-
-        if (this.layout === 'vertical') {
-          return r({
-            modelFields: form,
-            name: this.generateFieldName('arrayform'),
-            type: 'arrayform',
-            ...deepClone(this.extendedAttrs),
-            attrs: {
-              ...this.$refs.verticalLayout.formConfig,
-              fieldAttachedRule: this.fieldAttachedRule,
-              fieldCorrelativeRules: this.fieldCorrelativeRules
-            }
-          })
-        }
         Bus.$emit('get-layout', (data) => {
           // 布局字段
           const layout = {

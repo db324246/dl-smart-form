@@ -35,7 +35,7 @@
 <script>
 import Vue from 'vue'
 import store from '@pr/store'
-import FieldTag from './FieldTag'
+import FieldTag from '@pr/components/FieldTag'
 import {
   fieldTempComMap // 字段模板组件集合
 } from '@pr/components/fields'

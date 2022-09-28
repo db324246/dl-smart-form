@@ -15,22 +15,28 @@ const installRoutes = [
 
 const guideRoutes = [
   {
-    path: 'field',
-    component: () => import('@/views/doc/field'),
-    title: '字段',
-    name: 'field'
-  },
-  {
     path: 'form',
     component: () => import('@/views/doc/form'),
     title: '表单',
     name: 'form'
   },
   {
+    path: 'field',
+    component: () => import('@/views/doc/field'),
+    title: '字段',
+    name: 'field'
+  },
+  {
     path: 'register',
     component: () => import('@/views/doc/register'),
     title: '注册字段',
     name: 'register'
+  },
+  {
+    path: 'correlativeRule',
+    component: () => import('@/views/doc/correlativeRule'),
+    title: '关联规则',
+    name: 'correlativeRule'
   }
 ]
 

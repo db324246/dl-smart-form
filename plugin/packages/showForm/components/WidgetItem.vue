@@ -169,9 +169,6 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
-.widget-view .el-form-item {
-  padding-right: 30px;
-}
 .widget-view >>> .el-form-item__content {
   position: relative;
   padding-left: 5px;

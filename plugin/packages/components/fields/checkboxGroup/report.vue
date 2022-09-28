@@ -10,7 +10,7 @@
 <script>
 export default {
   name: 'checkboxGroup-report',
-  inject: ['loadDictList'],
+  inject: ['customAttrs'],
   props: {
     fieldObj: {
       type: Object,
@@ -19,6 +19,12 @@ export default {
     reportStyle: {
       type: Object,
       default: () => ({})
+    }
+  },
+  computed: {
+    loadDictList() {
+      const fn = () => Promise.resolve([])
+      return this.customAttrs.loadDictList || fn
     }
   },
   async created() {

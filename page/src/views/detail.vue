@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import formData from '@/formData.json'
-import reportFormData from '@/reportData.json'
+import formData from '@/data/formData.json'
+import reportFormData from '@/data/reportData.json'
 export default {
   name: 'Home',
   data() {

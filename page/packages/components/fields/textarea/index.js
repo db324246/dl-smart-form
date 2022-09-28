@@ -11,11 +11,11 @@ export default {
   templateComponent, // 模板组件
   attachedRule: inputRule, // 字段的附属规则计算函数
   correlativeRule(condition) { // 字段的关联规则
-    const { value, fieldName, judge, compareFieldName, valueCate } = condition
+    const { value, fieldName, judge, compareFieldName, isCompareField } = condition
     const fieldVal = `form['${fieldName}'].value`
-    const judeValue = valueCate
+    const judeValue = isCompareField
       ? `form['${compareFieldName}'].value`
-      : `${value}`
+      : `'${value}'`
     let str = ''
     switch (judge) {
       case '==':

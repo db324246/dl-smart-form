@@ -1,6 +1,6 @@
 <template>
   <div class='validate-value'>
-    <div v-if="condition.valueCate">
+    <div v-if="condition.isCompareField">
       <el-select placeholder="请选择字段" v-model="condition.compareFieldName">
         <el-option
           v-for="fieldItem in fieldList"
@@ -110,9 +110,7 @@
     <div v-if="condition.judge && compareFieldTypeList.includes(condition.judge)" style="margin: 0 20px">
       <el-tooltip :content="tooltipText" placement="top">
         <el-switch
-          v-model="condition.valueCate"
-          :active-value="1"
-          :inactive-value="0"
+          v-model="condition.isCompareField"
           @change="handleChange">
         </el-switch>
       </el-tooltip>
@@ -159,7 +157,7 @@ export default {
       return this.curFieldAttrs.comType.replace('range', '')
     },
     tooltipText() {
-      return this.condition.valueCate
+      return this.condition.isCompareField
         ? '指定字段的值'
         : '自定义值'
     }

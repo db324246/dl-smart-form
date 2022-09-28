@@ -40,15 +40,6 @@ export default {
       if (formId !== this.formId) return
       try {
         await this.$refs.flexForm.validate()
-        for (let i = 0, len = this.modelFields.length; i < len; i++) {
-          const field = this.modelFields[i]
-          if (['arrayform'].includes(field.type)) {
-            if (!field.value || !field.value.length) {
-              this.$message.error(`请上报${field.label}`)
-              return resolve(Promise.reject(new Error(`请上报${field.label}`)))
-            }
-          }
-        }
         resolve()
       } catch (err) {
         console.warn(err)

@@ -25,15 +25,12 @@ export default {
       formId: this.formId,
       isEditable: this.isEditable,
       isFieldShow: this.isFieldShow,
-      loadDictList: this.loadDictList,
+      customAttrs: this.customAttrs,
       getLayoutData: () => {
         return this.layout
       },
-      tagScopedSlots: (field) => {
-        return this.$scopedSlots.tag && this.$scopedSlots.tag(field)
-      },
-      tableTagScopedSlots: (data) => {
-        return this.$scopedSlots.tableTag && this.$scopedSlots.tableTag(data)
+      scopedSlotsMap: (slotName, data) => {
+        return this.$scopedSlots[slotName] && this.$scopedSlots[slotName](data)
       }
     }
   },
@@ -59,21 +56,13 @@ export default {
       type: Object,
       default: () => ({})
     },
-    /**
-     * 获取字典项的操作函数
-     * 函数应返回一个resolve 状态的 Promise，并传递字典选项数组
-     * 字典选项： {
-     *   key: '2020-2021',
-     *   value: '2020-2021学年'
-     * }
-     */
-    loadDictList: {
-      type: Function,
-      default: null
-    },
     // 字段是否展示，返回布尔值
     isFieldShow: {
       type: Function
+    },
+    // 自定义的组件参数对象
+    customAttrs: {
+      type: Object
     }
   },
   data() {

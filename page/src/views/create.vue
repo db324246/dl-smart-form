@@ -19,7 +19,7 @@
 </template>
 
 <script>
-// import formData from '@/formData.json'
+// import formData from '@/data/date.json'
 export default {
   name: 'Home',
   mounted() {

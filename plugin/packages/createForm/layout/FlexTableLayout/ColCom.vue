@@ -9,9 +9,12 @@
     v-contextmenu:contextmenu
     @contextmenu.stop.prevent="handlerFocus"
     @click.stop="handleNodeFocus">
-    <v-contextmenu ref="contextmenu" :style="{
-      'border-width': '1px'
-    }">
+    <v-contextmenu ref="contextmenu"
+      :node-key="colData.key"
+      :style="{
+        'border-width': '1px'
+      }"
+      @contextmenu.native.stop.prevent>
       <v-contextmenu-submenu title="新增">
         <v-contextmenu-item @click="handleCommand('newRow')">在单元格里新增表格行</v-contextmenu-item>
       </v-contextmenu-submenu>
@@ -56,7 +59,6 @@
 </template>
 
 <script>
-import Bus from '../../Bus'
 import Sortable from 'sortablejs'
 import WidgetItem from '../../components/WidgetItem.vue'
 import {
@@ -71,7 +73,12 @@ export default {
   components: {
     WidgetItem
   },
-  inject: ['rowKey', 'rowVm', 'fieldsArr'],
+  inject: [
+    'rowKey',
+    'rowVm',
+    'fieldsArr',
+    'eventBus'
+  ],
   props: {
     colData: {
       type: Object,
@@ -110,7 +117,7 @@ export default {
       }).length > 0
     },
     active() {
-      return Bus.focusNodeKey === this.colData.key
+      return this.eventBus.focusNodeKey === this.colData.key
     },
     computedStyles() {
       const width = this.colData.width
@@ -123,13 +130,13 @@ export default {
   },
   created() {
     // 递归删除col
-    Bus.$on('delete-col', colKey => {
+    this.eventBus.$on('delete-col', colKey => {
       if (this.colData.key !== colKey) return
       this.hasFiled && this.deleteField()
       this.hasRowNode && this.deleteRow()
       this.rowVm.deleletCol(colKey)
     })
-    Bus.$on('delete-field', ({ domKey, fieldKey }) => {
+    this.eventBus.$on('delete-field', ({ domKey, fieldKey }) => {
       if (this.colData.key !== domKey) return
 
       this.colData.children = this.colData.children.filter(item => {
@@ -137,7 +144,7 @@ export default {
         else return item.name !== fieldKey
       })
     })
-    Bus.$on('liquidation-rows', () => {
+    this.eventBus.$on('liquidation-rows', () => {
       const indexs = []
       this.colData.children.forEach((node, index) => {
         if (node.domtype === 'row' && !node.children.length) {
@@ -174,11 +181,11 @@ export default {
     // 节点 聚焦
     handleNodeFocus() {
       this.hideContextMenu()
-      Bus.setFocusNodeKey(this.colData.key)
+      this.eventBus.setFocusNodeKey(this.colData.key)
     },
     // 字段点击编辑
     handleContentEdit(fieldName) {
-      Bus.$emit('edit-node', this.fieldsArr.find(f => f.name === fieldName))
+      this.eventBus.$emit('edit-node', this.fieldsArr.find(f => f.name === fieldName))
     },
     // 列 右击聚焦
     handlerFocus() {
@@ -205,13 +212,13 @@ export default {
           this.rowVm.insertCol(this.colIndex + 1)
           break;
         case 'insertTopRow': // 插入一行在上边
-          Bus.$emit('insert-row', this.rowIndex, this.rowKey)
+          this.eventBus.$emit('insert-row', this.rowIndex, this.rowKey)
           break;
         case 'insertBottomRow': // 插入一行在下边
-          Bus.$emit('insert-row', this.rowIndex + 1, this.rowKey)
+          this.eventBus.$emit('insert-row', this.rowIndex + 1, this.rowKey)
           break;
         case 'editColAttr': // 编辑列属性
-          Bus.$emit('edit-node', this.colData)
+          this.eventBus.$emit('edit-node', this.colData)
           break;
         case 'delCol': // 删除单元格
           this.$confirm('删除后不可撤销，确认删除吗?', '提示', {
@@ -223,7 +230,7 @@ export default {
             this.hasRowNode && this.deleteRow()
             if (this.isOnlyCol) {
               this.rowVm.deleletCol(this.colData.key)
-              Bus.$emit('delete-row', this.rowKey)
+              this.eventBus.$emit('delete-row', this.rowKey)
             } else {
               this.rowVm.deleletCol(this.colData.key)
             }
@@ -235,7 +242,7 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(() => {
-            Bus.$emit('delete-row', this.rowKey)
+            this.eventBus.$emit('delete-row', this.rowKey)
           }).catch(() => {
             this.$message({
               type: 'info',
@@ -248,7 +255,7 @@ export default {
     // 删除字段
     deleteField() {
       const filedName = this.colData.children.find(node => node.domtype === 'field').fieldName
-      Bus.$emit('delete-field', {
+      this.eventBus.$emit('delete-field', {
         domKey: this.colData.key,
         fieldKey: filedName
       })
@@ -258,16 +265,16 @@ export default {
       const rowKeys = this.colData.children
         .filter(node => node.domtype === 'row')
         .map(row => row.key)
-      rowKeys.forEach(rk => Bus.$emit('delete-row', rk))
+      rowKeys.forEach(rk => this.eventBus.$emit('delete-row', rk))
     },
     // 隐藏 右击菜单项
     hideContextMenu() {
-      hideContextMenu()
+      hideContextMenu(this.colData.key)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽
     handleDragStart(evt) {
-      Bus.setDraggingNode({
+      this.eventBus.setDraggingNode({
         type: 'row',
         data: this.colData.children[evt.oldIndex]
       })
@@ -286,9 +293,9 @@ export default {
     },
     // 添加元素
     handleDragAdd(evt) {
-      if (!Bus.draggingNode) return
+      if (!this.eventBus.draggingNode) return
       setDraggableAttr(evt.item)
-      const { type, data } = Bus.draggingNode
+      const { type, data } = this.eventBus.draggingNode
       switch (type) {
         case 'row':
           this.colData.children.splice(evt.newIndex, 0, data)
@@ -301,10 +308,10 @@ export default {
               '.field-component'
             )
             if (this.hasFiled) return this.$message.error('节点中已存在字段')
-            Bus.$emit('add-field', {
+            this.eventBus.$emit('add-field', {
               field: data
             })
-            Bus.$emit('edit-node', data)
+            this.eventBus.$emit('edit-node', data)
             this.colData.children.splice(evt.newIndex, 0, {
               domtype: 'field',
               parentKey: this.colData.key,
@@ -325,7 +332,7 @@ export default {
       this.colData.children.forEach(node => {
         node.parentKey = this.colData.key
       })
-      Bus.setDraggingNode(null)
+      this.eventBus.setDraggingNode(null)
     }
   }
 }

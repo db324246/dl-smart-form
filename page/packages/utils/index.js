@@ -109,7 +109,6 @@ export const computeCorrelativeRule = (fieldCorrelativeRules = []) => {
     })
 
     const watchFunStr = `return !!(${exportRuleConditionsStr(conditions, 'form')})`
-    console.log(watchFunStr)
     // eslint-disable-next-line
     const handler = new Function('form', watchFunStr)
     Array.from(fieldNames).forEach(f => {

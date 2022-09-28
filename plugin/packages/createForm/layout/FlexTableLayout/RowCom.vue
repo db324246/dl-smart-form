@@ -8,9 +8,12 @@
     v-contextmenu:contextmenu
     @contextmenu.stop.prevent="hideContextMenu"
     @click.stop="handleNodeFocus">
-    <v-contextmenu ref="contextmenu" :style="{
-      'border-width': '1px'
-    }">
+    <v-contextmenu ref="contextmenu"
+      :node-key="rowKey"
+      :style="{
+        'border-width': '1px'
+      }"
+      @contextmenu.native.stop.prevent>
       <v-contextmenu-submenu title="插入">
         <v-contextmenu-item @click="handleCommand('insertCol')">单元格</v-contextmenu-item>
         <v-contextmenu-item @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
@@ -45,7 +48,6 @@
 </template>
 
 <script>
-import Bus from '../../Bus'
 import Sortable from 'sortablejs'
 import {
   createCol,
@@ -56,6 +58,7 @@ import {
 
 export default {
   name: 'row-com',
+  inject: ['eventBus'],
   props: {
     // 行配置
     rowConfig: {
@@ -80,10 +83,10 @@ export default {
   },
   computed: {
     nodesMap() {
-      return Bus.nodesMap
+      return this.eventBus.nodesMap
     },
     active() {
-      return Bus.focusNodeKey === this.rowKey
+      return this.eventBus.focusNodeKey === this.rowKey
     }
   },
   mounted() {
@@ -110,7 +113,7 @@ export default {
     // 节点 聚焦
     handleNodeFocus() {
       this.hideContextMenu()
-      Bus.setFocusNodeKey(this.rowKey)
+      this.eventBus.setFocusNodeKey(this.rowKey)
     },
     // 插入列
     insertCol(sourceIndex) {
@@ -137,7 +140,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        Bus.$emit('delete-row', this.rowKey)
+        this.eventBus.$emit('delete-row', this.rowKey)
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -160,27 +163,27 @@ export default {
           )
           break;
         case 'insertTopRow': // 插入一行在上边
-          Bus.$emit('insert-row', this.rowIndex, this.rowKey)
+          this.eventBus.$emit('insert-row', this.rowIndex, this.rowKey)
           break;
         case 'insertBottomRow': // 插入一行在下边
-          Bus.$emit('insert-row', this.rowIndex + 1, this.rowKey)
+          this.eventBus.$emit('insert-row', this.rowIndex + 1, this.rowKey)
           break;
         case 'delRow': // 删除行
           this.handleRowDelete()
           break;
         case 'upRow': // 前移行
-          Bus.$emit('exchange-row', this.rowIndex, this.rowIndex - 1, this.rowKey)
+          this.eventBus.$emit('exchange-row', this.rowIndex, this.rowIndex - 1, this.rowKey)
           break;
       }
     },
     // 隐藏 右击菜单项
     hideContextMenu() {
-      hideContextMenu()
+      hideContextMenu(this.rowKey)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽
     handleDragStart(evt) {
-      Bus.setDraggingNode({
+      this.eventBus.setDraggingNode({
         type: 'col',
         data: this.rowConfig.children[evt.oldIndex]
       })
@@ -189,7 +192,7 @@ export default {
     handleDragRemove(evt) {
       this.rowConfig.children.splice(evt.oldIndex, 1)
       this.$nextTick(() => {
-        Bus.$emit('liquidation-rows')
+        this.eventBus.$emit('liquidation-rows')
       })
     },
     // 拖拽排序更新
@@ -202,9 +205,9 @@ export default {
     },
     // 添加元素
     handleDragAdd(evt) {
-      if (!Bus.draggingNode) return
+      if (!this.eventBus.draggingNode) return
       setDraggableAttr(evt.item)
-      const { type, data } = Bus.draggingNode
+      const { type, data } = this.eventBus.draggingNode
       switch (type) {
         case 'col':
           this.rowConfig.children.splice(evt.newIndex, 0, data)
@@ -218,7 +221,7 @@ export default {
     },
     // 结束拖拽
     handleDragEnd() {
-      Bus.setDraggingNode(null)
+      this.eventBus.setDraggingNode(null)
     }
   }
 }

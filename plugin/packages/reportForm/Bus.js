@@ -128,10 +128,12 @@ export default new Vue({
             rules.forEach(r => {
               const flag = r.handler(watcher.fieldsMap)
               if (flag) {
+                r.T_message && Message.success({ message: r.T_message })
                 handlers.push(
                   ...(r.T_handle || [])
                 )
               } else {
+                r.F_message && Message.error({ message: r.F_message })
                 handlers.push(
                   ...(r.F_handle || [])
                 )
@@ -139,18 +141,21 @@ export default new Vue({
             })
             handlers.forEach(h => {
               const _field = watcher.fieldsMap[h.fieldName]
-              if (!_field) return
               switch (h.type) {
                 case 'C_value':
                   // eslint-disable-next-line
                   console.info(`关联操作： ${h.fieldName} 修改值 ${h.value}`)
-                  _field.value = h.value
+                  if (_field) {
+                    _field.value = h.value
+                  }
                   break;
                 case 'C_options':
                   // eslint-disable-next-line
                   console.info(`关联操作： ${h.fieldName} 修改选项 ${JSON.stringify(h.options)}`)
-                  _field.options = h.options
-                  _field.value = Array.isArray(_field.value) ? [] : ''
+                  if (_field) {
+                    _field.options = h.options
+                    _field.value = Array.isArray(_field.value) ? [] : ''
+                  }
                   break;
                 case 'C_show':
                   // eslint-disable-next-line

@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     fieldList() {
-      return this.modelFields || this.fieldsArr.filter(f => f.isFormField)
+      return (this.modelFields || this.fieldsArr).filter(f => f.isFormField)
     },
     ruleFiels() {
       return this.fieldList.filter(f => !this.complexFieldTypes.includes(f.type))
@@ -80,12 +80,13 @@ export default {
       const defaultJson = {
         key: generateKey('condition_'),
         type: 'condition', // 类型为条件
+        connector: '', // 连接符
         fieldName: '', // 字段name
         fieldType: '', // 字段类型
         judge: '', // 条件判断语句， 值的种类见下表 1.1
-        valueCate: 0, // 0 比对自定义值 1 比对指定字段值
         valueType: undefined, // 值的类型
         value: '', // 用于条件判断的值， 条件判断语句为 “为空”、“不为空”时， 没有这个
+        isCompareField: false, // false 比对自定义值 true 比对指定字段值
         compareFieldName: '' // 用于条件比对的字段
       }
       rule.conditions.push(deepClone(defaultJson))
@@ -205,7 +206,7 @@ export default {
             this.$alert(`请完整填写规则${i + 1}的条件！`)
             return
           }
-          if (!condition.value && !judgeList.includes(condition.judge) && !condition.valueCate) {
+          if (!condition.value && !judgeList.includes(condition.judge) && !condition.isCompareField) {
             this.$alert(`请完整填写规则${i + 1}的条件值！`)
             return
           }

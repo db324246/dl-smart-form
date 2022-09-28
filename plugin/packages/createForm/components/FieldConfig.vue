@@ -21,7 +21,7 @@
 
       <!-- 非单字段模式 && 字段name && 表单字段 -->
       <el-form
-        v-if="layout !== 'singleField' && filedData.name && filedData.isFormField"
+        v-if="layout !== 'single' && filedData.name && filedData.isFormField"
         label-position="top"
         class="attache-rule-form">
         <el-form-item >
@@ -60,7 +60,6 @@
 
 <script>
 import Vue from 'vue'
-import Bus from '../Bus'
 import store from '@pr/store'
 import ColConfig from './ColConfig'
 import smartTitle from '@pr/components/smartTitle'
@@ -77,6 +76,7 @@ export default {
   },
   inject: [
     'layout',
+    'eventBus',
     'getFieldAttachedRules'
   ],
   data() {
@@ -104,13 +104,13 @@ export default {
   created() {
     this.handleRegister()
     store.$on('fields-register', this.handleRegister)
-    Bus.$on('edit-node', (field) => {
+    this.eventBus.$on('edit-node', (field) => {
       this.filedData = field || {
         configurable: true,
         type: 'default'
       }
     })
-    Bus.$on('delete-field', ({ fieldKey }) => {
+    this.eventBus.$on('delete-field', ({ fieldKey }) => {
       if (fieldKey === this.filedData.name) {
         this.filedData = {
           configurable: true,
@@ -119,9 +119,9 @@ export default {
       }
     })
     this.$on('hook:destroyed', () => {
-      Bus.$off('edit-node')
+      this.eventBus.$off('edit-node')
       store.$off('fields-register')
-      Bus.$off('delete-field')
+      this.eventBus.$off('delete-field')
     })
   },
   methods: {

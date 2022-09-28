@@ -211,9 +211,6 @@ export default {
   position: relative;
   box-sizing: border-box;
 }
-.widget-view .el-form-item {
-  padding-right: 30px;
-}
 .widge-field-item_divider {
   display: none;
   position: absolute;

@@ -102,7 +102,7 @@ export default {
       trigger: 'change'
     }
   },
-  correlativeRule(value, judge, fieldName) {
+  correlativeRule(condition) {
     return ''
   },
   field: {

@@ -10,33 +10,37 @@ export default {
   reportComponent, // 上报组件
   templateComponent, // 模板组件
   attachedRule: changeRule, // 字段的附属规则计算函数
-  correlativeRule(value, judge, fieldName) { // 字段的关联规则
+  correlativeRule(condition) { // 字段的关联规则
+    const { value, fieldName, judge } = condition
     const fieldVal = `form['${fieldName}'].value`
     let str = ''
     switch (judge) {
       case 'contains':
         value.forEach((v, i) => {
           if (!i) {
-            str += `${fieldVal}.includes(${v})`
+            str += `${fieldVal}.includes('${v}')`
           } else {
-            str += ` && ${fieldVal}.includes(${v})`
+            str += ` && ${fieldVal}.includes('${v}')`
           }
         })
         break;
       case 'uncontains':
         value.forEach((v, i) => {
           if (!i) {
-            str += `!${fieldVal}.includes(${v})`
+            str += `!${fieldVal}.includes('${v}')`
           } else {
-            str += ` && !${fieldVal}.includes(${v})`
+            str += ` && !${fieldVal}.includes('${v}')`
           }
         })
         break;
       case 'nullArr':
-        str += `(!${fieldVal}] || !${fieldVal}.length)`
+        str += `(!${fieldVal} || !${fieldVal}.length)`
         break;
       case 'unnullArr':
         str += `(${fieldVal} && ${fieldVal}.length)`
+        break;
+      default:
+        str += 'true'
         break;
     }
     return str

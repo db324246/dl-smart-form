@@ -37,6 +37,7 @@
 | title | 标题字段 | layout（布局字段） |
 | divider | 分割线字段 | layout（布局字段） |
 | blankLine | 空白行字段 | layout（布局字段） |
+| subform | 明细字表 | high（高阶字段） |
 
 
 ### AttachedRule 字段的附属规则计算
@@ -50,27 +51,38 @@ attachedRule 方法接收 required 和 label 两个参数。
 <br />
 
 ### CorrelativeRule 字段的关联规则计算
-CorrelativeRule 主要用于动态计算返回字段的判断条件
-CorrelativeRule 方法接收 value, judge 和 fieldName 三个参数。
-+ value: 判断条件字段的值
-+ judge: 判断条件
-+ fieldName：字段名称（唯一值）
-
++ CorrelativeRule 主要用于动态计算返回字段的判断条件
++ CorrelativeRule 方法接收 [condition 条件](/doc/correlativeRule#ConditionObj) 对象一个参数。
 应返回一个字符串，表示字段关联的判断条件
 
-
-#### Judge
-| 名称 | 说明 | 通用类型 |
-| - | - | - |
-| == | 等于 | String, Boolean, Number |
-| != | 不等于 | String, Boolean, Number |
-| contains | 包含 | Array |
-| uncontains | 不包含 | Array |
-| nullStr | 为空 | String, Number |
-| unnullStr | 不为空 | String, Number |
-| nullArr | 数组为空 | Array |
-| unnullArr | 数组不为空 | Array |
-| > | 大于 | Number |
-| < | 小于 | Number |
-| >= | 大于等于 | Number |
-| <= | 小于等于 | Number |
+``` javascript
+// 内置 input 字段的关联规则
+export default {
+  // ...
+  correlativeRule(condition) { // 字段的关联规则
+    const { value, fieldName, judge, compareFieldName, isCompareField } = condition
+    const fieldVal = `form['${fieldName}'].value`
+    const judeValue = isCompareField
+      ? `form['${compareFieldName}'].value`
+      : `'${value}'`
+    let str = ''
+    switch (judge) {
+      case '==':
+      case '!=':
+        str += `${fieldVal} ${judge} ${judeValue}`
+        break;
+      case 'nullStr':
+        str += `!${fieldVal}`
+        break;
+      case 'unnullStr':
+        str += `${fieldVal}`
+        break;
+      default:
+        str += 'true'
+        break;
+    }
+    return str
+  }
+  // ...
+}
+```

@@ -2,10 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import ReadMe from '@/components/ReadMe'
-import 'marked-essay-loader/styles/marked-style.scss'
 import Uploader from './components/Uploader'
-import Element from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
+import Element from 'element-ui'
+import preview from 'vue-photo-preview'
+import 'element-ui/lib/theme-chalk/index.css'
+import 'marked-essay-loader/styles/marked-style.scss'
+import 'vue-photo-preview/dist/skin.css'
 
 import SmartForm, {
   createrInstaller,
@@ -46,6 +48,7 @@ SmartForm.registerFields([{
   ]
 }])
 
+Vue.use(preview)
 Vue.use(createrInstaller)
 Vue.use(reporterInstaller)
 Vue.use(showerInstaller)

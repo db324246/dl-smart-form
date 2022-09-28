@@ -28,15 +28,12 @@ export default {
       formId: this.formId,
       isEditable: this.isEditable,
       isFieldShow: this.isFieldShow,
-      loadDictList: this.loadDictList,
+      customAttrs: this.customAttrs,
       getLayoutData: () => {
         return this.layout
       },
-      tagScopedSlots: (field) => {
-        return this.$scopedSlots.tag && this.$scopedSlots.tag(field)
-      },
-      tableTagScopedSlots: (data) => {
-        return this.$scopedSlots.tableTag && this.$scopedSlots.tableTag(data)
+      scopedSlotsMap: (slotName, data) => {
+        return this.$scopedSlots[slotName] && this.$scopedSlots[slotName](data)
       }
     }
   },
@@ -70,22 +67,14 @@ export default {
     isFieldShow: {
       type: Function
     },
-    /**
-     * 获取字典项的操作函数
-     * 函数应返回一个resolve 状态的 Promise，并传递字典选项数组
-     * 字典选项： {
-     *   key: '2020-2021',
-     *   value: '2020-2021学年'
-     * }
-     */
-    loadDictList: {
-      type: Function,
-      default: null
-    },
     // 不需要上报数据的字段类型
     unReportFields: {
       type: Function,
       default: null
+    },
+    // 自定义的组件参数对象
+    customAttrs: {
+      type: Object
     }
   },
   data() {
@@ -101,7 +90,6 @@ export default {
     /**
      * default: 自定义布局
      * vertical: 垂直布局 - 针对于重复上报表单
-     * singleField：单字段布局
      */
     layoutType() {
       return this.layout.layoutType
