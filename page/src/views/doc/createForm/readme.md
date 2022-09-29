@@ -11,8 +11,8 @@
 ### Attributes
 | 参数 | 说明 | 类型 | 可选值 | 默认值 |
 | -- | -- | -- | -- | -- |
-| layout | 布局方式 | String | default: 自定义布局；vertical: 垂直布局 - 针对于重复上报表单；singleField：单字段布局 | default |
-| showOriginFields | 选择展示组件提供的基础字段 | Array | base： 基础字段；layout：布局字段 | ['base', 'layout'] |
+| layout | 布局方式 | String | default: 自定义布局；single：单字段布局 | default |
+| showOriginFields | 选择展示组件提供的基础字段 | Array | base： 基础字段；layout：布局字段 | ['base', 'high', 'layout'] |
 | extendedAttrs | 字段扩展属性的对象集合 | Object | -- | {} |
 | prefixName | 自定义字段唯一值 name 前缀 | String | -- | 字段的type |
 | customAttrs | 自定义的组件参数对象, **详细参数见下表** | Object | -- | -- |

@@ -7,8 +7,7 @@
 
 | 名称 | 说明 | 类型 | 默认值 | 必传 |
 | - | - | - | - | - |
-| dictionaryArr | 字典项配置数组 | Array | [] | true |
-| loadDictList | 自定义加载字典方法 | Function | () => Promise.resolve([]) | false |
+| customAttrs | 自定义的组件参数对象 | Object | - | - |
 
 ### Props
 

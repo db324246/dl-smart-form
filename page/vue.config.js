@@ -39,10 +39,16 @@ const config = {
             options.deleteOriginalAssets = false // 不删除源文件
             return options
           })  
-      config
-        .plugin('webpack-bundle-analyzer')
-        .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
+      // config
+      //   .plugin('webpack-bundle-analyzer')
+      //   .use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin);
     } 
+  },
+  pages: {
+    index: {
+      title: '我的自定义表单',
+      entry: 'src/main.js'
+    }
   }
 }
 

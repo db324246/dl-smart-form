@@ -3,7 +3,7 @@
 > registerFields 接受一个数组参数，表示注册的字段分组。注册的字段将在新的分组下展示
 
 ### 注册一个现有类型的字段
-我们可以在 `SmartFormCreate` 的 `singleField` 模式下编辑字段，将编辑好的字段数据直接导出。数据如下：
+我们可以在 `SmartFormCreate` 的 `single` 模式下编辑字段，将编辑好的字段数据直接导出。数据如下：
 
 <img class="readme-img" src="../../../assets/input.jpg" preview="二次封装字段" preview-text="二次封装字段" title="二次封装字段" alt="二次封装字段"/>
 

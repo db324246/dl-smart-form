@@ -1,6 +1,9 @@
 <template>
   <div class="create-container">
     <div class="create-header">
+      <el-button @click="handleChange">
+        切换至 {{layout === 'default' ? '单字段模式' : '布局模式'}}
+      </el-button>
       <el-button @click="handleLog">打印表单数据</el-button>
       <el-button @click="handleExport">导出表单数据</el-button>
       <el-button @click="$refs.upload.click()">导入表单数据</el-button>
@@ -10,9 +13,11 @@
         @change="handleImport"
         accept=".json" />
     </div>
-    <div class="create-body">
+    <div class="create-body" v-loading="loading">
       <smart-form-create
-        ref="createForm">
+        v-if="!loading"
+        ref="createForm"
+        :layout="layout">
       </smart-form-create>
     </div>
   </div>
@@ -22,10 +27,25 @@
 // import formData from '@/data/date.json'
 export default {
   name: 'Home',
+  data() {
+    return {
+      layout: 'default',
+      loading: false
+    }
+  },
   mounted() {
     // this.$refs.createForm.initFormData(formData)
   },
   methods: {
+    handleChange() {
+      this.loading = true
+      this.layout = this.layout === 'default'
+        ? 'single'
+        : 'default'
+      setTimeout(() => {
+        this.loading = false
+      }, 500)
+    },
     async handleLog() {
       const formData = await this.$refs.createForm.getCustomFormData()
       console.log(formData)
