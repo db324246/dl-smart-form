@@ -4,16 +4,18 @@ import { deepClone, typeOf, syncFieldInitTo } from '../utils'
 export { deepClone, typeOf, syncFieldInitTo }
 
 // 关闭右击菜单
-export const hideContextMenu = (nodeKey) => {
+export const hideContextMenu = (nodeKey, hide) => {
   Bus.setFocusNodeKey('')
   const contextmenuUlList = document.querySelectorAll('.v-contextmenu.v-contextmenu--default')
   for (let i = 0; i < contextmenuUlList.length; i++) {
     const contextmenuUl = contextmenuUlList[i]
-    if (contextmenuUl.getAttribute('node-key') !== nodeKey) {
+    if (!nodeKey) {
+      contextmenuUl.style.display = 'none'
+    } else if (contextmenuUl.getAttribute('node-key') !== nodeKey) {
       contextmenuUl.style.display = 'none'
     } else {
       setTimeout(() => {
-        contextmenuUl.style.display = 'block'
+        contextmenuUl.style.display = hide ? 'none' : 'block'
       })
     }
   }

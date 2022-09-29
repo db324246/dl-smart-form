@@ -2,11 +2,11 @@
   <el-form>
     <v-contextmenu
       ref="contextmenu"
+      :node-key="nodeKey"
       :style="{
-        'border-width': showFieldHandler ? '1px' : '0px'
+        'border-width': '1px'
       }">
-      <v-contextmenu-item v-show="showFieldHandler && focusField.configurable" @click="handleCommand('editField')">编辑字段</v-contextmenu-item>
-      <v-contextmenu-item v-show="showFieldHandler" @click="handleCommand('delField')">删除字段</v-contextmenu-item>
+      <v-contextmenu-item v-show="editable" @click="handleCommand('delField')">删除字段</v-contextmenu-item>
     </v-contextmenu>
     <div ref="drag-wrapper" class="drag-wrapper">
       <div
@@ -17,7 +17,7 @@
         v-for="(field, index) in rowsData"
         :key="field.name"
         v-contextmenu:contextmenu
-        @contextmenu.stop="handleContentFocus(field, index)"
+        @contextmenu.stop="hideContextMenu(false)"
         @click.stop="handleNodeFocus(field)">
         <widget-item
           @click.native="handleContentEdit(field.name)"
@@ -25,7 +25,7 @@
           :data-index="index">
         </widget-item>
 
-        <div v-if="draggable && focusNodeKey === field.name" class="row-drag">
+        <div v-if="editable && focusNodeKey === field.name" class="row-drag">
           <i class="el-icon-rank drag-field"></i>
         </div>
       </div>
@@ -54,10 +54,6 @@ export default {
     WidgetItem
   },
   props: {
-    draggable: {
-      type: Boolean,
-      default: true
-    },
     editable: {
       type: Boolean,
       default: false
@@ -65,10 +61,9 @@ export default {
   },
   data() {
     return {
+      nodeKey: 'mobile-form',
       rowsData: [],
       sortableWrap: null,
-      subIndex: 0,
-      focusFieldIn: false,
       focusField: null
     }
   },
@@ -78,9 +73,6 @@ export default {
     },
     nodesMap() {
       return this.eventBus.nodesMap
-    },
-    showFieldHandler() {
-      return this.focusFieldIn && this.focusField
     }
   },
   created() {
@@ -103,7 +95,7 @@ export default {
     })
   },
   mounted() {
-    if (!this.draggable) return
+    if (!this.editable) return
     this.sortableWrap = Sortable.create(
       this.$refs['drag-wrapper'],
       {
@@ -148,16 +140,8 @@ export default {
     },
     // 节点 聚焦
     handleNodeFocus(field) {
-      this.hideContextMenu()
+      this.hideContextMenu(true)
       this.eventBus.setFocusNodeKey(field.name)
-    },
-    // 内容 聚焦
-    handleContentFocus(node, subIndex) {
-      this.hideContextMenu()
-      if (!this.editable) return
-      this.subIndex = subIndex
-      this.focusFieldIn = true
-      this.focusField = node
     },
     // 字段点击编辑
     handleContentEdit(fieldName) {
@@ -166,21 +150,20 @@ export default {
     },
     // 菜单操作
     handleCommand(type) {
-      if (type === 'editField') {
-        this.focusField && this.handleContentEdit(this.focusField.name)
-      } else if (type === 'delField') {
-        this.focusField && this.$confirm('是否删除此字段?', {
+      if (type === 'delField') {
+        this.$confirm('是否删除此字段?', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.eventBus.$emit('delete-field', { fieldKey: this.focusField.name })
+          const f = this.rowsData[0]
+          this.eventBus.$emit('delete-field', { fieldKey: f.name })
         })
       }
     },
     // 隐藏 右击菜单项
-    hideContextMenu() {
-      hideContextMenu()
+    hideContextMenu(hide) {
+      hideContextMenu(this.nodeKey, hide)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽

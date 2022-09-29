@@ -180,7 +180,7 @@ export default {
   methods: {
     // 节点 聚焦
     handleNodeFocus() {
-      this.hideContextMenu()
+      this.hideContextMenu(true)
       this.eventBus.setFocusNodeKey(this.colData.key)
     },
     // 字段点击编辑
@@ -268,8 +268,8 @@ export default {
       rowKeys.forEach(rk => this.eventBus.$emit('delete-row', rk))
     },
     // 隐藏 右击菜单项
-    hideContextMenu() {
-      hideContextMenu(this.colData.key)
+    hideContextMenu(hide) {
+      hideContextMenu(this.colData.key, hide)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽

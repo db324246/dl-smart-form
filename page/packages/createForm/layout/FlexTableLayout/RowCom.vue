@@ -6,7 +6,7 @@
       'active-row': active
     }"
     v-contextmenu:contextmenu
-    @contextmenu.stop.prevent="hideContextMenu"
+    @contextmenu.stop.prevent="hideContextMenu(false)"
     @click.stop="handleNodeFocus">
     <v-contextmenu ref="contextmenu"
       :node-key="rowKey"
@@ -112,7 +112,7 @@ export default {
   methods: {
     // 节点 聚焦
     handleNodeFocus() {
-      this.hideContextMenu()
+      this.hideContextMenu(true)
       this.eventBus.setFocusNodeKey(this.rowKey)
     },
     // 插入列
@@ -177,8 +177,8 @@ export default {
       }
     },
     // 隐藏 右击菜单项
-    hideContextMenu() {
-      hideContextMenu(this.rowKey)
+    hideContextMenu(hide) {
+      hideContextMenu(this.rowKey, hide)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽

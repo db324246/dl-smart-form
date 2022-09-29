@@ -12,7 +12,11 @@
       v-contextmenu:contextmenu
       @contextmenu.stop.prevent="hideContextMenu">
 
-      <v-contextmenu ref="contextmenu">
+      <v-contextmenu ref="contextmenu"
+        :node-key="nodeKey"
+        :style="{
+          'border-width': '1px'
+        }">
         <v-contextmenu-item @click="handleCommand('insertRow')">插入行</v-contextmenu-item>
       </v-contextmenu>
 
@@ -79,6 +83,7 @@ export default {
   inject: ['fieldsArr', 'eventBus'],
   data() {
     return {
+      nodeKey: 'flex-layout',
       rowsData: [],
       layoutConfig: {
         width: 800,
@@ -250,7 +255,7 @@ export default {
     },
     // 隐藏 右击菜单项
     hideContextMenu() {
-      hideContextMenu()
+      hideContextMenu(this.nodeKey)
       this.$refs.contextmenu.hide()
     },
     // 开始拖拽

@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
-    "dl-smart-form": "^0.1.8",
+    "dl-smart-form": "^0.1.9",
     "element-ui": "2.15.6",
     "sortablejs": "^1.14.0",
     "v-contextmenu": "^2.9.0",
