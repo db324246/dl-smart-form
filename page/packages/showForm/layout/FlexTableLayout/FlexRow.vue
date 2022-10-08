@@ -1,6 +1,7 @@
 <template>
   <div
     v-show="!hideRowByNoData"
+    :no-data="hideRowByNoData"
     class='flex-row'
     :class="{
       'row-has-border': hasBorder
@@ -8,6 +9,7 @@
     <template v-for="col in colsRenderData">
       <div
         v-show="!hideColByNoData(col)"
+        :no-data="hideColByNoData(col)"
         :key="col.key"
         class='flex-col'
         :class="{
@@ -73,7 +75,7 @@ export default {
       const showCols = this.colsData.filter(col => {
         return !this.hideColByNoData(col)
       })
-      return showCols.length <= 0
+      return showCols.length <= 0 ? 1 : 0
     }
   },
   watch: {
@@ -96,7 +98,7 @@ export default {
         const flag = mapObj[node.key]
         return flag === undefined ? true : flag
       })
-      return showNodes.length <= 0
+      return showNodes.length <= 0 ? 1 : 0
     }
   }
 }
@@ -128,13 +130,13 @@ export default {
   border-top: 1px solid #999;
 }
 
-.col-has-border {
+.col-has-border:not([no-data="1"])+.col-has-border {
+  border-left: 1px solid #999;
+}
+/* .col-has-border {
   border-right: 1px solid #999;
-  &:last-child {
-    border-right: none
-  }
 }
-::v-deep .el-form-item {
-  margin-bottom: 0;
-}
+.col-has-border:last-child {
+  border-right: none
+} */
 </style>
