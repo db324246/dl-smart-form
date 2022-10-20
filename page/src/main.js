@@ -3,9 +3,9 @@ import App from './App.vue'
 import router from './router'
 import ReadMe from '@/components/ReadMe'
 import Uploader from './components/Uploader'
-// import Element from 'element-ui'
+import Element from 'element-ui'
 import preview from 'vue-photo-preview'
-// import 'element-ui/lib/theme-chalk/index.css'
+import 'element-ui/lib/theme-chalk/index.css'
 import 'marked-essay-loader/styles/marked-style.scss'
 import 'vue-photo-preview/dist/skin.css'
 
@@ -14,7 +14,7 @@ import SmartForm, {
   reporterInstaller,
   showerInstaller
 } from '@pr/index.js'
-import registerElements from '@pr/elements'
+// import registerElements from '@pr/elements'
 
 // import SmartForm, {
 //   createrInstaller,
@@ -22,8 +22,8 @@ import registerElements from '@pr/elements'
 //   showerInstaller
 // } from 'dl-smart-form'
 
-// Vue.use(Element);
-registerElements(Vue)
+Vue.use(Element);
+// registerElements(Vue)
 Vue.component('ReadMe', ReadMe)
 
 SmartForm.registerFields([{
