@@ -154,7 +154,17 @@ export default new Vue({
                   console.info(`关联操作： ${h.fieldName} 修改选项 ${JSON.stringify(h.options)}`)
                   if (_field) {
                     _field.options = h.options
-                    _field.value = Array.isArray(_field.value) ? [] : ''
+                    if (Array.isArray(_field.value)) {
+                      _field.value = _field.value.filter(key => {
+                        const hasValue = h.options.some(opt => opt.key === key)
+                        !hasValue && console.log(`关联操作：${key}选项丢失 重置选项值`)
+                        return hasValue
+                      })
+                    } else {
+                      const hasValue = h.options.some(opt => opt.key === _field.value)
+                      !hasValue && console.log(`关联操作：${_field.value}选项丢失 重置选项值`)
+                      _field.value = hasValue ? _field.value : ''
+                    }
                   }
                   break;
                 case 'C_show':

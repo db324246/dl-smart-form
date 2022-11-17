@@ -141,7 +141,7 @@ export default {
 
       this.colData.children = this.colData.children.filter(item => {
         if (item.domtype !== 'field') return true
-        else return item.name !== fieldKey
+        else return item.fieldName !== fieldKey
       })
     })
     this.eventBus.$on('liquidation-rows', () => {
