@@ -22,7 +22,6 @@ const config = {
     resolve: {
       // 别名配置
       alias: {
-        '@plugin': resolve('./dlSmartForm'),
         '@pr': resolve('./packages')
       }
     }

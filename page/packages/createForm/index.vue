@@ -4,8 +4,9 @@
     @click.stop="handleRemoveContextmenu"
     @contextmenu.prevent="handleRemoveContextmenu">
     <div class='smart_form-components'>
-      <field-selection>
-      </field-selection>
+      <field-selection></field-selection>
+      <!-- 字段插入对话框 -->
+      <field-insert-dialog></field-insert-dialog>
     </div>
     <div class='smart_form-wrapper'>
       <two-layout-tab v-if="layout === 'default'"/>
@@ -23,6 +24,7 @@ import TwoLayoutTab from './layout/TwoLayoutTab'
 import VerticalLayout from './layout/VerticalLayout'
 import FieldConfig from './components/FieldConfig'
 import FieldSelection from './components/FieldSelection'
+import FieldInsertDialog from './components/FieldSelection/FieldInsertDialog'
 import { deepClone, hideContextMenu, generateKey, syncFieldInitTo } from './utils'
 
 export default {
@@ -31,7 +33,8 @@ export default {
     FieldConfig,
     FieldSelection,
     TwoLayoutTab,
-    VerticalLayout
+    VerticalLayout,
+    FieldInsertDialog
   },
   props: {
     /**

@@ -12,12 +12,13 @@
       v-contextmenu:contextmenu
       @contextmenu.stop.prevent="hideContextMenu">
 
-      <v-contextmenu ref="contextmenu"
-        :node-key="nodeKey"
-        :style="{
-          'border-width': '1px'
-        }">
-        <v-contextmenu-item @click="handleCommand('insertRow')">插入行</v-contextmenu-item>
+      <v-contextmenu ref="contextmenu">
+        <v-contextmenu-submenu title="新增">
+          <v-contextmenu-item @click="handleCommand('newFields')">字段</v-contextmenu-item>
+          <v-contextmenu-item @click="handleCommand('newRow')">表格行</v-contextmenu-item>
+        </v-contextmenu-submenu>
+        <v-contextmenu-item divider></v-contextmenu-item>
+        <v-contextmenu-item @click="handleCommand('empty')">清空表单</v-contextmenu-item>
       </v-contextmenu>
 
       <el-form
@@ -46,11 +47,6 @@
            px(像素)
           <div class="table-tips">表格宽度最小为800，最大为1000</div>
         </el-form-item>
-        <!-- <el-form-item label="表单标题宽度：">
-          <el-input-number style="width:100px;" v-model="form.labelWidth" @keyup.enter.native="saveTable" :min="100" :max="300" :controls="false" step-strictly />
-           px(像素)
-          <div class="table-tips">表单标题宽度最小为100，最大为300</div>
-        </el-form-item> -->
         <el-form-item label="表格是否拥有边框线：">
           <el-switch
             v-model="form.hasBorder"
@@ -82,9 +78,17 @@ export default {
   name: 'flex-layout',
   inject: ['fieldsArr', 'eventBus'],
   data() {
+    const rootKey = -1
+    const rowsData = []
     return {
+      rootKey,
+      rowsData,
+      rootData: {
+        key: rootKey,
+        domtype: 'table',
+        children: rowsData
+      },
       nodeKey: 'flex-layout',
-      rowsData: [],
       layoutConfig: {
         width: 800,
         // labelWidth: 100,
@@ -105,11 +109,16 @@ export default {
     }
   },
   created() {
-    // 存储一个虚拟行
+    // 存储一个表格根节点
+    this.eventBus.setNode({
+      key: this.rootKey,
+      value: this.rootData
+    })
+    // 存储一个虚拟行，方便后续新增插入行数据
     this.eventBus.setNode({
       key: 'vRow-001',
       value: {
-        parentKey: -1
+        parentKey: this.rootKey
       }
     })
     this.eventBus.$on('set-layout-config', this.setLayoutConfig)
@@ -245,11 +254,18 @@ export default {
     // 右击菜单项点击- 事件
     handleCommand(type) {
       switch (type) {
-        case 'insertRow': // 插入行
+        case 'newRow': // 插入行
           this.handleInsertRow(
             this.rowsData.length,
             'vRow-001'
           )
+          break;
+        case 'newFields': // 插入字段
+          this.eventBus.$emit('show-insert-dialog', this.rootData)
+          break;
+        case 'empty': // 清空表单
+          this.rowsData.map(i => i.key)
+            .forEach(key => this.handleDeleteRow(key))
           break;
       }
     },

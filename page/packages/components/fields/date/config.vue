@@ -41,6 +41,9 @@ export default {
         case 'month':
           this.form.attrs.format = 'yyyy-MM'
           break;
+        case 'year':
+          this.form.attrs.format = 'yyyy'
+          break;
         case 'datetime':
           this.form.attrs.format = 'yyyy-MM-dd HH:mm'
           break;

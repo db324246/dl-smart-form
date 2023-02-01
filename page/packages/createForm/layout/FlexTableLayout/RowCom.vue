@@ -14,6 +14,10 @@
         'border-width': '1px'
       }"
       @contextmenu.native.stop.prevent>
+      <v-contextmenu-submenu title="新增">
+        <v-contextmenu-item @click="handleCommand('newFields')">字段</v-contextmenu-item>
+      </v-contextmenu-submenu>
+      <v-contextmenu-item divider></v-contextmenu-item>
       <v-contextmenu-submenu title="插入">
         <v-contextmenu-item @click="handleCommand('insertCol')">单元格</v-contextmenu-item>
         <v-contextmenu-item @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
@@ -161,6 +165,9 @@ export default {
           this.insertCol(
             this.rowConfig.children.length
           )
+          break;
+        case 'newFields': // 新增字段
+          this.eventBus.$emit('show-insert-dialog', this.rowConfig)
           break;
         case 'insertTopRow': // 插入一行在上边
           this.eventBus.$emit('insert-row', this.rowIndex, this.rowKey)

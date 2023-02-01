@@ -63,7 +63,7 @@ export default new Vue({
     }
   },
   methods: {
-    registerArrayForm() {
+    registerSubform() {
       complexComponents.push(subform)
       advanceComponents.push(subform)
       Vue.component(subform.configComponent.name, subform.configComponent)

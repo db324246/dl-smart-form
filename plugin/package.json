@@ -1,7 +1,7 @@
 {
   
   "name": "dl-smart-form",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "private": false,
   "author": "daixiaobin",
   "description": "基于 vue 与 element-UI 设计的自定义表单",

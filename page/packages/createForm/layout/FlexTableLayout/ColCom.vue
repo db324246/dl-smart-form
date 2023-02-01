@@ -16,17 +16,20 @@
       }"
       @contextmenu.native.stop.prevent>
       <v-contextmenu-submenu title="新增">
+        <v-contextmenu-item @click="handleCommand('newFields')">字段</v-contextmenu-item>
         <v-contextmenu-item @click="handleCommand('newRow')">在单元格里新增表格行</v-contextmenu-item>
       </v-contextmenu-submenu>
+      <v-contextmenu-item divider></v-contextmenu-item>
       <v-contextmenu-submenu title="插入">
         <v-contextmenu-item @click="handleCommand('insertLeftCol')">单元格(在左侧)</v-contextmenu-item>
         <v-contextmenu-item @click="handleCommand('insertRightCol')">单元格(在右侧)</v-contextmenu-item>
         <v-contextmenu-item @click="handleCommand('insertTopRow')">行(在上方)</v-contextmenu-item>
-        <v-contextmenu-item  @click="handleCommand('insertBottomRow')">行(在下方)</v-contextmenu-item>
+        <v-contextmenu-item @click="handleCommand('insertBottomRow')">行(在下方)</v-contextmenu-item>
       </v-contextmenu-submenu >
       <v-contextmenu-item divider></v-contextmenu-item>
       <v-contextmenu-item @click="handleCommand('editColAttr')">编辑单元格</v-contextmenu-item>
       <v-contextmenu-item divider></v-contextmenu-item>
+      <v-contextmenu-item @click="handleCommand('emptyCol')">清空单元格</v-contextmenu-item>
       <v-contextmenu-item @click="handleCommand('delCol')">删除单元格</v-contextmenu-item>
       <v-contextmenu-item @click="handleCommand('delRow')">删除行</v-contextmenu-item>
     </v-contextmenu>
@@ -205,6 +208,9 @@ export default {
             })
           })()
           break;
+        case 'newFields': // 新增字段
+          this.eventBus.$emit('show-insert-dialog', this.colData)
+          break;
         case 'insertLeftCol': // 插入一列在左边
           this.rowVm.insertCol(this.colIndex)
           break;
@@ -219,6 +225,10 @@ export default {
           break;
         case 'editColAttr': // 编辑列属性
           this.eventBus.$emit('edit-node', this.colData)
+          break;
+        case 'emptyCol': // 清空列
+          this.hasField && this.deleteField()
+          this.hasRowNode && this.deleteRow()
           break;
         case 'delCol': // 删除单元格
           this.$confirm('删除后不可撤销，确认删除吗?', '提示', {

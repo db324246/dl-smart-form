@@ -57,7 +57,7 @@ const dlSmartForm = {
   reporterInstaller
 }
 
-store.registerArrayForm()
+store.registerSubform()
 
 window.SmartForm = dlSmartForm
 window.dlSmartForm = dlSmartForm

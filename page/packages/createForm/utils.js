@@ -1,5 +1,5 @@
 import Bus from './Bus'
-import { deepClone, typeOf, syncFieldInitTo } from '../utils'
+import { deepClone, typeOf, syncFieldInitTo } from '@pr/utils'
 
 export { deepClone, typeOf, syncFieldInitTo }
 
