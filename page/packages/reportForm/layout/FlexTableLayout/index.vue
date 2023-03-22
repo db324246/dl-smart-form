@@ -58,7 +58,7 @@ export default {
     }
   },
   created() {
-    Bus.$on(`valide-form-${this.formId}`, async({ formId, resolve }) => {
+    Bus.$on(`validate-form-${this.formId}`, async({ formId, resolve }) => {
       if (formId !== this.formId) return
       try {
         await this.$refs.flexForm.validate()
@@ -70,7 +70,7 @@ export default {
       }
     })
     this.$on('hook:destroyed', () => {
-      Bus.$off(`valide-form-${this.formId}`)
+      Bus.$off(`validate-form-${this.formId}`)
     })
   }
 }

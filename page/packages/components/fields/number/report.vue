@@ -1,5 +1,6 @@
 <template>
   <el-input-number
+    ref="input"
     :style="reportStyle"
     v-model="fieldObj.value"
     :min="fieldObj.attrs.min"
@@ -20,6 +21,10 @@ export default {
       type: Object,
       default: () => ({})
     }
+  },
+  mounted() {
+    const input = this.$refs.input.$el.querySelector('input')
+    input.setAttribute('type', 'el')
   }
 }
 </script>

@@ -17,7 +17,20 @@
         accept=".json" />
     </div>
     <div class="report-body">
+      <div class="report-tip">
+        将下拉选择器选择选项二试试<br />
+        将开关打开试试<br />
+        将日期范围设置包含 2022-05-20 试试
+      </div>
       <smart-form-report
+        v-if="isMobile"
+        class="mobile-report"
+        ref="reportForm"
+        :form-data="formData"
+        :report-data="reportData">
+      </smart-form-report>
+      <smart-form-report
+        v-else
         ref="reportForm"
         :form-data="formData"
         :report-data="reportData">
@@ -37,8 +50,16 @@ export default {
       reportData: {}
     }
   },
-  mounted() {
-    this.$refs.reportForm.initReportForm()
+  watch: {
+    isMobile: {
+      handler(val) {
+        this.formData.layout.layoutType = val ? 'vertical' : 'default'
+        this.$nextTick(() => {
+          this.$refs.reportForm.initReportForm()
+        })
+      },
+      immediate: true
+    }
   },
   methods: {
     handleFormImport(e) {
@@ -99,21 +120,40 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .report-container {
   height: calc(100vh - 70px);
   padding: 0 10px 20px;
+  overflow-y: auto;
 }
 .report-header {
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  height: 50px;
+  padding: 5px 20px 0;
+  flex-wrap: wrap;
+  .el-button {
+    margin-bottom: 5px;
+  }
+  input {
+    height: 0;
+  }
 }
 .report-body {
-  height: calc(100% - 50px);
-  overflow-y: auto;
   padding-bottom: 100px;
   box-sizing: border-box;
+}
+.report-tip {
+  width: 80vw;
+  margin: 10px auto;
+  font-size: 14px;
+  color: #999;
+}
+.mobile-report {
+  padding: 0 10px 30px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px #c8c9cc;
 }
 </style>

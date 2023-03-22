@@ -1,5 +1,7 @@
 <template>
   <el-time-picker
+    ref="input"
+    :editable="false"
     :style="reportStyle"
     v-model="fieldObj.value"
     :placeholder="fieldObj.attrs.placeholder"

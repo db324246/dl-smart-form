@@ -89,7 +89,7 @@ export default {
     },
     /**
      * default: 自定义布局
-     * vertical: 垂直布局 - 针对于重复上报表单
+     * vertical: 垂直布局 - 针对于重复上报表单 / 移动端
      */
     layoutType() {
       return this.layout.layoutType
@@ -124,7 +124,7 @@ export default {
     initReportForm() {
       this.loadingForm = true
       // 注册表单实例
-      Bus.registerCoutomFormer(this.formId)
+      Bus.registerCustomFormer(this.formId)
       this.$nextTick(() => {
         Bus.setReportData(this.formId, this.reportData)
         // 计算保存关联规则
@@ -144,7 +144,7 @@ export default {
     async getReportData() {
       try {
         await new Promise(r => {
-          Bus.$emit(`valide-form-${this.formId}`, {
+          Bus.$emit(`validate-form-${this.formId}`, {
             resolve: r,
             formId: this.formId
           })
@@ -155,6 +155,7 @@ export default {
         const layoutTypes = layoutComponents.map(com => com.field.type)
         for (const fieldName in fieldsMap) {
           const field = fieldsMap[fieldName]
+          // 排除布局字段
           if (layoutTypes.includes(field.type)) continue
           if (this.unReportFields) {
             // 自定义计算无需上报的字段

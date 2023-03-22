@@ -34,21 +34,8 @@
     "mobileLayout": [
       {
         "name": "uploader_field_1658281367375284",
-        "type": "uploader",
-        "label": "上传图片",
-        "value": [],
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "btnText": "点击上传",
-          "tips": "请上传1M以下的图片",
-          "accept": [
-            ".png",
-            ".jpg",
-            ".jpeg"
-          ],
-          "multiple": false
-        }
+        "key": "uploader_field_1658281367375284",
+        "type": "uploader"
       }
     ],
     "layoutType": "default"

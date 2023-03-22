@@ -1,12 +1,10 @@
 <template>
   <div class='vertical-layout'>
-    <el-form ref="flexForm" class="detail-form" :model="form" :rules="rules">
-      <template v-for="field in modelFields">
-        <widget-item
-          :key="field.key"
-          :field-name="field.name">
-        </widget-item>
-      </template>
+    <el-form ref="flexForm" class="detail-form" :model="form">
+      <widget-item v-for="field in layoutData"
+        :key="field.key"
+        :field-name="field.name">
+      </widget-item>
     </el-form>
   </div>
 </template>
@@ -16,8 +14,16 @@ import Bus from '../../reportForm/Bus'
 import WidgetItem from '../components/WidgetItem'
 export default {
   name: 'vertical-layout',
-  inject: ['formId'],
   components: { WidgetItem },
+  inject: [
+    'formId',
+    'getLayoutData'
+  ],
+  provide() {
+    return {
+      hasBorder: false
+    }
+  },
   computed: {
     former() {
       return Bus.formerMap.get(this.formId)
@@ -25,11 +31,9 @@ export default {
     form() {
       return this.former.formWatcher.formModel
     },
-    rules() {
-      return this.former.formWatcher.formModelRules
-    },
-    modelFields() {
-      return this.$parent.form
+    layoutData() {
+      const layout = this.getLayoutData() || {}
+      return layout.mobileLayout || {}
     }
   }
 }

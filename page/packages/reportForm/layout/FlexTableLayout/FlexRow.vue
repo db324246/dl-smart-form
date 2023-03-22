@@ -6,32 +6,31 @@
     :class="{
       'row-has-border': hasBorder
     }">
-    <template v-for="col in colsRenderData">
-      <div
-        v-show="!hideColByNoData(col)"
-        :no-data="hideColByNoData(col)"
-        :key="col.key"
-        class='flex-col'
-        :class="{
-          'col-has-border': hasBorder
-        }"
-        :style="col.style">
-        <template v-for="node in (col.children || [])">
-          <flex-row
-            v-if="node.domtype === 'row'"
-            :key="node.key"
-            :value="node"
-            @rule-show="ruleShowCol($event, node.key, col.key)">
-          </flex-row>
-          <widget-item
-            v-else-if="node.domtype === 'field'"
-            :key="node.parentKey + node.key"
-            :field-name="node.fieldName"
-            @rule-show="ruleShowCol($event, node.key, col.key)">
-          </widget-item>
-        </template>
-      </div>
-    </template>
+    <div
+      v-for="col in colsRenderData"
+      v-show="!hideColByNoData(col)"
+      :no-data="hideColByNoData(col)"
+      :key="col.key"
+      class='flex-col'
+      :class="{
+        'col-has-border': hasBorder
+      }"
+      :style="col.style">
+      <template v-for="node in (col.children || [])">
+        <flex-row
+          v-if="node.domtype === 'row'"
+          :key="node.key"
+          :value="node"
+          @rule-show="ruleShowCol($event, node.key, col.key)">
+        </flex-row>
+        <widget-item
+          v-else-if="node.domtype === 'field'"
+          :key="node.parentKey + node.key"
+          :field-name="node.fieldName"
+          @rule-show="ruleShowCol($event, node.key, col.key)">
+        </widget-item>
+      </template>
+    </div>
   </div>
 </template>
 

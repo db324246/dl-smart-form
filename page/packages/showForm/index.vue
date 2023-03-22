@@ -104,7 +104,7 @@ export default {
     initShowForm() {
       this.loadingForm = true
       // 注册表单实例
-      Bus.registerCoutomFormer(this.formId)
+      Bus.registerCustomFormer(this.formId)
       this.$nextTick(() => {
         Bus.setReportData(this.formId, this.reportData)
         // 计算保存关联规则

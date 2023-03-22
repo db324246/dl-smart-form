@@ -30,7 +30,7 @@ export default new Vue({
   },
   methods: {
     // covered 默认覆盖，每次都会重新创建表单实例
-    registerCoutomFormer(formId) {
+    registerCustomFormer(formId) {
       this.formerMap.set(formId, new CustomFormer())
     },
     // 保存表单上报的数据

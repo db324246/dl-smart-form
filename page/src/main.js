@@ -8,6 +8,7 @@ import preview from 'vue-photo-preview'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'marked-essay-loader/styles/marked-style.scss'
 import 'vue-photo-preview/dist/skin.css'
+import mixins from './mixin'
 
 import SmartForm, {
   createrInstaller,
@@ -50,6 +51,7 @@ SmartForm.registerFields([{
   ]
 }])
 
+Vue.mixin(mixins)
 Vue.use(preview)
 Vue.use(createrInstaller)
 Vue.use(reporterInstaller)

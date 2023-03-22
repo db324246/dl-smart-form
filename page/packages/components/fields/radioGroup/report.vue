@@ -48,5 +48,6 @@ export default {
   display: flex;
   align-items: center;
   min-height: 40px;
+  flex-wrap: wrap;
 }
 </style>

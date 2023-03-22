@@ -73,6 +73,7 @@
         :form-data="{
           layout: {
             layoutType: 'vertical',
+            mobileLayout: fieldObj.modelFields
           },
           form: fieldObj.modelFields,
           attachedRule: attachedRule,
@@ -98,6 +99,7 @@
         :form-data="{
           layout: {
             layoutType: 'vertical',
+            mobileLayout: fieldObj.modelFields
           },
           form: fieldObj.modelFields,
           attachedRule: attachedRule,
@@ -159,7 +161,8 @@ export default {
       })
     },
     dialogWidth() {
-      return this.fieldObj.attrs.dialogWidth + 'px'
+      const width = this.fieldObj.attrs.dialogWidth
+      return width > window.innerWidth ? window.innerWidth + 'px' : width + 'px'
     },
     dialogTitle() {
       return `${this.fieldObj.label}${this.editFlag ? '编辑' : '新增'}`
@@ -293,8 +296,11 @@ export default {
   display: flex;
 }
 .subform-dialog >>> .el-dialog__header {
-  padding: 15px 20px;
+  padding: 10px 15px;
   border-bottom: 1px solid #eee;
+}
+.subform-dialog >>> .el-dialog__headerbtn {
+  top: 15px;
 }
 .detail-dialog >>> .el-dialog__body {
   padding: 10px 20px 30px;

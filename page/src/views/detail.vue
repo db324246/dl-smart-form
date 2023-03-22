@@ -16,6 +16,14 @@
     </div>
     <div class="detail-body">
       <smart-form-show
+        v-if="isMobile"
+        class="mobile-detail"
+        ref="showForm"
+        :form-data="formData"
+        :report-data="reportData">
+      </smart-form-show>
+      <smart-form-show
+        v-else
         ref="showForm"
         :form-data="formData"
         :report-data="reportData">
@@ -35,8 +43,16 @@ export default {
       reportData: reportFormData.reportData
     }
   },
-  mounted() {
-    this.$refs.showForm.initShowForm()
+  watch: {
+    isMobile: {
+      handler(val) {
+        this.formData.layout.layoutType = val ? 'vertical' : 'default'
+        this.$nextTick(() => {
+          this.$refs.showForm.initShowForm()
+        })
+      },
+      immediate: true
+    }
   },
   methods: {
     handleFormImport(e) {
@@ -77,20 +93,25 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .detail-container {
   height: calc(100vh - 70px);
   padding: 0 10px 20px;
+  overflow-y: auto;
 }
 .detail-header {
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  height: 50px;
+  padding: 5px 20px 0;
+  flex-wrap: wrap;
+  .el-button {
+    margin-bottom: 5px;
+  }
+  input {
+    height: 0;
+  }
 }
 .detail-body {
-  height: calc(100% - 50px);
-  overflow-y: auto;
   padding-bottom: 100px;
   box-sizing: border-box;
 }

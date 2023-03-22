@@ -318,308 +318,69 @@
     },
     "mobileLayout": [
       {
-        "name": "arrayform_field_1653380325623158",
-        "type": "subform",
-        "label": "我的重复上报",
-        "value": [],
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "dialogWidth": 500,
-          "tableColumns": [
-            "input_field_1653380234611128",
-            "input_field_1653380263907797",
-            "input_field_1653380291627638"
-          ],
-          "queryFields": [],
-          "fieldAttachedRule": {
-            "input_field_1653380234611128": {
-              "showLabel": true,
-              "required": true,
-              "labelWidth": 100,
-              "mediumWidth": 0,
-              "labelPosition": "right"
-            },
-            "input_field_1653380263907797": {
-              "showLabel": true,
-              "required": true,
-              "labelWidth": 100,
-              "mediumWidth": 0,
-              "labelPosition": "right"
-            },
-            "input_field_1653380291627638": {
-              "showLabel": true,
-              "required": false,
-              "labelWidth": 100,
-              "mediumWidth": 0,
-              "labelPosition": "right"
-            }
-          },
-          "fieldCorrelativeRules": []
-        },
-        "modelFields": [
-          {
-            "name": "input_field_1653380234611128",
-            "type": "input",
-            "label": "姓名",
-            "value": "",
-            "configurable": true,
-            "isFormField": true,
-            "attrs": {
-              "placeholder": "占位符文字",
-              "maxlength": 10,
-              "dataType": "string",
-              "pattern": ""
-            }
-          },
-          {
-            "name": "input_field_1653380263907797",
-            "type": "input",
-            "label": "手机号",
-            "value": "",
-            "configurable": true,
-            "isFormField": true,
-            "attrs": {
-              "placeholder": "占位符文字",
-              "maxlength": 100,
-              "dataType": "phone",
-              "pattern": ""
-            }
-          },
-          {
-            "name": "input_field_1653380291627638",
-            "type": "input",
-            "label": "地址",
-            "value": "",
-            "configurable": true,
-            "isFormField": true,
-            "attrs": {
-              "placeholder": "占位符文字",
-              "maxlength": 100,
-              "dataType": "string",
-              "pattern": ""
-            }
-          }
-        ]
+        "key": "title_field_165339747062177",
+        "name": "title_field_165339747062177",
+        "type": "title"
       },
       {
         "name": "input_field_1653397388791410",
-        "type": "input",
-        "label": "单行文本",
-        "value": "",
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "占位符文字",
-          "maxlength": 100,
-          "dataType": "string",
-          "pattern": ""
-        }
+        "key": "input_field_1653397388791410",
+        "type": "input"
       },
       {
         "name": "number_field_165339740610296",
-        "type": "number",
-        "label": "数字输入",
-        "value": 0,
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "占位符文字",
-          "step": 1
-        }
+        "key": "number_field_165339740610296",
+        "type": "number"
       },
       {
         "name": "date_field_1653397410453707",
-        "type": "date",
-        "label": "日期选择器",
-        "value": "",
-        "placeholder": "请选择日期",
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "请选择日期",
-          "format": "yyyy-MM-dd",
-          "comType": "date"
-        }
+        "key": "date_field_1653397410453707",
+        "type": "date"
       },
       {
         "name": "time_field_1653397412494217",
-        "type": "time",
-        "label": "时间选择器",
-        "value": "",
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "请选择时间",
-          "format": "HH:mm"
-        }
-      },
-      {
-        "name": "select_field_1653397433573194",
-        "type": "select",
-        "label": "下拉选择框",
-        "value": "",
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "请选择",
-          "bindDicts": false,
-          "dictName": "",
-          "constantId": ""
-        },
-        "options": [
-          {
-            "value": "选项1",
-            "key": "1"
-          },
-          {
-            "value": "选项2",
-            "key": "2"
-          },
-          {
-            "value": "选项3",
-            "key": "3"
-          }
-        ]
-      },
-      {
-        "name": "textarea_field_16533974363244",
-        "type": "textarea",
-        "label": "多行文本",
-        "value": "",
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "占位符文字",
-          "maxlength": 1000
-        }
-      },
-      {
-        "name": "dateRange_field_1653397443276620",
-        "type": "dateRange",
-        "label": "日期范围",
-        "value": [],
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "startPlaceholder": "请选择开始日期",
-          "endPlaceholder": "请选择结束日期",
-          "format": "yyyy-MM-dd",
-          "comType": "daterange"
-        }
-      },
-      {
-        "name": "mulSelect_field_1653397445774922",
-        "type": "mulSelect",
-        "label": "多选下拉框",
-        "value": [],
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "placeholder": "请选择",
-          "bindDicts": false,
-          "dictName": "",
-          "constantId": ""
-        },
-        "options": [
-          {
-            "value": "选项1",
-            "key": "1"
-          },
-          {
-            "value": "选项2",
-            "key": "2"
-          },
-          {
-            "value": "选项3",
-            "key": "3"
-          }
-        ]
-      },
-      {
-        "name": "switch_field_1653397451415264",
-        "type": "switch",
-        "label": "开关",
-        "value": true,
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {}
-      },
-      {
-        "name": "radioGroup_field_1653397456685616",
-        "type": "radioGroup",
-        "label": "单选框组",
-        "value": "",
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "bindDicts": false,
-          "dictName": "",
-          "constantId": ""
-        },
-        "options": [
-          {
-            "value": "选项1",
-            "key": "1"
-          },
-          {
-            "value": "选项2",
-            "key": "2"
-          },
-          {
-            "value": "选项3",
-            "key": "3"
-          }
-        ]
-      },
-      {
-        "name": "checkboxGroup_field_1653397463437924",
-        "type": "checkboxGroup",
-        "label": "多选框组",
-        "value": [],
-        "configurable": true,
-        "isFormField": true,
-        "attrs": {
-          "bindDicts": false,
-          "dictName": "",
-          "constantId": ""
-        },
-        "options": [
-          {
-            "value": "选项1",
-            "key": "1"
-          },
-          {
-            "value": "选项2",
-            "key": "2"
-          },
-          {
-            "value": "选项3",
-            "key": "3"
-          }
-        ]
-      },
-      {
-        "name": "title_field_165339747062177",
-        "type": "title",
-        "label": "标题/段落",
-        "value": "标题/段落",
-        "configurable": true,
-        "isFormField": false,
-        "attrs": {
-          "fontSize": "16px",
-          "backgroundColor": "#efdebb",
-          "color": "#303133",
-          "fontWeight": "normal"
-        }
+        "key": "time_field_1653397412494217",
+        "type": "time"
       },
       {
         "name": "divider_field_1653397473501469",
-        "type": "divider",
-        "label": "分割线",
-        "value": null,
-        "configurable": false,
-        "isFormField": false
+        "key": "divider_field_1653397473501469",
+        "type": "divider"
+      },
+      {
+        "name": "select_field_1653397433573194",
+        "key": "select_field_1653397433573194",
+        "type": "select"
+      },
+      {
+        "name": "textarea_field_16533974363244",
+        "key": "textarea_field_16533974363244",
+        "type": "textarea"
+      },
+      {
+        "name": "dateRange_field_1653397443276620",
+        "key": "dateRange_field_1653397443276620",
+        "type": "dateRange"
+      },
+      {
+        "name": "switch_field_1653397451415264",
+        "key": "switch_field_1653397451415264",
+        "type": "switch"
+      },
+      {
+        "name": "radioGroup_field_1653397456685616",
+        "key": "radioGroup_field_1653397456685616",
+        "type": "radioGroup"
+      },
+      {
+        "name": "checkboxGroup_field_1653397463437924",
+        "key": "checkboxGroup_field_1653397463437924",
+        "type": "checkboxGroup"
+      },
+      {
+        "name": "arrayform_field_1653380325623158",
+        "key": "arrayform_field_1653380325623158",
+        "type": "subform"
       }
     ],
     "layoutType": "default"

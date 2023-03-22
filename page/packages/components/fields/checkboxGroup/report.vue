@@ -47,5 +47,11 @@ export default {
 </script>
 
 <style scoped>
-
+.el-checkbox-group {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  flex-wrap: wrap;
+  line-height: 1;
+}
 </style>

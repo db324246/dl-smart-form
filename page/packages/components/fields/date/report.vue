@@ -1,5 +1,7 @@
 <template>
   <el-date-picker
+    ref="input"
+    :editable="false"
     :style="reportStyle"
     v-model="fieldObj.value"
     :type="fieldObj.attrs.comType"

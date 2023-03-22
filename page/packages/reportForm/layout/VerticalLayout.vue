@@ -1,12 +1,10 @@
 <template>
   <div class='vertical-layout'>
     <el-form ref="flexForm" :model="form" :rules="rules">
-      <template v-for="field in modelFields">
-        <widget-item
-          :key="field.key"
-          :field-name="field.name">
-        </widget-item>
-      </template>
+      <widget-item v-for="field in layoutData"
+        :key="field.key"
+        :field-name="field.name">
+      </widget-item>
     </el-form>
   </div>
 </template>
@@ -17,7 +15,15 @@ import WidgetItem from '../components/WidgetItem'
 export default {
   name: 'vertical-layout',
   components: { WidgetItem },
-  inject: ['formId'],
+  inject: [
+    'formId',
+    'getLayoutData'
+  ],
+  provide() {
+    return {
+      hasBorder: false
+    }
+  },
   data() {
     return {}
   },
@@ -31,12 +37,13 @@ export default {
     rules() {
       return this.busFormer.formWatcher.formModelRules
     },
-    modelFields() {
-      return this.$parent.form
+    layoutData() {
+      const layout = this.getLayoutData() || {}
+      return layout.mobileLayout || {}
     }
   },
   created() {
-    Bus.$on(`valide-form-${this.formId}`, async({ formId, resolve }) => {
+    Bus.$on(`validate-form-${this.formId}`, async({ formId, resolve }) => {
       if (formId !== this.formId) return
       try {
         await this.$refs.flexForm.validate()
@@ -47,7 +54,7 @@ export default {
       }
     })
     this.$on('hook:destroyed', () => {
-      Bus.$off(`valide-form-${this.formId}`)
+      Bus.$off(`validate-form-${this.formId}`)
     })
   }
 }

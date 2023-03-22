@@ -1,7 +1,15 @@
 <template>
   <div class='home_container'>
     <div class="home-body">
-      <div class="home-box">
+      <div v-if="isMobile" class="mobile-home-box">
+        <div class="beijing"></div>
+        <img class="app-logo" :src="require('@/assets/logo.png')" alt="SmartForm" title="SmartForm">
+        <div class="app-description">
+          <h1>自定义表单控件</h1>
+          <p>字段拖拽、任意布局、一键生成表单Json</p>
+        </div>
+      </div>
+      <div v-else class="home-box">
         <div class="beijing"></div>
         <div class="position t-50">
           <img class="app-logo" :src="require('@/assets/logo.png')" alt="SmartForm" title="SmartForm">
@@ -51,7 +59,6 @@ export default {
 
 <style lang='scss' scoped>
 .home_container {
-  min-height: 100vh;
   background: #f5f5f5;
 }
 .home-body {
@@ -95,6 +102,33 @@ export default {
     background-size: cover;
     opacity: 0.4;
     pointer-events: none;
+  }
+}
+.mobile-home-box {
+  position: relative;
+  overflow: hidden;
+  height: 380px;
+  padding: 30px 10px 50px;
+  .app-logo {
+    position: relative;
+    width: 80vw;
+    z-index: 1;
+  }
+  .beijing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100vw;
+    background: url('~@/assets/create.jpg') no-repeat center;
+    background-size: cover;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .app-description {
+    position: relative;
+    z-index: 1;
+    padding-left: 20px;
   }
 }
 .home-footer {
